@@ -1,1 +1,0 @@
-process of creating graph.

@@ -1,0 +1,912 @@
+
+Evaluating Progressive Solver on Unseen Test Set...
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 1...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.15
+  Normalized Mutual Info: 0.13
+  Group Matches: [1, 2, 1, 2] (Total Words: 6/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.54
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 2...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [2, 2, 2, 3] (Total Words: 9/16)
+  Tier 1 Confidence: 0.59
+  Tier 2 Confidence: 0.57
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 3...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.22
+  Normalized Mutual Info: 0.44
+  Group Matches: [2, 2, 2, 4] (Total Words: 10/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.55
+
+Evaluating Test Puzzle 4...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.43
+  Normalized Mutual Info: 0.61
+  Group Matches: [3, 3, 2, 4] (Total Words: 12/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 5...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [1, 2, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.59
+  Tier 2 Confidence: 0.57
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 6...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.09
+  Normalized Mutual Info: 0.19
+  Group Matches: [2, 2, 1, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 7...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.09
+  Normalized Mutual Info: 0.19
+  Group Matches: [2, 2, 2, 1] (Total Words: 7/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 8...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [3, 2, 1, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.54
+  Tier 3 Confidence: 0.52
+
+Evaluating Test Puzzle 9...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [2, 2, 2, 3] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.58
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 10...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.31
+  Group Matches: [2, 2, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.63
+  Tier 2 Confidence: 0.64
+  Tier 3 Confidence: 0.62
+
+Evaluating Test Puzzle 11...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.43
+  Normalized Mutual Info: 0.61
+  Group Matches: [2, 3, 3, 4] (Total Words: 12/16)
+  Tier 1 Confidence: 0.57
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 12...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.27
+  Group Matches: [2, 1, 3, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.57
+  Tier 2 Confidence: 0.54
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 13...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.11
+  Normalized Mutual Info: 0.40
+  Group Matches: [3, 2, 2, 1] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.60
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 14...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.38
+  Normalized Mutual Info: 0.59
+  Group Matches: [3, 2, 4, 2] (Total Words: 11/16)
+  Tier 1 Confidence: 0.57
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 15...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.09
+  Normalized Mutual Info: 0.19
+  Group Matches: [2, 1, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.52
+
+Evaluating Test Puzzle 16...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 2, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.59
+  Tier 2 Confidence: 0.60
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 17...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [1, 3, 3, 2] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 18...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.38
+  Group Matches: [1, 2, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.62
+  Tier 2 Confidence: 0.61
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 19...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.22
+  Normalized Mutual Info: 0.48
+  Group Matches: [2, 3, 3, 2] (Total Words: 10/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 20...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [3, 2, 1, 3] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 21...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 1, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 22...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.09
+  Normalized Mutual Info: 0.19
+  Group Matches: [2, 2, 2, 1] (Total Words: 7/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 23...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.15
+  Normalized Mutual Info: 0.13
+  Group Matches: [1, 2, 1, 2] (Total Words: 6/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 24...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 1, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.62
+  Tier 2 Confidence: 0.61
+  Tier 3 Confidence: 0.63
+
+Evaluating Test Puzzle 25...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [2, 2, 3, 2] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.57
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 26...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [1, 2, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 27...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.27
+  Group Matches: [1, 2, 2, 3] (Total Words: 8/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 28...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.31
+  Group Matches: [2, 2, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.57
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 29...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.09
+  Normalized Mutual Info: 0.19
+  Group Matches: [2, 2, 1, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 30...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.11
+  Normalized Mutual Info: 0.40
+  Group Matches: [2, 2, 2, 3] (Total Words: 9/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 31...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.31
+  Group Matches: [2, 2, 2, 1] (Total Words: 7/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.58
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 32...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.22
+  Normalized Mutual Info: 0.48
+  Group Matches: [2, 3, 3, 2] (Total Words: 10/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 33...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 2, 1, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.57
+  Tier 2 Confidence: 0.61
+  Tier 3 Confidence: 0.60
+
+Evaluating Test Puzzle 34...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.38
+  Normalized Mutual Info: 0.59
+  Group Matches: [2, 4, 3, 2] (Total Words: 11/16)
+  Tier 1 Confidence: 0.54
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 35...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 1, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.54
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 36...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [1, 3, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 37...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.22
+  Normalized Mutual Info: 0.48
+  Group Matches: [3, 3, 2, 2] (Total Words: 10/16)
+  Tier 1 Confidence: 0.59
+  Tier 2 Confidence: 0.58
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 38...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.31
+  Group Matches: [2, 2, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.59
+  Tier 2 Confidence: 0.63
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 39...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 2, 2, 1] (Total Words: 7/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 40...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [3, 1, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.58
+  Tier 3 Confidence: 0.60
+
+Evaluating Test Puzzle 41...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.11
+  Normalized Mutual Info: 0.40
+  Group Matches: [2, 2, 3, 2] (Total Words: 9/16)
+  Tier 1 Confidence: 0.59
+  Tier 2 Confidence: 0.59
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 42...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.27
+  Group Matches: [2, 2, 1, 3] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.61
+  Tier 3 Confidence: 0.60
+
+Evaluating Test Puzzle 43...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.22
+  Normalized Mutual Info: 0.44
+  Group Matches: [2, 2, 4, 2] (Total Words: 10/16)
+  Tier 1 Confidence: 0.57
+  Tier 2 Confidence: 0.60
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 44...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [3, 2, 2, 1] (Total Words: 8/16)
+  Tier 1 Confidence: 0.60
+  Tier 2 Confidence: 0.65
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 45...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.38
+  Normalized Mutual Info: 0.59
+  Group Matches: [3, 3, 3, 3] (Total Words: 12/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.55
+
+Evaluating Test Puzzle 46...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 1, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 47...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.15
+  Normalized Mutual Info: 0.13
+  Group Matches: [1, 2, 1, 2] (Total Words: 6/16)
+  Tier 1 Confidence: 0.54
+  Tier 2 Confidence: 0.57
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 48...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.09
+  Normalized Mutual Info: 0.19
+  Group Matches: [1, 2, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 49...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.38
+  Normalized Mutual Info: 0.59
+  Group Matches: [2, 4, 2, 3] (Total Words: 11/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 50...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.38
+  Group Matches: [2, 1, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.52
+
+Evaluating Test Puzzle 51...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.11
+  Normalized Mutual Info: 0.40
+  Group Matches: [2, 3, 2, 2] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 52...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.31
+  Group Matches: [2, 2, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.57
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 53...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.38
+  Normalized Mutual Info: 0.59
+  Group Matches: [2, 4, 3, 2] (Total Words: 11/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 54...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [1, 2, 2, 3] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.57
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 55...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.27
+  Normalized Mutual Info: 0.50
+  Group Matches: [2, 1, 2, 4] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 56...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.11
+  Normalized Mutual Info: 0.40
+  Group Matches: [3, 2, 2, 2] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.55
+
+Evaluating Test Puzzle 57...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.31
+  Group Matches: [2, 2, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.60
+  Tier 2 Confidence: 0.62
+  Tier 3 Confidence: 0.59
+
+Evaluating Test Puzzle 58...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.27
+  Normalized Mutual Info: 0.50
+  Group Matches: [1, 2, 2, 4] (Total Words: 9/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.59
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 59...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [1, 3, 2, 3] (Total Words: 9/16)
+  Tier 1 Confidence: 0.57
+  Tier 2 Confidence: 0.58
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 60...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.27
+  Normalized Mutual Info: 0.51
+  Group Matches: [3, 3, 3, 2] (Total Words: 11/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.59
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 61...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 1, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.57
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 62...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [2, 3, 2, 3] (Total Words: 10/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 63...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [2, 3, 3, 2] (Total Words: 10/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 64...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [2, 2, 1, 3] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 65...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.31
+  Group Matches: [2, 1, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 66...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [1, 2, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 67...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [1, 2, 1, 2] (Total Words: 6/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.54
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 68...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.27
+  Group Matches: [2, 1, 3, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.61
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.55
+
+Evaluating Test Puzzle 69...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [1, 2, 3, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.54
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 70...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.46
+  Group Matches: [2, 2, 2, 3] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 71...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [2, 2, 2, 3] (Total Words: 9/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 72...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.46
+  Group Matches: [2, 2, 2, 3] (Total Words: 9/16)
+  Tier 1 Confidence: 0.59
+  Tier 2 Confidence: 0.59
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 73...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.27
+  Group Matches: [2, 3, 1, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.58
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 74...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.38
+  Normalized Mutual Info: 0.59
+  Group Matches: [2, 2, 4, 3] (Total Words: 11/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.59
+  Tier 3 Confidence: 0.58
+
+Evaluating Test Puzzle 75...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [1, 2, 3, 3] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 76...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.22
+  Normalized Mutual Info: 0.44
+  Group Matches: [4, 2, 2, 2] (Total Words: 10/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 77...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 2, 2, 1] (Total Words: 7/16)
+  Tier 1 Confidence: 0.61
+  Tier 2 Confidence: 0.60
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 78...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [2, 2, 3, 1] (Total Words: 8/16)
+  Tier 1 Confidence: 0.61
+  Tier 2 Confidence: 0.63
+  Tier 3 Confidence: 0.56
+
+Evaluating Test Puzzle 79...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.38
+  Group Matches: [2, 2, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.59
+  Tier 3 Confidence: 0.55
+
+Evaluating Test Puzzle 80...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [2, 3, 3, 2] (Total Words: 10/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 81...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.22
+  Normalized Mutual Info: 0.48
+  Group Matches: [2, 3, 2, 3] (Total Words: 10/16)
+  Tier 1 Confidence: 0.59
+  Tier 2 Confidence: 0.58
+  Tier 3 Confidence: 0.55
+
+Evaluating Test Puzzle 82...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [3, 2, 1, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 83...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.09
+  Normalized Mutual Info: 0.19
+  Group Matches: [2, 1, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.53
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 84...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 2, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 85...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 2, 2, 1] (Total Words: 7/16)
+  Tier 1 Confidence: 0.65
+  Tier 2 Confidence: 0.65
+  Tier 3 Confidence: 0.61
+
+Evaluating Test Puzzle 86...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [3, 1, 3, 2] (Total Words: 9/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.58
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 87...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.31
+  Group Matches: [2, 2, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.59
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 88...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.11
+  Normalized Mutual Info: 0.40
+  Group Matches: [1, 3, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.54
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 89...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [1, 3, 2, 3] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 90...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 2, 2, 2] (Total Words: 8/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.58
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 91...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [3, 3, 2, 2] (Total Words: 10/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.60
+  Tier 3 Confidence: 0.53
+
+Evaluating Test Puzzle 92...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.17
+  Normalized Mutual Info: 0.42
+  Group Matches: [1, 3, 3, 2] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.55
+
+Evaluating Test Puzzle 93...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.31
+  Group Matches: [1, 2, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.58
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 94...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.15
+  Normalized Mutual Info: 0.13
+  Group Matches: [2, 1, 1, 2] (Total Words: 6/16)
+  Tier 1 Confidence: 0.58
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 95...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.06
+  Normalized Mutual Info: 0.34
+  Group Matches: [3, 2, 2, 2] (Total Words: 9/16)
+  Tier 1 Confidence: 0.55
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 96...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [2, 2, 2, 1] (Total Words: 7/16)
+  Tier 1 Confidence: 0.59
+  Tier 2 Confidence: 0.60
+  Tier 3 Confidence: 0.57
+
+Evaluating Test Puzzle 97...
+  Stopped at Tier: 3
+  Adjusted Rand Index: -0.04
+  Normalized Mutual Info: 0.25
+  Group Matches: [1, 2, 2, 2] (Total Words: 7/16)
+  Tier 1 Confidence: 0.56
+  Tier 2 Confidence: 0.56
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 98...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.27
+  Group Matches: [2, 2, 1, 3] (Total Words: 8/16)
+  Tier 1 Confidence: 0.57
+  Tier 2 Confidence: 0.59
+  Tier 3 Confidence: 0.60
+
+Evaluating Test Puzzle 99...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.22
+  Normalized Mutual Info: 0.48
+  Group Matches: [3, 3, 2, 2] (Total Words: 10/16)
+  Tier 1 Confidence: 0.57
+  Tier 2 Confidence: 0.55
+  Tier 3 Confidence: 0.54
+
+Evaluating Test Puzzle 100...
+  Stopped at Tier: 3
+  Adjusted Rand Index: 0.01
+  Normalized Mutual Info: 0.31
+  Group Matches: [2, 2, 1, 2] (Total Words: 7/16)
+
+===== FINAL EVALUATION METRICS =====
+1) Grouping Accuracy:
+   1.1) Total no. of groups solved: 12 (out of 400)
+   1.2) No. of '3 words correct out of 4 in a group': 76
+____
+2) No. of games in which (2 groups solved completely and remaining 2 groups are '3 words correct'): 0
+____
+3) No. of games solved completely: 0 (out of 100 test games)
+_____

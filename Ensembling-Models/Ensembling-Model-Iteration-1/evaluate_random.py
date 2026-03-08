@@ -3,6 +3,7 @@ import sys
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+import random
 
 from data_loader import load_games
 from embedder import ConnectionsEmbedder
@@ -57,11 +58,15 @@ def simulate_game_greedy(sim_matrix, gt_partitions_list):
             
     return matched_groups, pred_partitions
 
-def evaluate_games(csv_path: str, limit: int = None):
+def evaluate_games(csv_path: str, limit: int = None, seed: int = 42):
     print("Loading data...")
     games = load_games(csv_path)
-    if limit is not None:
-        games = games[:limit]
+    
+    if limit is not None and limit < len(games):
+        print(f"Randomly selecting {limit} games...")
+        random.seed(seed)
+        games = random.sample(games, limit)
+    
     print(f"Loaded {len(games)} valid games to evaluate.")
     
     print("Initializing embedder...")
@@ -75,20 +80,12 @@ def evaluate_games(csv_path: str, limit: int = None):
     for idx, game in enumerate(tqdm(games, desc="Solving Games")):
         words = game["words"]
         
-        # Ground truth groups
-        # game["groups"] is a dict from level (0, 1, 2, 3) to list of 4 words
-        # Convert to sets of indices for easy comparison
         gt_partitions = []
         for level, group_words in game["groups"].items():
-            # Find indices of these words in the `words` list
             indices = {words.index(w) for w in group_words}
             gt_partitions.append(indices)
             
-        # Get embeddings
         embeddings = embedder.get_embeddings(words)
-        
-        # Compute semantic similarity matrix
-        semantic_sim = np.dot(embeddings, embeddings.T)
         
         def double_center(mat):
             r_mu = np.mean(mat, axis=1, keepdims=True)
@@ -96,35 +93,27 @@ def evaluate_games(csv_path: str, limit: int = None):
             g_mu = np.mean(mat)
             return mat - r_mu - c_mu + g_mu
             
+        semantic_sim = np.dot(embeddings, embeddings.T)
         semantic_sim = double_center(semantic_sim)
         
-        # Get Lexical similarity matrix
         lexical_sim = embedder.get_lexical_similarity(words)
         lexical_sim = double_center(lexical_sim)
         
-        # Get WordNet Knowledge Graph similarity matrix
         wordnet_sim = embedder.get_wordnet_similarity(words)
         wordnet_sim = double_center(wordnet_sim)
         
-        # Get WikiData Knowledge Graph similarity matrix
         wikidata_sim = embedder.get_wikidata_similarity(words)
         wikidata_sim = double_center(wikidata_sim)
         
-        # Combine (Weighted Average)
-        # 0.55 Semantic + 0.15 Lexical + 0.15 WordNet + 0.15 WikiData
         sim_matrix = 0.55 * semantic_sim + 0.15 * lexical_sim + 0.15 * wordnet_sim + 0.15 * wikidata_sim
+        np.fill_diagonal(sim_matrix, 0.0)
         
-        np.fill_diagonal(sim_matrix, 0.0) # We might not need diagonal, but solver only uses i<j
-        
-        # Simulate game play greedily
         matched_groups, pred_partitions = simulate_game_greedy(sim_matrix, gt_partitions)
         
         total_groups_matched += matched_groups
-                
         if matched_groups == 4:
             exact_matches += 1
             
-        # Print for all games to file or stdout
         print(f"\nGame {idx+1}")
         print("Ground Truth Groups:")
         for p in gt_partitions:
@@ -153,12 +142,12 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--csv", type=str, default="Connections_Data.csv", help="Path to Connections_Data.csv")
-    parser.add_argument("--limit", type=int, default=None, help="Limit number of games to evaluate")
+    parser.add_argument("--limit", type=int, default=100, help="Limit number of games to evaluate")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducibility")
     args = parser.parse_args()
     
-    # Check if file exists
     if not os.path.exists(args.csv):
         print(f"Error: Could not find {args.csv}")
         sys.exit(1)
         
-    evaluate_games(args.csv, limit=args.limit)
+    evaluate_games(args.csv, limit=args.limit, seed=args.seed)

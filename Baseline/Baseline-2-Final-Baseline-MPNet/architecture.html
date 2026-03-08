@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPNet Baseline Architecture - NYT Connections</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --yellow: #f9df6d;
+            --green: #a0c35a;
+            --blue: #a0c3d2;
+            --purple: #b181c4;
+            --bg-glass: rgba(255, 255, 255, 0.85);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #eef2f3 0%, #8e9eab 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+            color: #2d3436;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: #1e272e;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #485e68;
+            font-weight: 400;
+        }
+
+        .architecture-flow {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .step-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 30px 40px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Color assignments for cards */
+        .card-0 {
+            background: var(--yellow);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .card-1 {
+            background: var(--green);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .card-2 {
+            background: var(--blue);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .card-3 {
+            background: var(--purple);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .card-0,
+        .card-1,
+        .card-2,
+        .card-3 {
+            color: #000;
+        }
+
+        .card-0 .step-tag,
+        .card-1 .step-tag,
+        .card-2 .step-tag,
+        .card-3 .step-tag {
+            background: rgba(255, 255, 255, 0.4);
+            color: #000;
+        }
+
+        .step-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .step-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .step-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .connector {
+            width: 3px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .connector::after {
+            content: '▼';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(0, 0, 0, 0.2);
+            font-size: 12px;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .group-pill {
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .group-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+        }
+
+        .highlight-chip {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-card {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .step-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .step-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .step-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .step-card:nth-child(7) {
+            animation-delay: 0.7s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Final Baseline Architecture (MPNet)</h1>
+        <div class="subtitle">Neural Contextual Embeddings & Hungarian Optimization</div>
+    </header>
+
+    <div class="architecture-flow">
+
+        <!-- Step 1 -->
+        <div class="step-card card-0">
+            <span class="step-tag">Input Phase</span>
+            <div class="step-title">16 Puzzle Tokens</div>
+            <div class="step-desc">The system takes the 16 words from the Connections board as input (e.g., <span
+                    class="highlight-chip">LEAD</span>, <span class="highlight-chip">TIN</span>, <span
+                    class="highlight-chip">BOTTLE</span>, <span class="highlight-chip">JAR</span>).</div>
+        </div>
+
+        <div class="connector"></div>
+
+        <!-- Step 2 -->
+        <div class="step-card card-1">
+            <span class="step-tag">Deep Embedding</span>
+            <div class="step-title">all-mpnet-base-v2 Context Layer</div>
+            <div class="step-desc">Words are mapped to a 768-dimensional space using a pre-trained Transformer model. We
+                also calculate <strong>Lexical Similarity</strong> (character n-grams) to catch syntactic patterns,
+                resulting in a dual-similarity matrix.</div>
+        </div>
+
+        <div class="connector"></div>
+
+        <!-- Step 3 -->
+        <div class="step-card card-2">
+            <span class="step-tag">Preprocessing</span>
+            <div class="step-title">Double Centering Transformer</div>
+            <div class="step-desc">To improve clustering quality, the similarity matrix is <strong>Double
+                    Centered</strong> (subtracting row/column means). This highlights the relative uniqueness of word
+                relationships within the specific 16-word board context.</div>
+        </div>
+
+        <div class="connector"></div>
+
+        <!-- Step 4 -->
+        <div class="step-card card-3">
+            <span class="step-tag">Constraint Solving</span>
+            <div class="step-title">Hungarian Algorithm (Size-Constrained)</div>
+            <div class="step-desc">Unlike standard K-Means, this layer enforces a <strong>Quadratic Assignment</strong>
+                that guarantees exactly 4 groups of 4. It treats word-grouping as a bipartite matching problem to
+                minimize total semantic cost.</div>
+
+            <div class="output-grid">
+                <div class="group-pill"><span class="group-label">Group 0</span>Yellow (Easy)</div>
+                <div class="group-pill"><span class="group-label">Group 1</span>Green (Medium)</div>
+                <div class="group-pill"><span class="group-label">Group 2</span>Blue (Medium-Hard)</div>
+                <div class="group-pill"><span class="group-label">Group 3</span>Purple (Hard)</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

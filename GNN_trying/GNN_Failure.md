@@ -1,3 +1,5 @@
+### GNN Model Architecture (Overview)
+
 ### 1. Fundamental Architectural Issues
 
 The initial approach of modeling NYT Connections using an R-GCN suffered from core theoretical and structural incompatibilities with the nature of lateral word association puzzles.

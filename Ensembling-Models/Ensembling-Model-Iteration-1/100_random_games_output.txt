@@ -1,0 +1,1402 @@
+Loading data...
+Randomly selecting 100 games...
+Loaded 100 valid games to evaluate.
+Initializing embedder...
+Loading embedding model: all-mpnet-base-v2...
+Model loaded.
+Evaluating...
+
+Game 1
+Ground Truth Groups:
+  ['SILVER', 'CRYSTAL', 'CHINA', 'LINEN']
+  ['BIKE', 'BOXER', 'BERMUDA', 'CARGO']
+  ['PANAMA', 'PLAN', 'MAN', 'CANAL']
+  ['BRAZIL', 'WITNESS', 'CLUE', 'COMMANDO']
+Predictions sequence (lives used when wrong):
+  Wrong: ['CHINA', 'BRAZIL', 'PANAMA', 'BERMUDA']
+  Wrong: ['CHINA', 'BRAZIL', 'PANAMA', 'CANAL']
+  Wrong: ['BRAZIL', 'PANAMA', 'BERMUDA', 'CANAL']
+  Wrong: ['CRYSTAL', 'BRAZIL', 'PANAMA', 'CHINA']
+Matched Groups: 0/4
+
+Game 2
+Ground Truth Groups:
+  ['SHOW', 'EXHIBIT', 'DISPLAY', 'PRESENT']
+  ['DONUT', 'LIFESAVER', 'BAGEL', 'CHEERIO']
+  ['REINDEER', 'STOCKING', 'MISTLETOE', 'SNOWMAN']
+  ['REFEREE', 'TIGER', 'CANDY CANE', 'CROSSWALK']
+Predictions sequence (lives used when wrong):
+  Correct: ['SHOW', 'EXHIBIT', 'DISPLAY', 'PRESENT']
+  Wrong: ['DONUT', 'TIGER', 'BAGEL', 'CANDY CANE']
+  Wrong: ['DONUT', 'BAGEL', 'CANDY CANE', 'MISTLETOE']
+  One-Away: ['DONUT', 'BAGEL', 'CANDY CANE', 'CHEERIO']
+  Correct: ['REINDEER', 'STOCKING', 'MISTLETOE', 'SNOWMAN']
+  One-Away: ['DONUT', 'LIFESAVER', 'BAGEL', 'CANDY CANE']
+Matched Groups: 2/4
+
+Game 3
+Ground Truth Groups:
+  ['PETTY', 'CRUISE', 'WAITS', 'HOLLAND']
+  ['ECHO', 'PARROT', 'COPY', 'MIMIC']
+  ['POLAND', 'PORTUGAL', 'DENMARK', 'GREECE']
+  ['MILD', 'LIVID', 'MIX', 'DILL']
+Predictions sequence (lives used when wrong):
+  One-Away: ['POLAND', 'DENMARK', 'HOLLAND', 'GREECE']
+  One-Away: ['POLAND', 'PORTUGAL', 'HOLLAND', 'GREECE']
+  Correct: ['POLAND', 'PORTUGAL', 'DENMARK', 'GREECE']
+  One-Away: ['PETTY', 'MILD', 'MIX', 'DILL']
+  One-Away: ['PETTY', 'MILD', 'LIVID', 'DILL']
+Matched Groups: 1/4
+
+Game 4
+Ground Truth Groups:
+  ['UBER', 'PHOTOSHOP', 'GOOGLE', 'ZOOM']
+  ['SWAN', 'LOVE', 'FOLK', 'SIREN']
+  ['MIEN', 'VIAL', 'FOWL', 'OFFAL']
+  ['YAHOO', 'DODO', 'GOOSE', 'GOOF']
+Predictions sequence (lives used when wrong):
+  Wrong: ['SWAN', 'DODO', 'GOOSE', 'FOWL']
+  Wrong: ['SWAN', 'DODO', 'FOWL', 'SIREN']
+  Wrong: ['SWAN', 'GOOSE', 'FOWL', 'SIREN']
+  Wrong: ['SWAN', 'GOOSE', 'FOWL', 'OFFAL']
+Matched Groups: 0/4
+
+Game 5
+Ground Truth Groups:
+  ['GUESS', 'WIND', 'NATURE', 'FIDDLE']
+  ['FRONT', 'CHARADE', 'AIRS', 'AFFECT']
+  ['PAGE', 'KING', 'WATERS', 'BERRY']
+  ['TITLE', 'CAST', 'PLOT', 'GENRE']
+Predictions sequence (lives used when wrong):
+  Wrong: ['AIRS', 'WIND', 'NATURE', 'WATERS']
+  Wrong: ['FRONT', 'AIRS', 'WIND', 'WATERS']
+  One-Away: ['KING', 'NATURE', 'WATERS', 'BERRY']
+  One-Away: ['KING', 'AIRS', 'WATERS', 'BERRY']
+Matched Groups: 0/4
+
+Game 6
+Ground Truth Groups:
+  ['HONEY', 'PLATINUM', 'DIRTY', 'STRAWBERRY']
+  ['WIND', 'TOOT', 'GAS', 'STINKER']
+  ['GARISH', 'LOUD', 'BRIGHT', 'FLASHY']
+  ['OF', 'ZERO', 'HUG', 'OXYGEN']
+Predictions sequence (lives used when wrong):
+  Correct: ['GARISH', 'LOUD', 'BRIGHT', 'FLASHY']
+  Wrong: ['WIND', 'PLATINUM', 'OXYGEN', 'GAS']
+  One-Away: ['WIND', 'STINKER', 'OXYGEN', 'GAS']
+  Wrong: ['WIND', 'GAS', 'OXYGEN', 'STRAWBERRY']
+  Wrong: ['WIND', 'ZERO', 'OXYGEN', 'GAS']
+Matched Groups: 1/4
+
+Game 7
+Ground Truth Groups:
+  ['DUST', 'BAD', 'BUGS', 'HONEY']
+  ['SOCK', 'BLOW', 'STRIKE', 'LICK']
+  ['IRON', 'THIMBLE', 'BOOT', 'TOP HAT']
+  ['BASE', 'GLOVE', 'BALL', 'BAT']
+Predictions sequence (lives used when wrong):
+  One-Away: ['BLOW', 'STRIKE', 'HONEY', 'LICK']
+  Wrong: ['DUST', 'BLOW', 'STRIKE', 'HONEY']
+  Wrong: ['BAD', 'BLOW', 'STRIKE', 'HONEY']
+  Wrong: ['DUST', 'IRON', 'STRIKE', 'HONEY']
+Matched Groups: 0/4
+
+Game 8
+Ground Truth Groups:
+  ['WELL', 'UM', 'ERM', 'UH']
+  ['LIKE', 'SUBSCRIBE', 'SHARE', 'FOLLOW']
+  ['SCRUBS', 'RATCHED', 'HOUSE', 'ER']
+  ['SEAM', 'HEM', 'DARN', 'SEW']
+Predictions sequence (lives used when wrong):
+  One-Away: ['UM', 'ERM', 'ER', 'UH']
+  One-Away: ['WELL', 'UM', 'ER', 'UH']
+  Correct: ['WELL', 'UM', 'ERM', 'UH']
+  Correct: ['LIKE', 'SUBSCRIBE', 'SHARE', 'FOLLOW']
+  One-Away: ['SEAM', 'HEM', 'RATCHED', 'SEW']
+  One-Away: ['SEAM', 'HOUSE', 'HEM', 'SEW']
+Matched Groups: 2/4
+
+Game 9
+Ground Truth Groups:
+  ['FLING', 'AFFAIR', 'RELATIONS', 'THING']
+  ['KEY', 'CODE', 'PIN', 'PASSWORD']
+  ['LEGEND', 'CARPENTER', 'CANDY', 'MAJOR']
+  ['MIRROR', 'BENCH', 'SCALE', 'LOCKER']
+Predictions sequence (lives used when wrong):
+  Wrong: ['FLING', 'KEY', 'PASSWORD', 'LOCKER']
+  Wrong: ['FLING', 'KEY', 'PIN', 'LOCKER']
+  Wrong: ['FLING', 'KEY', 'BENCH', 'LOCKER']
+  Wrong: ['FLING', 'KEY', 'AFFAIR', 'LOCKER']
+Matched Groups: 0/4
+
+Game 10
+Ground Truth Groups:
+  ['CLEAVER', 'BUNKER', 'TANNER', 'PARTRIDGE']
+  ['REPTILE', 'FISH', 'BIRD', 'MAMMAL']
+  ['PLUMBER', 'PRINCESS', 'DINOSAUR', 'MUSHROOM']
+  ['WHISK', 'LADLE', 'GRATER', 'PEELER']
+Predictions sequence (lives used when wrong):
+  One-Away: ['REPTILE', 'DINOSAUR', 'BIRD', 'MAMMAL']
+  One-Away: ['REPTILE', 'FISH', 'DINOSAUR', 'MAMMAL']
+  Correct: ['REPTILE', 'FISH', 'BIRD', 'MAMMAL']
+  One-Away: ['CLEAVER', 'WHISK', 'LADLE', 'PEELER']
+  One-Away: ['CLEAVER', 'WHISK', 'LADLE', 'GRATER']
+Matched Groups: 1/4
+
+Game 11
+Ground Truth Groups:
+  ['CHORAL', 'OPEL', 'PURL', 'QUARTS']
+  ['SWORDS', 'CUPS', 'PENTACLES', 'WANDS']
+  ['KNIT', 'MEND', 'RECOVER', 'HEAL']
+  ['BESIDES', 'SAVE', 'BUT', 'EXCEPT']
+Predictions sequence (lives used when wrong):
+  One-Away: ['MEND', 'SAVE', 'RECOVER', 'HEAL']
+  Correct: ['KNIT', 'MEND', 'RECOVER', 'HEAL']
+  Correct: ['SWORDS', 'CUPS', 'PENTACLES', 'WANDS']
+  Correct: ['BESIDES', 'SAVE', 'BUT', 'EXCEPT']
+  Correct: ['CHORAL', 'OPEL', 'PURL', 'QUARTS']
+Matched Groups: 4/4
+
+Game 12
+Ground Truth Groups:
+  ['PERIOD', 'AGE', 'TIME', 'DAY']
+  ['UNIFORM', 'VICTOR', 'KILO', 'ECHO']
+  ['SUPPORT', 'CHAMPION', 'BACK', 'SECOND']
+  ['ELABORATE', 'MINUTE', 'PARTICULAR', 'THOROUGH']
+Predictions sequence (lives used when wrong):
+  One-Away: ['PERIOD', 'MINUTE', 'TIME', 'DAY']
+  One-Away: ['PERIOD', 'AGE', 'MINUTE', 'TIME']
+  Wrong: ['PERIOD', 'MINUTE', 'SECOND', 'TIME']
+  One-Away: ['AGE', 'MINUTE', 'TIME', 'DAY']
+Matched Groups: 0/4
+
+Game 13
+Ground Truth Groups:
+  ['TACKLE', 'HANDLE', 'FIELD', 'MANAGE']
+  ['CAPITOL', 'TEAPOT', 'ONION', 'CHROME']
+  ['HOLD', 'TRADE', 'SHORT', 'HEDGE']
+  ['SOUR', 'BITTER', 'STOUT', 'BOCK']
+Predictions sequence (lives used when wrong):
+  Wrong: ['HANDLE', 'MANAGE', 'STOUT', 'HEDGE']
+  Wrong: ['HANDLE', 'HOLD', 'STOUT', 'HEDGE']
+  Correct: ['SOUR', 'BITTER', 'STOUT', 'BOCK']
+  Wrong: ['HANDLE', 'HOLD', 'MANAGE', 'HEDGE']
+  Wrong: ['TACKLE', 'HANDLE', 'HOLD', 'HEDGE']
+Matched Groups: 1/4
+
+Game 14
+Ground Truth Groups:
+  ['SMELT', 'CATFISH', 'CARP', 'FLOUNDER']
+  ['OUT', 'STRIKE', 'SAFE', 'BALL']
+  ['WALK', 'SALMON', 'YOLK', 'COLONEL']
+  ['KILN', 'OVEN', 'FURNACE', 'FORGE']
+Predictions sequence (lives used when wrong):
+  One-Away: ['CATFISH', 'SALMON', 'CARP', 'FLOUNDER']
+  Correct: ['KILN', 'OVEN', 'FURNACE', 'FORGE']
+  Correct: ['SMELT', 'CATFISH', 'CARP', 'FLOUNDER']
+  One-Away: ['OUT', 'WALK', 'STRIKE', 'BALL']
+  One-Away: ['OUT', 'WALK', 'SAFE', 'STRIKE']
+  Correct: ['OUT', 'STRIKE', 'SAFE', 'BALL']
+  Correct: ['WALK', 'SALMON', 'YOLK', 'COLONEL']
+Matched Groups: 4/4
+
+Game 15
+Ground Truth Groups:
+  ['SHAKESPEARE', 'RATTLESNAKE', 'ANDROID', 'ROLLERBLADE']
+  ['DANCE', 'SONG', 'MONOLOGUE', 'SKETCH']
+  ['DEED', 'CERTIFICATE', 'TITLE', 'RECEIPT']
+  ['DONUT', 'SAXOPHONE', 'SKATEBOARD', 'PACIFIER']
+Predictions sequence (lives used when wrong):
+  Correct: ['DEED', 'CERTIFICATE', 'TITLE', 'RECEIPT']
+  Wrong: ['SAXOPHONE', 'DANCE', 'ROLLERBLADE', 'SKATEBOARD']
+  Wrong: ['DANCE', 'ANDROID', 'ROLLERBLADE', 'SKATEBOARD']
+  Wrong: ['SAXOPHONE', 'ANDROID', 'ROLLERBLADE', 'SKATEBOARD']
+  Wrong: ['DANCE', 'ROLLERBLADE', 'SKATEBOARD', 'SKETCH']
+Matched Groups: 1/4
+
+Game 16
+Ground Truth Groups:
+  ['OK', 'FAIR', 'AVERAGE', 'SO-SO']
+  ['COWBOY', 'ANKLE', 'GO-GO', 'THIGH-HIGH']
+  ['ELEVATOR', 'SUN', 'TIDE', 'YO-YO']
+  ['HI', 'PA', 'OR', 'MA']
+Predictions sequence (lives used when wrong):
+  One-Away: ['OK', 'HI', 'PA', 'MA']
+  Correct: ['HI', 'PA', 'OR', 'MA']
+  Correct: ['OK', 'FAIR', 'AVERAGE', 'SO-SO']
+  One-Away: ['COWBOY', 'THIGH-HIGH', 'YO-YO', 'GO-GO']
+  Wrong: ['COWBOY', 'ELEVATOR', 'YO-YO', 'GO-GO']
+  One-Away: ['COWBOY', 'ANKLE', 'YO-YO', 'GO-GO']
+Matched Groups: 2/4
+
+Game 17
+Ground Truth Groups:
+  ['TUG', 'FERRY', 'JUNK', 'YACHT']
+  ['CHUCK', 'SUE', 'JOSH', 'ROB']
+  ['CUBAN', 'CLUB', 'SUB', 'MELT']
+  ['LOIN', 'SHANK', 'ROUND', 'FLANK']
+Predictions sequence (lives used when wrong):
+  One-Away: ['CHUCK', 'SHANK', 'ROUND', 'FLANK']
+  Correct: ['TUG', 'FERRY', 'JUNK', 'YACHT']
+  Correct: ['LOIN', 'SHANK', 'ROUND', 'FLANK']
+  Wrong: ['CUBAN', 'CLUB', 'JOSH', 'ROB']
+  One-Away: ['SUE', 'JOSH', 'ROB', 'MELT']
+  Wrong: ['CLUB', 'JOSH', 'ROB', 'SUB']
+Matched Groups: 2/4
+
+Game 18
+Ground Truth Groups:
+  ['PAD', 'MAC', 'PHONE', 'POD']
+  ['LIMA', 'JOB', 'POLISH', 'MOBILE']
+  ['CUBE', 'CONE', 'SPHERE', 'PYRAMID']
+  ['CUCUMBER', 'TOMATO', 'EGGPLANT', 'PEPPER']
+Predictions sequence (lives used when wrong):
+  Wrong: ['MOBILE', 'JOB', 'MAC', 'PHONE']
+  Wrong: ['LIMA', 'MAC', 'PHONE', 'MOBILE']
+  One-Away: ['PAD', 'MOBILE', 'MAC', 'PHONE']
+  One-Away: ['MOBILE', 'MAC', 'PHONE', 'POD']
+Matched Groups: 0/4
+
+Game 19
+Ground Truth Groups:
+  ['FLOOR', 'VAULT', 'RINGS', 'HORSE']
+  ['SHINE', 'GLOW', 'RADIATE', 'BEAM']
+  ['EXCEL', 'CUTIE', 'ENVY', 'SEEDY']
+  ['GOAT', 'COW', 'BUFFALO', 'SHEEP']
+Predictions sequence (lives used when wrong):
+  Correct: ['SHINE', 'GLOW', 'RADIATE', 'BEAM']
+  One-Away: ['GOAT', 'COW', 'HORSE', 'SHEEP']
+  One-Away: ['COW', 'BUFFALO', 'HORSE', 'SHEEP']
+  Correct: ['GOAT', 'COW', 'BUFFALO', 'SHEEP']
+  Correct: ['FLOOR', 'VAULT', 'RINGS', 'HORSE']
+  Correct: ['EXCEL', 'CUTIE', 'ENVY', 'SEEDY']
+Matched Groups: 4/4
+
+Game 20
+Ground Truth Groups:
+  ['HEAD', 'BULB', 'EAR', 'STALK']
+  ['ENGINE', 'WING', 'CABIN', 'NOSE']
+  ['CANDLE', 'SEAL', 'CRAYON', 'HONEYCOMB']
+  ['HOSE', 'STIFF', 'FLEECE', 'ROB']
+Predictions sequence (lives used when wrong):
+  One-Away: ['HEAD', 'EAR', 'STALK', 'NOSE']
+  One-Away: ['HEAD', 'BULB', 'EAR', 'NOSE']
+  Wrong: ['HEAD', 'WING', 'EAR', 'NOSE']
+  Wrong: ['HEAD', 'SEAL', 'EAR', 'NOSE']
+Matched Groups: 0/4
+
+Game 21
+Ground Truth Groups:
+  ['BISHOP', 'CARDINAL', 'PRIOR', 'PASTOR']
+  ['BROTHER', 'PLEASE', 'LORD', 'SHEESH']
+  ['QUEEN', 'MADONNA', 'HEART', 'PRINCE']
+  ['ROAM', 'DELI', 'NIECE', 'SOUL']
+Predictions sequence (lives used when wrong):
+  One-Away: ['BISHOP', 'CARDINAL', 'PASTOR', 'LORD']
+  One-Away: ['QUEEN', 'MADONNA', 'NIECE', 'PRINCE']
+  One-Away: ['BISHOP', 'CARDINAL', 'PASTOR', 'ROAM']
+  Correct: ['BISHOP', 'CARDINAL', 'PRIOR', 'PASTOR']
+  One-Away: ['LORD', 'QUEEN', 'MADONNA', 'PRINCE']
+Matched Groups: 1/4
+
+Game 22
+Ground Truth Groups:
+  ['THRONE', 'REST', 'POWDER', 'BATH']
+  ['SHRED', 'TRACE', 'LICK', 'OUNCE']
+  ['TWISTED', 'GNARLY', 'BENT', 'WARPED']
+  ['ROOT', 'RADICAL', 'EXPONENT', 'POWER']
+Predictions sequence (lives used when wrong):
+  Correct: ['TWISTED', 'GNARLY', 'BENT', 'WARPED']
+  Correct: ['ROOT', 'RADICAL', 'EXPONENT', 'POWER']
+  One-Away: ['SHRED', 'REST', 'POWDER', 'BATH']
+  Correct: ['THRONE', 'REST', 'POWDER', 'BATH']
+  Correct: ['SHRED', 'TRACE', 'LICK', 'OUNCE']
+Matched Groups: 4/4
+
+Game 23
+Ground Truth Groups:
+  ['PICKLE', 'FERMENT', 'FREEZE', 'CAN']
+  ['GRIND', 'GRATE', 'SCRAPE', 'GNASH']
+  ['BEANS', 'MILK', 'TEA', 'GUTS']
+  ['SYRUP', 'JAM', 'HOT SAUCE', 'BUTTER']
+Predictions sequence (lives used when wrong):
+  Correct: ['GRIND', 'GRATE', 'SCRAPE', 'GNASH']
+  Wrong: ['SYRUP', 'MILK', 'TEA', 'BUTTER']
+  Wrong: ['SYRUP', 'FERMENT', 'MILK', 'TEA']
+  One-Away: ['MILK', 'SYRUP', 'HOT SAUCE', 'BUTTER']
+  Wrong: ['FERMENT', 'MILK', 'SYRUP', 'BUTTER']
+Matched Groups: 1/4
+
+Game 24
+Ground Truth Groups:
+  ['COCONUT', 'MANGO', 'PINEAPPLE', 'BANANA']
+  ['ZIP', 'GIF', 'PDF', 'TIFF']
+  ['EMU', 'PENGUIN', 'KIWI', 'OSTRICH']
+  ['GRUMPY', 'DOC', 'HAPPY', 'BASHFUL']
+Predictions sequence (lives used when wrong):
+  Correct: ['COCONUT', 'MANGO', 'PINEAPPLE', 'BANANA']
+  One-Away: ['GRUMPY', 'GIF', 'HAPPY', 'BASHFUL']
+  Correct: ['ZIP', 'GIF', 'PDF', 'TIFF']
+  Correct: ['EMU', 'PENGUIN', 'KIWI', 'OSTRICH']
+  Correct: ['GRUMPY', 'DOC', 'HAPPY', 'BASHFUL']
+Matched Groups: 4/4
+
+Game 25
+Ground Truth Groups:
+  ['COMETS', 'COIN TOSS', 'SONIC THE HEDGEHOG', 'DRESS COAT']
+  ['FICTION', 'INVENTION', 'FANTASY', 'FAIRY TALE']
+  ['CENTIPEDE', 'DEFENDER', 'ASTEROIDS', 'BREAKOUT']
+  ['ROMANCE', 'COURT', 'CHARM', 'PURSUE']
+Predictions sequence (lives used when wrong):
+  One-Away: ['FICTION', 'ROMANCE', 'FANTASY', 'FAIRY TALE']
+  Wrong: ['FICTION', 'ROMANCE', 'CHARM', 'FANTASY']
+  One-Away: ['COMETS', 'CENTIPEDE', 'DEFENDER', 'ASTEROIDS']
+  Wrong: ['COMETS', 'INVENTION', 'CENTIPEDE', 'ASTEROIDS']
+Matched Groups: 0/4
+
+Game 26
+Ground Truth Groups:
+  ['WAY', 'WHY', 'WHOA', 'WEE']
+  ['WEED', 'SEED', 'WATER', 'PLANT']
+  ['PYRAMID', 'WHEEL', 'MILLIONAIRE', 'FEUD']
+  ['GREEK', 'WEDGE', 'GREEN', 'CAESAR']
+Predictions sequence (lives used when wrong):
+  One-Away: ['WEED', 'SEED', 'GREEN', 'PLANT']
+  Correct: ['WEED', 'SEED', 'WATER', 'PLANT']
+  Correct: ['WAY', 'WHY', 'WHOA', 'WEE']
+  One-Away: ['GREEK', 'MILLIONAIRE', 'GREEN', 'CAESAR']
+  Wrong: ['PYRAMID', 'GREEK', 'MILLIONAIRE', 'CAESAR']
+  Wrong: ['GREEK', 'MILLIONAIRE', 'CAESAR', 'FEUD']
+Matched Groups: 2/4
+
+Game 27
+Ground Truth Groups:
+  ['FIGHT', 'RESOLVE', 'GRIT', 'SPIRIT']
+  ['QUIT', 'TIMEOUT', 'FREEZE', 'GLITCH']
+  ['HOTEL', 'FLIGHT', 'TOUR', 'CAR']
+  ['FAWN', 'MOUSE', 'ELEPHANT', 'MARIONETTE']
+Predictions sequence (lives used when wrong):
+  Correct: ['FAWN', 'MOUSE', 'ELEPHANT', 'MARIONETTE']
+  Correct: ['FIGHT', 'RESOLVE', 'GRIT', 'SPIRIT']
+  Correct: ['HOTEL', 'FLIGHT', 'TOUR', 'CAR']
+  Correct: ['QUIT', 'TIMEOUT', 'FREEZE', 'GLITCH']
+Matched Groups: 4/4
+
+Game 28
+Ground Truth Groups:
+  ['HUNT', 'OXEN', 'FORD', 'DYSENTERY']
+  ['CHECK', 'DAM', 'BLOCK', 'STOP']
+  ['GAME', 'MOVIE', 'PLAY', 'CONCERT']
+  ['ACTOR', 'PRESIDENT', 'CAR', 'DIRECTOR']
+Predictions sequence (lives used when wrong):
+  One-Away: ['ACTOR', 'FORD', 'PRESIDENT', 'DIRECTOR']
+  Correct: ['GAME', 'MOVIE', 'PLAY', 'CONCERT']
+  One-Away: ['HUNT', 'ACTOR', 'PRESIDENT', 'DIRECTOR']
+  One-Away: ['OXEN', 'ACTOR', 'PRESIDENT', 'DIRECTOR']
+  One-Away: ['ACTOR', 'FORD', 'CAR', 'DIRECTOR']
+Matched Groups: 1/4
+
+Game 29
+Ground Truth Groups:
+  ['DIVE', 'JOINT', 'ESTABLISHMENT', 'HAUNT']
+  ['MUTUAL', 'SLUSH', 'HEDGE', 'TRUST']
+  ['FENCE', 'RIDE', 'SWIM', 'SHOOT']
+  ['GUARANTEE', 'LOCK', 'CINCH', 'ICE']
+Predictions sequence (lives used when wrong):
+  One-Away: ['DIVE', 'RIDE', 'SWIM', 'SHOOT']
+  Wrong: ['DIVE', 'RIDE', 'SWIM', 'HAUNT']
+  Wrong: ['DIVE', 'RIDE', 'SWIM', 'ICE']
+  Wrong: ['DIVE', 'SLUSH', 'SWIM', 'ICE']
+Matched Groups: 0/4
+
+Game 30
+Ground Truth Groups:
+  ['SPLASH', 'DAB', 'DROP', 'TOUCH']
+  ['SWAB', 'SALTY DOG', 'SKIPPER', 'TAR']
+  ['RAW', 'PLEA', 'BIG', 'SWEETHEART']
+  ['CHAYOTE', 'BITTER MELON', 'SOURSOP', 'DURIAN']
+Predictions sequence (lives used when wrong):
+  Correct: ['CHAYOTE', 'BITTER MELON', 'SOURSOP', 'DURIAN']
+  Correct: ['SPLASH', 'DAB', 'DROP', 'TOUCH']
+  Wrong: ['TAR', 'BIG', 'SKIPPER', 'SWEETHEART']
+  One-Away: ['RAW', 'BIG', 'SKIPPER', 'SWEETHEART']
+  Wrong: ['RAW', 'TAR', 'SKIPPER', 'SWEETHEART']
+  One-Away: ['SWAB', 'TAR', 'SKIPPER', 'SWEETHEART']
+Matched Groups: 2/4
+
+Game 31
+Ground Truth Groups:
+  ['TONGUE', 'SPEECH', 'LANGUAGE', 'DIALECT']
+  ['BANDAGE', 'TAPE', 'SCISSORS', 'DRESSING']
+  ['CRAFTSMAN', 'RANCH', 'PRAIRIE', 'COTTAGE']
+  ['MAKE OUT', 'NECK', 'FRENCH', 'KISS']
+Predictions sequence (lives used when wrong):
+  One-Away: ['SPEECH', 'FRENCH', 'LANGUAGE', 'DIALECT']
+  Correct: ['TONGUE', 'SPEECH', 'LANGUAGE', 'DIALECT']
+  Correct: ['BANDAGE', 'TAPE', 'SCISSORS', 'DRESSING']
+  Correct: ['CRAFTSMAN', 'RANCH', 'PRAIRIE', 'COTTAGE']
+  Correct: ['MAKE OUT', 'NECK', 'FRENCH', 'KISS']
+Matched Groups: 4/4
+
+Game 32
+Ground Truth Groups:
+  ['PRIME', 'QUALITY', 'STERLING', 'FINE']
+  ['TORCH', 'TIME', 'BAR', 'BUCK']
+  ['AT', 'DOLLAR', 'PERCENT', 'POUND']
+  ['COIN', 'DEVISE', 'CREATE', 'INVENT']
+Predictions sequence (lives used when wrong):
+  Wrong: ['BUCK', 'COIN', 'DOLLAR', 'POUND']
+  Wrong: ['BUCK', 'COIN', 'STERLING', 'DOLLAR']
+  Wrong: ['COIN', 'STERLING', 'DOLLAR', 'POUND']
+  Wrong: ['BUCK', 'COIN', 'BAR', 'DOLLAR']
+Matched Groups: 0/4
+
+Game 33
+Ground Truth Groups:
+  ['COACH', 'BLOSSOM', 'COMMUNITY', 'FULL HOUSE']
+  ['BURN', 'FLUSH', 'BLUSH', 'GLOW']
+  ['STRAIGHT', 'NONSTOP', 'SOLID', 'CONSECUTIVE']
+  ['TASTING', 'SAMPLER', 'FLIGHT', 'PLATTER']
+Predictions sequence (lives used when wrong):
+  Correct: ['BURN', 'FLUSH', 'BLUSH', 'GLOW']
+  One-Away: ['STRAIGHT', 'NONSTOP', 'FLIGHT', 'CONSECUTIVE']
+  Correct: ['STRAIGHT', 'NONSTOP', 'SOLID', 'CONSECUTIVE']
+  Wrong: ['COACH', 'SAMPLER', 'COMMUNITY', 'PLATTER']
+  One-Away: ['COACH', 'SAMPLER', 'TASTING', 'PLATTER']
+  One-Away: ['COACH', 'SAMPLER', 'FLIGHT', 'PLATTER']
+Matched Groups: 2/4
+
+Game 34
+Ground Truth Groups:
+  ['GREAT', 'GRAND', 'NOBLE', 'LOFTY']
+  ['GUITAR', 'LAMP', 'GIRAFFE', 'BOTTLE']
+  ['DUKE', 'DIZZY', 'CAB', 'COUNT']
+  ['MILD', 'SOFT', 'LIGHT', 'FAINT']
+Predictions sequence (lives used when wrong):
+  One-Away: ['DIZZY', 'SOFT', 'MILD', 'FAINT']
+  One-Away: ['SOFT', 'MILD', 'LOFTY', 'FAINT']
+  Wrong: ['GUITAR', 'LAMP', 'CAB', 'LIGHT']
+  One-Away: ['GUITAR', 'LAMP', 'BOTTLE', 'LIGHT']
+Matched Groups: 0/4
+
+Game 35
+Ground Truth Groups:
+  ['VOLLEYBALL', 'TABLE', 'MOOD', 'RECORD']
+  ['SQUASH', 'CRUSH', 'MASH', 'PRESS']
+  ['SKELETON', 'HOCKEY', 'TRAMPOLINE', 'BREAKING']
+  ['FROG', 'KANGAROO', 'CRICKET', 'HARE']
+Predictions sequence (lives used when wrong):
+  Correct: ['FROG', 'KANGAROO', 'CRICKET', 'HARE']
+  Correct: ['SQUASH', 'CRUSH', 'MASH', 'PRESS']
+  Wrong: ['VOLLEYBALL', 'HOCKEY', 'RECORD', 'TRAMPOLINE']
+  One-Away: ['VOLLEYBALL', 'SKELETON', 'HOCKEY', 'TRAMPOLINE']
+  Wrong: ['VOLLEYBALL', 'TABLE', 'HOCKEY', 'TRAMPOLINE']
+  Wrong: ['VOLLEYBALL', 'HOCKEY', 'RECORD', 'BREAKING']
+Matched Groups: 2/4
+
+Game 36
+Ground Truth Groups:
+  ['NASA', 'PARAMOUNT', 'SUBARU', 'N.F.L.']
+  ['READY', 'PREPARE', 'OUTFIT', 'EQUIP']
+  ['DOWN', 'WILLING', 'EAGER', 'GAME']
+  ['CANE', 'ABLE', 'NOAA', 'EAVE']
+Predictions sequence (lives used when wrong):
+  Wrong: ['PREPARE', 'READY', 'WILLING', 'ABLE']
+  Wrong: ['READY', 'WILLING', 'ABLE', 'EAGER']
+  Wrong: ['READY', 'WILLING', 'PREPARE', 'EAGER']
+  Wrong: ['DOWN', 'READY', 'WILLING', 'ABLE']
+Matched Groups: 0/4
+
+Game 37
+Ground Truth Groups:
+  ['JOHN', 'CAN', 'HEAD', 'THRONE']
+  ['CALF', 'CUB', 'JOEY', 'KID']
+  ['CRAY', 'STAR', 'SILVER', 'JELLY']
+  ['ANKLE', 'KNEE', 'SHIN', 'THIGH']
+Predictions sequence (lives used when wrong):
+  Correct: ['ANKLE', 'KNEE', 'SHIN', 'THIGH']
+  Wrong: ['JOHN', 'CUB', 'JOEY', 'JELLY']
+  Wrong: ['JOHN', 'CRAY', 'JOEY', 'JELLY']
+  Wrong: ['JOHN', 'KID', 'JOEY', 'JELLY']
+  Wrong: ['STAR', 'SILVER', 'THRONE', 'KID']
+Matched Groups: 1/4
+
+Game 38
+Ground Truth Groups:
+  ['SPECIAL', 'DEAL', 'PROMOTION', 'SALE']
+  ['BUG', 'RUFFLE', 'STEAM', 'NETTLE']
+  ['CHECK', 'RAISE', 'CALL', 'FOLD']
+  ['GAS', 'FIST', 'BRAKES', 'IRON']
+Predictions sequence (lives used when wrong):
+  Correct: ['SPECIAL', 'DEAL', 'PROMOTION', 'SALE']
+  One-Away: ['GAS', 'STEAM', 'BRAKES', 'IRON']
+  One-Away: ['BUG', 'GAS', 'BRAKES', 'IRON']
+  Wrong: ['RUFFLE', 'FIST', 'NETTLE', 'FOLD']
+  Wrong: ['BUG', 'GAS', 'IRON', 'CHECK']
+Matched Groups: 1/4
+
+Game 39
+Ground Truth Groups:
+  ['MAIN', 'FLEET', 'WALL', 'DOWNING']
+  ['INSET', 'SCALE', 'KEY', 'COMPASS']
+  ['DOOR', 'PORTAL', 'HATCH', 'GATE']
+  ['BEST', 'BEAT', 'TOP', 'BETTER']
+Predictions sequence (lives used when wrong):
+  One-Away: ['DOOR', 'PORTAL', 'WALL', 'GATE']
+  Correct: ['DOOR', 'PORTAL', 'HATCH', 'GATE']
+  One-Away: ['BEST', 'BEAT', 'BETTER', 'DOWNING']
+  Correct: ['BEST', 'BEAT', 'TOP', 'BETTER']
+  One-Away: ['MAIN', 'FLEET', 'COMPASS', 'DOWNING']
+  One-Away: ['MAIN', 'SCALE', 'FLEET', 'DOWNING']
+Matched Groups: 2/4
+
+Game 40
+Ground Truth Groups:
+  ['SCARF', 'GORGE', 'GULP', 'WOLF']
+  ['PASS', 'RAVINE', 'CANYON', 'GULCH']
+  ['MIRROR', 'BASHFUL', 'APPLE', 'QUEEN']
+  ['CRAVEN', 'CLARK', 'CHEN', 'COWL']
+Predictions sequence (lives used when wrong):
+  One-Away: ['CANYON', 'GORGE', 'RAVINE', 'GULCH']
+  One-Away: ['CANYON', 'RAVINE', 'COWL', 'GULCH']
+  Wrong: ['CANYON', 'GORGE', 'CLARK', 'RAVINE']
+  One-Away: ['PASS', 'GORGE', 'RAVINE', 'GULCH']
+Matched Groups: 0/4
+
+Game 41
+Ground Truth Groups:
+  ['BOSS', 'LEVEL', 'HEALTH', 'POWER-UP']
+  ['GOOSE', 'SUPERIOR', 'MAY I', 'EARTH']
+  ['PLEASE', 'TICKLE', 'SUIT', 'DELIGHT']
+  ['DUCK', 'DODGE', 'SHAKE', 'SKIRT']
+Predictions sequence (lives used when wrong):
+  Wrong: ['GOOSE', 'SUIT', 'DUCK', 'SKIRT']
+  One-Away: ['GOOSE', 'DUCK', 'DODGE', 'SKIRT']
+  Wrong: ['BOSS', 'SUPERIOR', 'SUIT', 'SKIRT']
+  One-Away: ['GOOSE', 'DUCK', 'DODGE', 'SHAKE']
+Matched Groups: 0/4
+
+Game 42
+Ground Truth Groups:
+  ['JFK', 'NIXON', 'WALL STREET', 'PLATOON']
+  ['QUEEN', 'GIMME', 'TROUPER', 'MIA']
+  ['DEN', 'WARREN', 'LODGE', 'BURROW']
+  ['LOOSE', 'LAX', 'SLACK', 'EASY']
+Predictions sequence (lives used when wrong):
+  Correct: ['LOOSE', 'LAX', 'SLACK', 'EASY']
+  Wrong: ['JFK', 'QUEEN', 'WARREN', 'NIXON']
+  Wrong: ['JFK', 'QUEEN', 'NIXON', 'TROUPER']
+  One-Away: ['JFK', 'QUEEN', 'NIXON', 'WALL STREET']
+  Correct: ['DEN', 'WARREN', 'LODGE', 'BURROW']
+  One-Away: ['JFK', 'QUEEN', 'NIXON', 'PLATOON']
+Matched Groups: 2/4
+
+Game 43
+Ground Truth Groups:
+  ['SEA', 'LOOSE', 'CLIMATE', 'CHUMP']
+  ['SMILE', 'EGG', 'KNUCKLES', 'WINDOW']
+  ['CORN', 'CHEESE', 'SCHMALTZ', 'SAP']
+  ['DRAIN', 'DUCT', 'PIPE', 'SEWER']
+Predictions sequence (lives used when wrong):
+  Correct: ['DRAIN', 'DUCT', 'PIPE', 'SEWER']
+  Wrong: ['KNUCKLES', 'EGG', 'CORN', 'CHEESE']
+  One-Away: ['EGG', 'CORN', 'CHEESE', 'SCHMALTZ']
+  Wrong: ['LOOSE', 'EGG', 'CORN', 'CHEESE']
+  Wrong: ['EGG', 'CORN', 'CHEESE', 'CHUMP']
+Matched Groups: 1/4
+
+Game 44
+Ground Truth Groups:
+  ['CAPRI', 'AQUA', 'SAG', 'GEM']
+  ['CRAMP', 'REDDEN', 'SWEAT', 'PANT']
+  ['CARGO', 'HAUL', 'LOAD', 'FREIGHT']
+  ['TAN', 'CAMEL', 'KHAKI', 'FAWN']
+Predictions sequence (lives used when wrong):
+  Correct: ['CARGO', 'HAUL', 'LOAD', 'FREIGHT']
+  Wrong: ['AQUA', 'REDDEN', 'KHAKI', 'TAN']
+  Wrong: ['AQUA', 'REDDEN', 'TAN', 'FAWN']
+  Wrong: ['TAN', 'REDDEN', 'KHAKI', 'PANT']
+  One-Away: ['TAN', 'REDDEN', 'KHAKI', 'FAWN']
+Matched Groups: 1/4
+
+Game 45
+Ground Truth Groups:
+  ['RIDGE', 'CRAG', 'LEDGE', 'CLIFF']
+  ['GANDER', 'GLANCE', 'LOOK', 'GLIMPSE']
+  ['BLUFF', 'FRONT', 'CHARADE', 'ACT']
+  ['PIQUE', 'PEEK', 'PEKE', 'PEAK']
+Predictions sequence (lives used when wrong):
+  One-Away: ['GLANCE', 'PEEK', 'LOOK', 'GLIMPSE']
+  Wrong: ['GLANCE', 'PEEK', 'GLIMPSE', 'ACT']
+  Correct: ['RIDGE', 'CRAG', 'LEDGE', 'CLIFF']
+  Wrong: ['GLANCE', 'PEEK', 'PEAK', 'GLIMPSE']
+  Wrong: ['GLANCE', 'PEEK', 'LOOK', 'ACT']
+Matched Groups: 1/4
+
+Game 46
+Ground Truth Groups:
+  ['PRIME', 'PARAMOUNT', 'MAIN', 'SUPREME']
+  ['LOVE', 'SCARLET', 'COVER', 'CHAIN']
+  ['WHITE', 'GREEN', 'BLUE', 'YELLOW']
+  ['STRUT', 'PEACOCK', 'GRANDSTAND', 'POSTURE']
+Predictions sequence (lives used when wrong):
+  Correct: ['WHITE', 'GREEN', 'BLUE', 'YELLOW']
+  One-Away: ['PARAMOUNT', 'MAIN', 'GRANDSTAND', 'SUPREME']
+  Correct: ['PRIME', 'PARAMOUNT', 'MAIN', 'SUPREME']
+  One-Away: ['COVER', 'STRUT', 'GRANDSTAND', 'POSTURE']
+  Wrong: ['COVER', 'CHAIN', 'STRUT', 'POSTURE']
+  One-Away: ['STRUT', 'CHAIN', 'GRANDSTAND', 'POSTURE']
+Matched Groups: 2/4
+
+Game 47
+Ground Truth Groups:
+  ['APHID', 'BEETLE', 'MITE', 'TICK']
+  ['BEECH', 'CEDAR', 'PINE', 'YEW']
+  ['DECAY', 'EASY', 'GEO', 'ZITI']
+  ['VENDETTA', 'APPLE', 'COOKIE', 'EFFORT']
+Predictions sequence (lives used when wrong):
+  One-Away: ['BEECH', 'PINE', 'CEDAR', 'APPLE']
+  Correct: ['BEECH', 'CEDAR', 'PINE', 'YEW']
+  Correct: ['APHID', 'BEETLE', 'MITE', 'TICK']
+  Wrong: ['VENDETTA', 'DECAY', 'EASY', 'EFFORT']
+  Wrong: ['VENDETTA', 'EASY', 'EFFORT', 'ZITI']
+  Wrong: ['VENDETTA', 'DECAY', 'EFFORT', 'ZITI']
+Matched Groups: 2/4
+
+Game 48
+Ground Truth Groups:
+  ['CARPENTER', 'WOO', 'SCOTT', 'BAY']
+  ['PUPPET', 'INSTRUMENT', 'TOOL', 'PAWN']
+  ['CHARM', 'MAGIC', 'SPELL', 'HEX']
+  ['MASK', 'UNDERWEAR', 'TIGHTS', 'CAPE']
+Predictions sequence (lives used when wrong):
+  Correct: ['MASK', 'UNDERWEAR', 'TIGHTS', 'CAPE']
+  One-Away: ['CHARM', 'MAGIC', 'SPELL', 'WOO']
+  Correct: ['CHARM', 'MAGIC', 'SPELL', 'HEX']
+  Correct: ['PUPPET', 'INSTRUMENT', 'TOOL', 'PAWN']
+  Correct: ['CARPENTER', 'WOO', 'SCOTT', 'BAY']
+Matched Groups: 4/4
+
+Game 49
+Ground Truth Groups:
+  ['DRAW CLOSE', 'HOLD TIGHT', 'NUZZLE', 'SPOON']
+  ['PUZZLE', 'MODEL', 'IKEA FURNITURE', 'LEGO SET']
+  ['ROSTRUM', 'BEAK', 'MUZZLE', 'PROBOSCIS']
+  ['KNOCK BACK', 'GUZZLE', 'SWILL', 'POUND DOWN']
+Predictions sequence (lives used when wrong):
+  Wrong: ['DRAW CLOSE', 'HOLD TIGHT', 'KNOCK BACK', 'POUND DOWN']
+  Wrong: ['NUZZLE', 'GUZZLE', 'SWILL', 'MUZZLE']
+  Correct: ['ROSTRUM', 'BEAK', 'MUZZLE', 'PROBOSCIS']
+  Wrong: ['SPOON', 'NUZZLE', 'GUZZLE', 'SWILL']
+  Wrong: ['PUZZLE', 'NUZZLE', 'GUZZLE', 'SWILL']
+Matched Groups: 1/4
+
+Game 50
+Ground Truth Groups:
+  ['IRIS', 'LENS', 'PUPIL', 'RETINA']
+  ['OUT', 'COPY', 'ROGER', 'OVER']
+  ['FAKE', 'SHAM', 'PHONY', 'BOGUS']
+  ['ALEJANDRO', 'LOLA', 'MICHELLE', 'STAN']
+Predictions sequence (lives used when wrong):
+  Correct: ['FAKE', 'SHAM', 'PHONY', 'BOGUS']
+  Correct: ['IRIS', 'LENS', 'PUPIL', 'RETINA']
+  Correct: ['ALEJANDRO', 'LOLA', 'MICHELLE', 'STAN']
+  Correct: ['OUT', 'COPY', 'ROGER', 'OVER']
+Matched Groups: 4/4
+
+Game 51
+Ground Truth Groups:
+  ['COPPER', 'HACK', 'SHRINK', 'SUIT']
+  ['HONEY', 'SOMEDAY', 'FANTASY', 'HERO']
+  ['COVER', 'BACKUP', 'SUB', 'ALTERNATE']
+  ['FREEZE', 'MELT', 'VAPORIZE', 'CONDENSE']
+Predictions sequence (lives used when wrong):
+  Correct: ['FREEZE', 'MELT', 'VAPORIZE', 'CONDENSE']
+  One-Away: ['COVER', 'BACKUP', 'ALTERNATE', 'SUIT']
+  Wrong: ['HACK', 'SUB', 'FANTASY', 'HERO']
+  Wrong: ['BACKUP', 'ALTERNATE', 'FANTASY', 'HERO']
+  Wrong: ['HACK', 'BACKUP', 'ALTERNATE', 'HERO']
+Matched Groups: 1/4
+
+Game 52
+Ground Truth Groups:
+  ['LINK', 'RELATION', 'TIE', 'BOND']
+  ['LAUNDRY', 'DOZEN', 'MARTINI', 'JOKE']
+  ['BUTTON', 'COLLAR', 'CUFF', 'POCKET']
+  ['HISTORY', 'BOOKMARK', 'WINDOW', 'TAB']
+Predictions sequence (lives used when wrong):
+  One-Away: ['LAUNDRY', 'COLLAR', 'CUFF', 'POCKET']
+  One-Away: ['BUTTON', 'TIE', 'COLLAR', 'CUFF']
+  Correct: ['BUTTON', 'COLLAR', 'CUFF', 'POCKET']
+  Wrong: ['RELATION', 'JOKE', 'TIE', 'HISTORY']
+  Wrong: ['WINDOW', 'TAB', 'MARTINI', 'BOND']
+Matched Groups: 1/4
+
+Game 53
+Ground Truth Groups:
+  ['COAT', 'LAYER', 'FILM', 'SKIN']
+  ['BRUSH', 'SWEEP', 'WIPE', 'FLICK']
+  ['CODE', 'DEVELOP', 'PROGRAM', 'HACK']
+  ['IMAGINE', 'CONCEIVE', 'PICTURE', 'ENVISION']
+Predictions sequence (lives used when wrong):
+  One-Away: ['IMAGINE', 'DEVELOP', 'CONCEIVE', 'ENVISION']
+  One-Away: ['COAT', 'BRUSH', 'SKIN', 'LAYER']
+  Correct: ['BRUSH', 'SWEEP', 'WIPE', 'FLICK']
+  Correct: ['COAT', 'LAYER', 'FILM', 'SKIN']
+  Correct: ['IMAGINE', 'CONCEIVE', 'PICTURE', 'ENVISION']
+  Correct: ['CODE', 'DEVELOP', 'PROGRAM', 'HACK']
+Matched Groups: 4/4
+
+Game 54
+Ground Truth Groups:
+  ['SAFETY', 'BOBBY', 'PUSH', 'HAIR']
+  ['SWAY', 'CLOUT', 'PULL', 'WEIGHT']
+  ['LOOT', 'SACK', 'RAID', 'ROB']
+  ['CROP', 'FADE', 'BOB', 'SHAG']
+Predictions sequence (lives used when wrong):
+  Wrong: ['BOBBY', 'LOOT', 'BOB', 'ROB']
+  Wrong: ['BOBBY', 'SACK', 'BOB', 'ROB']
+  Wrong: ['BOBBY', 'BOB', 'HAIR', 'ROB']
+  Wrong: ['BOBBY', 'BOB', 'SHAG', 'ROB']
+Matched Groups: 0/4
+
+Game 55
+Ground Truth Groups:
+  ['BRICK', 'SHOEBOX', 'FISH TANK', 'MICROWAVE']
+  ['MORTAR', 'PICKLE', 'LIME', 'JENNY']
+  ['BEAUCOUP', 'MUCHO', 'MULTI', 'MOLTO']
+  ['RELISH', 'PASSION', 'ZEST', 'GUSTO']
+Predictions sequence (lives used when wrong):
+  Correct: ['RELISH', 'PASSION', 'ZEST', 'GUSTO']
+  One-Away: ['BRICK', 'MORTAR', 'SHOEBOX', 'MICROWAVE']
+  One-Away: ['BRICK', 'MORTAR', 'SHOEBOX', 'FISH TANK']
+  Wrong: ['BRICK', 'MORTAR', 'SHOEBOX', 'JENNY']
+  Wrong: ['BRICK', 'MORTAR', 'LIME', 'SHOEBOX']
+Matched Groups: 1/4
+
+Game 56
+Ground Truth Groups:
+  ['DART', 'PLEAT', 'HEM', 'SEAM']
+  ['CAN', 'FREEZE', 'DRY', 'CURE']
+  ['SPICE', 'PUNCH', 'BITE', 'EDGE']
+  ['CONDO', 'HAW', 'HERO', 'LOO']
+Predictions sequence (lives used when wrong):
+  One-Away: ['PLEAT', 'HEM', 'SEAM', 'EDGE']
+  One-Away: ['SPICE', 'PUNCH', 'BITE', 'CURE']
+  One-Away: ['DART', 'PLEAT', 'SEAM', 'EDGE']
+  Wrong: ['SPICE', 'FREEZE', 'BITE', 'CURE']
+Matched Groups: 0/4
+
+Game 57
+Ground Truth Groups:
+  ['CONNECTION', 'SPARK', 'CHEMISTRY', 'FIREWORKS']
+  ['HEARTBREAKER', 'BANSHEE', 'PIP', 'WAILER']
+  ['WOOD', 'CARPET', 'LAMINATE', 'TILE']
+  ['COAST', 'STRAND', 'SHORE', 'BANK']
+Predictions sequence (lives used when wrong):
+  Correct: ['WOOD', 'CARPET', 'LAMINATE', 'TILE']
+  Correct: ['COAST', 'STRAND', 'SHORE', 'BANK']
+  Correct: ['CONNECTION', 'SPARK', 'CHEMISTRY', 'FIREWORKS']
+  Correct: ['HEARTBREAKER', 'BANSHEE', 'PIP', 'WAILER']
+Matched Groups: 4/4
+
+Game 58
+Ground Truth Groups:
+  ['PLANE', 'CAR', 'TRAIN', 'BOAT']
+  ['SUN', 'THUNDER', 'KING', 'MAGIC']
+  ['DAY', 'FLOYD', 'STRIPES', 'SABBATH']
+  ['SUBWAY', 'SONIC', 'OUTBACK', 'CHECKERS']
+Predictions sequence (lives used when wrong):
+  Correct: ['PLANE', 'CAR', 'TRAIN', 'BOAT']
+  Wrong: ['SUN', 'DAY', 'THUNDER', 'SABBATH']
+  Wrong: ['SUN', 'DAY', 'SABBATH', 'MAGIC']
+  Wrong: ['SUN', 'DAY', 'SUBWAY', 'SABBATH']
+  One-Away: ['SUN', 'THUNDER', 'SABBATH', 'MAGIC']
+Matched Groups: 1/4
+
+Game 59
+Ground Truth Groups:
+  ['AIRPLANE', 'HOT TUB NOZZLE', 'BLACK', 'NFL PLAYER']
+  ['HIGHWAY', 'VELVET', 'DRIVE', 'PEAKS']
+  ['WHIRLWIND', 'ROLLER COASTER', 'SOAP OPERA', 'CIRCUS']
+  ['FILLING', 'VENEER', 'BRIDGE', 'CROWN']
+Predictions sequence (lives used when wrong):
+  Wrong: ['AIRPLANE', 'HIGHWAY', 'BRIDGE', 'DRIVE']
+  One-Away: ['VENEER', 'FILLING', 'VELVET', 'CROWN']
+  Wrong: ['VENEER', 'VELVET', 'CROWN', 'PEAKS']
+  One-Away: ['VENEER', 'FILLING', 'CROWN', 'PEAKS']
+Matched Groups: 0/4
+
+Game 60
+Ground Truth Groups:
+  ['CHAMPAGNE', 'ANGERS', 'REUNION', 'NICE']
+  ['SUPER', 'HYPER', 'EXTRA', 'OVER']
+  ['FRONTLINE', 'NOVA', 'MASTERPIECE', 'NATURE']
+  ['SURPRISE', 'BIRTHDAY', 'DINNER', 'COCKTAIL']
+Predictions sequence (lives used when wrong):
+  One-Away: ['CHAMPAGNE', 'BIRTHDAY', 'DINNER', 'COCKTAIL']
+  Wrong: ['CHAMPAGNE', 'REUNION', 'DINNER', 'COCKTAIL']
+  One-Away: ['SUPER', 'OVER', 'NICE', 'EXTRA']
+  Wrong: ['CHAMPAGNE', 'MASTERPIECE', 'DINNER', 'COCKTAIL']
+Matched Groups: 0/4
+
+Game 61
+Ground Truth Groups:
+  ['RAY', 'FACTOR', 'FILES', 'GAMES']
+  ['MATCHES', 'LIGHTER', 'FLINT', 'MAGNIFYING GLASS']
+  ['SLIDE', 'STAIN', 'MICROSCOPE', 'SPECIMEN']
+  ['REFLECTION', 'THOUGHT', 'CONSIDERATION', 'SCRUTINY']
+Predictions sequence (lives used when wrong):
+  Correct: ['REFLECTION', 'THOUGHT', 'CONSIDERATION', 'SCRUTINY']
+  Wrong: ['MATCHES', 'LIGHTER', 'FILES', 'GAMES']
+  Wrong: ['MATCHES', 'SLIDE', 'FILES', 'GAMES']
+  One-Away: ['STAIN', 'MICROSCOPE', 'SPECIMEN', 'MAGNIFYING GLASS']
+  One-Away: ['FACTOR', 'FILES', 'GAMES', 'MATCHES']
+Matched Groups: 1/4
+
+Game 62
+Ground Truth Groups:
+  ['GHOST', 'IGNORE', 'DESERT', 'JILT']
+  ['FLOP', 'LEMON', 'DUD', 'BOMB']
+  ['GARDEN', 'STAR', 'BOTTOM', 'CANDY']
+  ['HISS', 'BOO', 'RASPBERRY', 'JEER']
+Predictions sequence (lives used when wrong):
+  Wrong: ['LEMON', 'GARDEN', 'DESERT', 'CANDY']
+  Wrong: ['LEMON', 'GARDEN', 'DESERT', 'RASPBERRY']
+  One-Away: ['HISS', 'BOO', 'JEER', 'JILT']
+  Wrong: ['GARDEN', 'DESERT', 'RASPBERRY', 'CANDY']
+Matched Groups: 0/4
+
+Game 63
+Ground Truth Groups:
+  ['PYRAMID', 'EAGLE', 'SEAL', 'WASHINGTON']
+  ['NORTHWEST', 'PRINCE', 'BRITISH', 'NOVA']
+  ['RACKET', 'STING', 'CON', 'HUSTLE']
+  ['LEAD', 'GUIDE', 'DIRECT', 'USHER']
+Predictions sequence (lives used when wrong):
+  Wrong: ['PRINCE', 'STING', 'HUSTLE', 'USHER']
+  Wrong: ['PRINCE', 'SEAL', 'STING', 'USHER']
+  Wrong: ['NORTHWEST', 'EAGLE', 'WASHINGTON', 'NOVA']
+  Wrong: ['PRINCE', 'STING', 'CON', 'USHER']
+Matched Groups: 0/4
+
+Game 64
+Ground Truth Groups:
+  ['CHIP', 'SCRATCH', 'NICK', 'DING']
+  ['APPLE', 'CRACKER', 'LUMBER', 'FLAP']
+  ['FRY', 'NACHO', 'WING', 'POPPER']
+  ['BINGO', 'YES', 'RIGHT', 'CORRECT']
+Predictions sequence (lives used when wrong):
+  Correct: ['BINGO', 'YES', 'RIGHT', 'CORRECT']
+  Wrong: ['APPLE', 'NACHO', 'CRACKER', 'POPPER']
+  Correct: ['CHIP', 'SCRATCH', 'NICK', 'DING']
+  One-Away: ['FRY', 'NACHO', 'CRACKER', 'POPPER']
+  Wrong: ['APPLE', 'FRY', 'CRACKER', 'POPPER']
+  One-Away: ['APPLE', 'CRACKER', 'LUMBER', 'POPPER']
+Matched Groups: 2/4
+
+Game 65
+Ground Truth Groups:
+  ['QUEEN', 'VIXEN', 'NANNY', 'JENNY']
+  ['STAR', 'PLANET', 'MOON', 'COMET']
+  ['CUPID', 'ROBIN HOOD', 'HAWKEYE', 'SAGITTARIUS']
+  ['SHANNON', 'STRONG', 'RUDOLPH', 'FEY']
+Predictions sequence (lives used when wrong):
+  Correct: ['STAR', 'PLANET', 'MOON', 'COMET']
+  One-Away: ['QUEEN', 'SHANNON', 'NANNY', 'JENNY']
+  One-Away: ['VIXEN', 'SHANNON', 'NANNY', 'JENNY']
+  Correct: ['QUEEN', 'VIXEN', 'NANNY', 'JENNY']
+  One-Away: ['CUPID', 'ROBIN HOOD', 'RUDOLPH', 'HAWKEYE']
+  Wrong: ['ROBIN HOOD', 'FEY', 'RUDOLPH', 'HAWKEYE']
+Matched Groups: 2/4
+
+Game 66
+Ground Truth Groups:
+  ['🍞', '🧀', '🥓', '🥬']
+  ['🧠', '🌧️', '✈️', '🚂']
+  ['🫖', '👁️', '🐑', '🐝']
+  ['👽', '🪚', '😱', '🧛']
+Predictions sequence (lives used when wrong):
+  Wrong: ['🍞', '🌧️', '👁️', '✈️']
+  One-Away: ['🧠', '🌧️', '👁️', '✈️']
+  Wrong: ['👁️', '🫖', '🌧️', '✈️']
+  Wrong: ['👁️', '🌧️', '🪚', '✈️']
+Matched Groups: 0/4
+
+Game 67
+Ground Truth Groups:
+  ['ORANGE', 'PURPLE', 'SILVER', 'MONTH']
+  ['KETCHUP', 'ELMO', 'CARDINAL', 'ROSE']
+  ['ROCK', 'COTTON', 'EYE', 'JOHN']
+  ['EGGS', 'BUTTER', 'SUGAR', 'FLOUR']
+Predictions sequence (lives used when wrong):
+  One-Away: ['KETCHUP', 'BUTTER', 'SUGAR', 'FLOUR']
+  One-Away: ['EGGS', 'KETCHUP', 'BUTTER', 'FLOUR']
+  Correct: ['EGGS', 'BUTTER', 'SUGAR', 'FLOUR']
+  One-Away: ['ORANGE', 'PURPLE', 'COTTON', 'SILVER']
+  One-Away: ['ORANGE', 'PURPLE', 'ROSE', 'SILVER']
+Matched Groups: 1/4
+
+Game 68
+Ground Truth Groups:
+  ['FLAT', 'MARY JANE', 'SLIDE', 'MULE']
+  ['PAPER', 'STONE', 'PIPER', 'CASTLE']
+  ['TAPER', 'PETER', 'FADE', 'DWINDLE']
+  ['PLANT', 'PRUNE', 'WATER', 'WEED']
+Predictions sequence (lives used when wrong):
+  One-Away: ['TAPER', 'FADE', 'PRUNE', 'DWINDLE']
+  One-Away: ['TAPER', 'FADE', 'SLIDE', 'DWINDLE']
+  Wrong: ['TAPER', 'PRUNE', 'SLIDE', 'DWINDLE']
+  Wrong: ['FLAT', 'TAPER', 'PRUNE', 'DWINDLE']
+Matched Groups: 0/4
+
+Game 69
+Ground Truth Groups:
+  ['SEA', 'PACK', 'HOST', 'DROVE']
+  ['AYE', 'PRO', 'FOR', 'YEA']
+  ['SEE', 'WOO', 'COURT', 'DATE']
+  ['PALM', 'TEA', 'TAROT', 'AURA']
+Predictions sequence (lives used when wrong):
+  Wrong: ['AYE', 'SEE', 'WOO', 'YEA']
+  One-Away: ['AYE', 'WOO', 'FOR', 'YEA']
+  One-Away: ['SEA', 'TEA', 'TAROT', 'AURA']
+  Correct: ['PALM', 'TEA', 'TAROT', 'AURA']
+  One-Away: ['AYE', 'WOO', 'PRO', 'YEA']
+Matched Groups: 1/4
+
+Game 70
+Ground Truth Groups:
+  ['LITTER', 'STARE', 'INTERRUPT', 'POINT']
+  ['NICOTINE', 'ROUGH', 'CABBAGE', 'SOUL']
+  ['WORK', 'TRADE', 'CRAFT', 'LINE']
+  ['REFLECT', 'MUSE', 'BROOD', 'PONDER']
+Predictions sequence (lives used when wrong):
+  One-Away: ['LITTER', 'NICOTINE', 'CABBAGE', 'SOUL']
+  One-Away: ['REFLECT', 'STARE', 'MUSE', 'PONDER']
+  One-Away: ['REFLECT', 'INTERRUPT', 'MUSE', 'PONDER']
+  Wrong: ['LITTER', 'NICOTINE', 'CABBAGE', 'BROOD']
+Matched Groups: 0/4
+
+Game 71
+Ground Truth Groups:
+  ['SANTA', 'CODE', 'SAUCE', 'AGENT']
+  ['BOO', 'BABY', 'DEAR', 'LOVE']
+  ['ZIP', 'JUICE', 'FIRE', 'ENERGY']
+  ['RAY', 'LINE', 'POINT', 'SEGMENT']
+Predictions sequence (lives used when wrong):
+  One-Away: ['JUICE', 'FIRE', 'SAUCE', 'ENERGY']
+  Correct: ['BOO', 'BABY', 'DEAR', 'LOVE']
+  Correct: ['RAY', 'LINE', 'POINT', 'SEGMENT']
+  One-Away: ['JUICE', 'FIRE', 'AGENT', 'ENERGY']
+  Correct: ['ZIP', 'JUICE', 'FIRE', 'ENERGY']
+  Correct: ['SANTA', 'CODE', 'SAUCE', 'AGENT']
+Matched Groups: 4/4
+
+Game 72
+Ground Truth Groups:
+  ['CHICAGO', 'MOONLIGHT', 'GLADIATOR', 'CRASH']
+  ['BLUEST', 'POPE', 'ROCKY', 'SKAT']
+  ['UNITE', 'BRIDGE', 'JOIN', 'LINK']
+  ['PEDAL', 'WHEEL', 'SADDLE', 'CHAIN']
+Predictions sequence (lives used when wrong):
+  Correct: ['PEDAL', 'WHEEL', 'SADDLE', 'CHAIN']
+  Correct: ['UNITE', 'BRIDGE', 'JOIN', 'LINK']
+  One-Away: ['BLUEST', 'MOONLIGHT', 'ROCKY', 'SKAT']
+  Wrong: ['BLUEST', 'MOONLIGHT', 'GLADIATOR', 'SKAT']
+  One-Away: ['BLUEST', 'GLADIATOR', 'ROCKY', 'SKAT']
+  Wrong: ['BLUEST', 'MOONLIGHT', 'GLADIATOR', 'ROCKY']
+Matched Groups: 2/4
+
+Game 73
+Ground Truth Groups:
+  ['HEART', 'ROSE', 'CARD', 'CHOCOLATE']
+  ['COMET', 'VIXEN', 'CUPID', 'DASHER']
+  ['BOYS', 'TASTE', 'SANTA', 'LIEUTENANT']
+  ['STAND-UP', 'SINGER', 'ACTOR', 'DANCER']
+Predictions sequence (lives used when wrong):
+  One-Away: ['SINGER', 'LIEUTENANT', 'ACTOR', 'DANCER']
+  One-Away: ['ROSE', 'SINGER', 'ACTOR', 'DANCER']
+  Correct: ['STAND-UP', 'SINGER', 'ACTOR', 'DANCER']
+  Wrong: ['HEART', 'TASTE', 'CUPID', 'CHOCOLATE']
+  One-Away: ['HEART', 'TASTE', 'CARD', 'CHOCOLATE']
+Matched Groups: 1/4
+
+Game 74
+Ground Truth Groups:
+  ['TREE', 'COBRA', 'WARRIOR', 'LOTUS']
+  ['IGUANA', 'GECKO', 'MONITOR', 'CHAMELEON']
+  ['FOREST', 'TUNDRA', 'GRASSLAND', 'DESERT']
+  ['CHA', 'GO', 'NAE', 'CAN']
+Predictions sequence (lives used when wrong):
+  Correct: ['FOREST', 'TUNDRA', 'GRASSLAND', 'DESERT']
+  One-Away: ['IGUANA', 'GECKO', 'COBRA', 'CHAMELEON']
+  One-Away: ['IGUANA', 'GECKO', 'COBRA', 'MONITOR']
+  Correct: ['IGUANA', 'GECKO', 'MONITOR', 'CHAMELEON']
+  Correct: ['CHA', 'GO', 'NAE', 'CAN']
+  Correct: ['TREE', 'COBRA', 'WARRIOR', 'LOTUS']
+Matched Groups: 4/4
+
+Game 75
+Ground Truth Groups:
+  ['MASSAGE', 'FISH', 'CHEF', 'MEATBALL']
+  ['TIMES', 'EQUALS', 'PERCENT', 'MINUS']
+  ['COMBO', 'RUFFLE', 'TAKI', 'GOLDFISH']
+  ['LOCK', 'THATCH', 'SHOCK', 'TUFT']
+Predictions sequence (lives used when wrong):
+  One-Away: ['FISH', 'CHEF', 'MEATBALL', 'GOLDFISH']
+  Wrong: ['FISH', 'TAKI', 'MEATBALL', 'GOLDFISH']
+  Wrong: ['FISH', 'CHEF', 'TAKI', 'GOLDFISH']
+  Wrong: ['THATCH', 'FISH', 'CHEF', 'GOLDFISH']
+Matched Groups: 0/4
+
+Game 76
+Ground Truth Groups:
+  ['PUG', 'PRUNE', 'BRAIN', 'WALNUT']
+  ['LOVER', 'BUFF', 'NUT', 'FAN']
+  ['BUILT', 'JACKED', 'SWOLE', 'RIPPED']
+  ['PARE', 'TRIM', 'CUT', 'CLIP']
+Predictions sequence (lives used when wrong):
+  One-Away: ['PRUNE', 'TRIM', 'CUT', 'CLIP']
+  One-Away: ['PARE', 'PRUNE', 'TRIM', 'CUT']
+  Wrong: ['PRUNE', 'TRIM', 'CUT', 'RIPPED']
+  One-Away: ['TRIM', 'CLIP', 'CUT', 'RIPPED']
+Matched Groups: 0/4
+
+Game 77
+Ground Truth Groups:
+  ['FISH', 'BOARD', 'GATE', 'STRUCK']
+  ['CHICK', 'SUPREME', 'BANGLE', 'GO-GO']
+  ['EXTRACT', 'CLIP', 'QUOTE', 'PASSAGE']
+  ['RIVET', 'ENTRANCE', 'CHARM', 'THRILL']
+Predictions sequence (lives used when wrong):
+  Wrong: ['ENTRANCE', 'GATE', 'THRILL', 'PASSAGE']
+  Wrong: ['BOARD', 'ENTRANCE', 'GATE', 'PASSAGE']
+  Wrong: ['QUOTE', 'ENTRANCE', 'GATE', 'PASSAGE']
+  Wrong: ['EXTRACT', 'ENTRANCE', 'GATE', 'PASSAGE']
+Matched Groups: 0/4
+
+Game 78
+Ground Truth Groups:
+  ['MASS', 'MARY', 'WASH', 'KENT']
+  ['OILY', 'NORMAL', 'COMBINATION', 'DRY']
+  ['GAUGE', 'STANDARD', 'YARDSTICK', 'BENCHMARK']
+  ['CHECK', 'CALL', 'BET', 'FOLD']
+Predictions sequence (lives used when wrong):
+  Correct: ['GAUGE', 'STANDARD', 'YARDSTICK', 'BENCHMARK']
+  One-Away: ['OILY', 'NORMAL', 'WASH', 'DRY']
+  Wrong: ['OILY', 'WASH', 'DRY', 'FOLD']
+  One-Away: ['MASS', 'MARY', 'KENT', 'DRY']
+  One-Away: ['OILY', 'CHECK', 'NORMAL', 'DRY']
+Matched Groups: 1/4
+
+Game 79
+Ground Truth Groups:
+  ['FLUTE', 'CLARINET', 'OBOE', 'SAXOPHONE']
+  ['BASSOON', 'COFFEE', 'FRICASSEE', 'BALLOON']
+  ['FROST', 'POUND', 'OLDS', 'BISHOP']
+  ['GOBLET', 'STEIN', 'SNIFTER', 'TUMBLER']
+Predictions sequence (lives used when wrong):
+  Correct: ['FLUTE', 'CLARINET', 'OBOE', 'SAXOPHONE']
+  Wrong: ['COFFEE', 'STEIN', 'FRICASSEE', 'FROST']
+  One-Away: ['GOBLET', 'BALLOON', 'SNIFTER', 'TUMBLER']
+  Wrong: ['COFFEE', 'OLDS', 'FRICASSEE', 'FROST']
+  Wrong: ['POUND', 'GOBLET', 'BALLOON', 'TUMBLER']
+Matched Groups: 1/4
+
+Game 80
+Ground Truth Groups:
+  ['SQUAT', 'HUSKY', 'THICK', 'SOLID']
+  ['SHEPHERD', 'DIRECT', 'GUIDE', 'LEAD']
+  ['CASK', 'PIT', 'FALL', 'MASQUE']
+  ['COLONY', 'LUNGE', 'SKINK', 'HEARTH']
+Predictions sequence (lives used when wrong):
+  Wrong: ['SQUAT', 'FALL', 'LUNGE', 'THICK']
+  Wrong: ['SQUAT', 'HUSKY', 'FALL', 'LUNGE']
+  Wrong: ['SQUAT', 'FALL', 'LUNGE', 'SOLID']
+  One-Away: ['PIT', 'DIRECT', 'GUIDE', 'LEAD']
+Matched Groups: 0/4
+
+Game 81
+Ground Truth Groups:
+  ['FALL', 'DIP', 'DROP', 'SINK']
+  ['FIT', 'STRONG', 'SOUND', 'HEALTHY']
+  ['SWIFT', 'SUMMER', 'KEYS', 'NICKS']
+  ['TAP', 'FOUNTAIN', 'SPRING', 'WELL']
+Predictions sequence (lives used when wrong):
+  Wrong: ['FALL', 'DIP', 'SUMMER', 'SPRING']
+  Wrong: ['FALL', 'SUMMER', 'FOUNTAIN', 'SPRING']
+  Wrong: ['FALL', 'SUMMER', 'DROP', 'SPRING']
+  Wrong: ['FALL', 'SUMMER', 'SPRING', 'HEALTHY']
+Matched Groups: 0/4
+
+Game 82
+Ground Truth Groups:
+  ['FASHION', 'MOLD', 'SHAPE', 'TAILOR']
+  ['WRITER', 'PASTA', 'CAT', 'RIGHT']
+  ['CARPENTER', 'PHARAOH', 'FIRE', 'ARMY']
+  ['GAS', 'ELECTRIC', 'TELEPHONE', 'WATER']
+Predictions sequence (lives used when wrong):
+  Wrong: ['WRITER', 'PHARAOH', 'TAILOR', 'CARPENTER']
+  Wrong: ['FASHION', 'WRITER', 'TAILOR', 'CARPENTER']
+  Wrong: ['WRITER', 'CAT', 'TAILOR', 'CARPENTER']
+  One-Away: ['GAS', 'ELECTRIC', 'FIRE', 'WATER']
+Matched Groups: 0/4
+
+Game 83
+Ground Truth Groups:
+  ['PELVIS', 'KENYA', 'OCHER', 'GUSHER']
+  ['CHESTNUT', 'CLICHÉ', 'TROPE', 'PLATITUDE']
+  ['HOME', 'MENU', 'SELECT', 'BACK']
+  ['WISE', 'HIP', 'AWARE', 'SAVVY']
+Predictions sequence (lives used when wrong):
+  Wrong: ['PELVIS', 'HOME', 'HIP', 'BACK']
+  One-Away: ['WISE', 'SELECT', 'AWARE', 'SAVVY']
+  One-Away: ['MENU', 'CLICHÉ', 'TROPE', 'PLATITUDE']
+  One-Away: ['WISE', 'AWARE', 'PLATITUDE', 'SAVVY']
+Matched Groups: 0/4
+
+Game 84
+Ground Truth Groups:
+  ['BASH', 'BLAST', 'SLAM', 'PAN']
+  ['BAG', 'SCORE', 'SNAG', 'LAND']
+  ['CUT', 'COLOR', 'BLOWOUT', 'TRIM']
+  ['YARD', 'SACK', 'RECEPTION', 'ATTEMPT']
+Predictions sequence (lives used when wrong):
+  Wrong: ['BASH', 'CUT', 'BLAST', 'TRIM']
+  One-Away: ['CUT', 'BLAST', 'BLOWOUT', 'TRIM']
+  One-Away: ['CUT', 'COLOR', 'YARD', 'TRIM']
+  Wrong: ['BAG', 'YARD', 'SACK', 'LAND']
+Matched Groups: 0/4
+
+Game 85
+Ground Truth Groups:
+  ['MEAN', 'EXPRESS', 'CONVEY', 'SPELL']
+  ['KING', 'MODE', 'PLANCHA', 'CARTE']
+  ['DIVIDER', 'LANE', 'SHOULDER', 'MEDIAN']
+  ['EXTENSIONS', 'REFRESH', 'BACK', 'FORWARD']
+Predictions sequence (lives used when wrong):
+  One-Away: ['MEAN', 'CONVEY', 'MEDIAN', 'SPELL']
+  Wrong: ['MEAN', 'MODE', 'MEDIAN', 'SPELL']
+  Correct: ['MEAN', 'EXPRESS', 'CONVEY', 'SPELL']
+  Wrong: ['SHOULDER', 'BACK', 'LANE', 'FORWARD']
+  Wrong: ['DIVIDER', 'SHOULDER', 'BACK', 'FORWARD']
+Matched Groups: 1/4
+
+Game 86
+Ground Truth Groups:
+  ['POWER', 'MENU', 'VOLUME', 'CHANNEL']
+  ['CASINO', 'QUANTUM', 'DIAMONDS', 'TOMORROW']
+  ['OLIVE', 'UMBRELLA', 'CHERRY', 'SWORD']
+  ['SCREEN', 'BLOCK', 'SHIELD', 'COVER']
+Predictions sequence (lives used when wrong):
+  Wrong: ['UMBRELLA', 'SWORD', 'SHIELD', 'COVER']
+  One-Away: ['UMBRELLA', 'SCREEN', 'SHIELD', 'COVER']
+  One-Away: ['UMBRELLA', 'BLOCK', 'SHIELD', 'COVER']
+  Wrong: ['UMBRELLA', 'SCREEN', 'SWORD', 'SHIELD']
+Matched Groups: 0/4
+
+Game 87
+Ground Truth Groups:
+  ['CHANNEL', 'STRAIT', 'CANAL', 'SOUND']
+  ['NOON', '96', 'SIS', 'MOW']
+  ['QUANTITY', 'NUMBER', 'AMOUNT', 'VOLUME']
+  ['SECRET', 'REMOTE', 'PRIVATE', 'HIDDEN']
+Predictions sequence (lives used when wrong):
+  Correct: ['QUANTITY', 'NUMBER', 'AMOUNT', 'VOLUME']
+  Correct: ['SECRET', 'REMOTE', 'PRIVATE', 'HIDDEN']
+  Correct: ['CHANNEL', 'STRAIT', 'CANAL', 'SOUND']
+  Correct: ['NOON', '96', 'SIS', 'MOW']
+Matched Groups: 4/4
+
+Game 88
+Ground Truth Groups:
+  ['PERSONAL', 'WANT', 'POP-UP', 'ATTACK']
+  ['JACK', 'PORT', 'OUTLET', 'SOCKET']
+  ['MAJOR', 'CAPTAIN', 'PRIVATE', 'GENERAL']
+  ['AUDIENCE', 'APPETITE', 'DEMAND', 'MARKET']
+Predictions sequence (lives used when wrong):
+  One-Away: ['WANT', 'APPETITE', 'DEMAND', 'MARKET']
+  Correct: ['JACK', 'PORT', 'OUTLET', 'SOCKET']
+  One-Away: ['AUDIENCE', 'WANT', 'APPETITE', 'DEMAND']
+  Wrong: ['WANT', 'APPETITE', 'DEMAND', 'ATTACK']
+  Correct: ['MAJOR', 'CAPTAIN', 'PRIVATE', 'GENERAL']
+  One-Away: ['AUDIENCE', 'WANT', 'DEMAND', 'MARKET']
+Matched Groups: 2/4
+
+Game 89
+Ground Truth Groups:
+  ['STAFF', 'HAT', 'BEARD', 'ROBE']
+  ['CLEAR', 'MAKE', 'NET', 'EARN']
+  ['KEEL', 'BRIDGE', 'HATCH', 'DECK']
+  ['CLEF', 'SECTION', 'SUITE', 'SPAN']
+Predictions sequence (lives used when wrong):
+  Correct: ['CLEAR', 'MAKE', 'NET', 'EARN']
+  One-Away: ['HAT', 'HATCH', 'BEARD', 'ROBE']
+  One-Away: ['HAT', 'BEARD', 'ROBE', 'DECK']
+  Wrong: ['BRIDGE', 'SUITE', 'DECK', 'SPAN']
+  Correct: ['STAFF', 'HAT', 'BEARD', 'ROBE']
+  One-Away: ['SECTION', 'BRIDGE', 'SUITE', 'SPAN']
+Matched Groups: 2/4
+
+Game 90
+Ground Truth Groups:
+  ['READ', 'ROWS', 'BLEW', 'CHORAL']
+  ['SHOCK', 'WHEEL', 'TANK', 'DASH']
+  ['MATTER', 'POINT', 'SUBJECT', 'ISSUE']
+  ['PERIOD', 'CHAPTER', 'PHASE', 'STAGE']
+Predictions sequence (lives used when wrong):
+  One-Away: ['PERIOD', 'POINT', 'PHASE', 'STAGE']
+  One-Away: ['READ', 'MATTER', 'SUBJECT', 'ISSUE']
+  Wrong: ['READ', 'MATTER', 'SUBJECT', 'TANK']
+  Correct: ['PERIOD', 'CHAPTER', 'PHASE', 'STAGE']
+  Wrong: ['READ', 'MATTER', 'TANK', 'ISSUE']
+Matched Groups: 1/4
+
+Game 91
+Ground Truth Groups:
+  ['DOG', 'LINK', 'RIB', 'WING']
+  ['STATUE', 'TORSO', 'RELIEF', 'BUST']
+  ['GOOSE', 'BREAK', 'TURTLE', 'BOTTLE']
+  ['SUPPORT', 'PROP', 'POST', 'BRACE']
+Predictions sequence (lives used when wrong):
+  Wrong: ['SUPPORT', 'RELIEF', 'BREAK', 'BUST']
+  Wrong: ['SUPPORT', 'RELIEF', 'BREAK', 'BRACE']
+  Wrong: ['GOOSE', 'RIB', 'WING', 'TORSO']
+  Wrong: ['SUPPORT', 'RELIEF', 'BREAK', 'POST']
+Matched Groups: 0/4
+
+Game 92
+Ground Truth Groups:
+  ['STICK', 'BONE', 'FRISBEE', 'BALL']
+  ['SHIFT', 'CONTROL', 'COMMAND', 'OPTION']
+  ['OBSCURE', 'COVER', 'HIDE', 'BLOCK']
+  ['FLAKE', 'BLANK', 'FORGET', 'SPACE']
+Predictions sequence (lives used when wrong):
+  One-Away: ['OBSCURE', 'COVER', 'HIDE', 'FORGET']
+  One-Away: ['COMMAND', 'COVER', 'CONTROL', 'OPTION']
+  Correct: ['SHIFT', 'CONTROL', 'COMMAND', 'OPTION']
+  One-Away: ['STICK', 'FLAKE', 'FRISBEE', 'BALL']
+  Correct: ['STICK', 'BONE', 'FRISBEE', 'BALL']
+  One-Away: ['OBSCURE', 'FORGET', 'HIDE', 'BLOCK']
+Matched Groups: 2/4
+
+Game 93
+Ground Truth Groups:
+  ['FORE', 'DECK', 'AFT', 'MAST']
+  ['FACE', 'FINGERPRINT', 'PIN', 'PASSWORD']
+  ['VALUE', 'FIGURE', 'PRICE', 'AMOUNT']
+  ['BOW', 'ARROW', 'WINGS', 'DIAPER']
+Predictions sequence (lives used when wrong):
+  Correct: ['VALUE', 'FIGURE', 'PRICE', 'AMOUNT']
+  Wrong: ['FORE', 'BOW', 'ARROW', 'AFT']
+  Wrong: ['FORE', 'BOW', 'ARROW', 'MAST']
+  One-Away: ['DECK', 'BOW', 'ARROW', 'WINGS']
+  One-Away: ['FORE', 'BOW', 'AFT', 'MAST']
+Matched Groups: 1/4
+
+Game 94
+Ground Truth Groups:
+  ['BAZAAR', 'OUTLET', 'MARKET', 'FAIR']
+  ['SUPREME', 'PLAIN', 'VEGGIE', 'HAWAIIAN']
+  ['PIPE', 'VACUUM', 'BATHROOM', 'DRY']
+  ['INFRARED', 'EVERGREEN', 'MARIGOLD', 'QUICKSILVER']
+Predictions sequence (lives used when wrong):
+  Correct: ['BAZAAR', 'OUTLET', 'MARKET', 'FAIR']
+  Correct: ['PIPE', 'VACUUM', 'BATHROOM', 'DRY']
+  Wrong: ['VEGGIE', 'EVERGREEN', 'MARIGOLD', 'HAWAIIAN']
+  One-Away: ['VEGGIE', 'EVERGREEN', 'MARIGOLD', 'QUICKSILVER']
+  One-Away: ['SUPREME', 'EVERGREEN', 'MARIGOLD', 'QUICKSILVER']
+  Wrong: ['PLAIN', 'EVERGREEN', 'MARIGOLD', 'HAWAIIAN']
+Matched Groups: 2/4
+
+Game 95
+Ground Truth Groups:
+  ['TRASH', 'CABLE', 'GAS', 'WATER']
+  ['PIZZA', 'DOVETAIL', 'HIP', 'SPIKE LEE']
+  ['REMOTE', 'COOL', 'RESERVED', 'DISTANT']
+  ['CURRENT', 'CHARGE', 'VOLTAGE', 'RESISTANCE']
+Predictions sequence (lives used when wrong):
+  Correct: ['CURRENT', 'CHARGE', 'VOLTAGE', 'RESISTANCE']
+  One-Away: ['TRASH', 'PIZZA', 'GAS', 'WATER']
+  Wrong: ['DOVETAIL', 'CABLE', 'REMOTE', 'DISTANT']
+  One-Away: ['REMOTE', 'RESERVED', 'HIP', 'DISTANT']
+  One-Away: ['DOVETAIL', 'REMOTE', 'RESERVED', 'DISTANT']
+Matched Groups: 1/4
+
+Game 96
+Ground Truth Groups:
+  ['MASTODON', 'MAMMOTH', 'DODO', 'TRILOBITE']
+  ['SMOOCH', 'X', 'SMACK', 'PECK']
+  ['OUTFIT', 'THREADS', 'GETUP', 'DUDS']
+  ['FLOPS', 'BUSTS', 'MISSES', 'TURKEYS']
+Predictions sequence (lives used when wrong):
+  Correct: ['MASTODON', 'MAMMOTH', 'DODO', 'TRILOBITE']
+  One-Away: ['FLOPS', 'BUSTS', 'MISSES', 'DUDS']
+  One-Away: ['FLOPS', 'BUSTS', 'TURKEYS', 'DUDS']
+  Correct: ['FLOPS', 'BUSTS', 'MISSES', 'TURKEYS']
+  Correct: ['SMOOCH', 'X', 'SMACK', 'PECK']
+  Correct: ['OUTFIT', 'THREADS', 'GETUP', 'DUDS']
+Matched Groups: 4/4
+
+Game 97
+Ground Truth Groups:
+  ['ROOSTER', 'DEW', 'SUNRISE', 'WORM']
+  ['CIRCLE', 'UMBRELLA', 'STAR', 'TRIANGLE']
+  ['BUNK', 'SLEEP', 'STAY', 'CRASH']
+  ['SIGNAL', 'SOS', 'ALARM', 'FLARE']
+Predictions sequence (lives used when wrong):
+  One-Away: ['CIRCLE', 'STAR', 'TRIANGLE', 'FLARE']
+  One-Away: ['CIRCLE', 'UMBRELLA', 'TRIANGLE', 'FLARE']
+  Correct: ['BUNK', 'SLEEP', 'STAY', 'CRASH']
+  Wrong: ['UMBRELLA', 'DEW', 'SUNRISE', 'FLARE']
+  Correct: ['CIRCLE', 'UMBRELLA', 'STAR', 'TRIANGLE']
+  Wrong: ['SIGNAL', 'DEW', 'ALARM', 'SUNRISE']
+Matched Groups: 2/4
+
+Game 98
+Ground Truth Groups:
+  ['ALE', 'HIVE', 'EEK', 'QUASH']
+  ['TAP', 'SCROLL', 'SWIPE', 'PINCH']
+  ['VEG', 'LOAF', 'LOUNGE', 'CHILL']
+  ['COUNTER', 'TABLE', 'BAR', 'BOOTH']
+Predictions sequence (lives used when wrong):
+  One-Away: ['TABLE', 'BAR', 'LOUNGE', 'BOOTH']
+  Correct: ['TAP', 'SCROLL', 'SWIPE', 'PINCH']
+  One-Away: ['COUNTER', 'TABLE', 'BAR', 'LOUNGE']
+  Correct: ['COUNTER', 'TABLE', 'BAR', 'BOOTH']
+  Wrong: ['ALE', 'HIVE', 'VEG', 'LOAF']
+  Wrong: ['ALE', 'VEG', 'LOAF', 'QUASH']
+Matched Groups: 2/4
+
+Game 99
+Ground Truth Groups:
+  ['LOCK', 'CLINCH', 'SECURE', 'GUARANTEE']
+  ['STEAM', 'HAIR', 'LETTUCE', 'STATE']
+  ['CHIP', 'SCRATCH', 'NICK', 'MARK']
+  ['ROLL', 'BAGUETTE', 'BUN', 'LOAF']
+Predictions sequence (lives used when wrong):
+  One-Away: ['LETTUCE', 'BAGUETTE', 'BUN', 'LOAF']
+  Correct: ['ROLL', 'BAGUETTE', 'BUN', 'LOAF']
+  Correct: ['LOCK', 'CLINCH', 'SECURE', 'GUARANTEE']
+  Correct: ['CHIP', 'SCRATCH', 'NICK', 'MARK']
+  Correct: ['STEAM', 'HAIR', 'LETTUCE', 'STATE']
+Matched Groups: 4/4
+
+Game 100
+Ground Truth Groups:
+  ['PAN', 'ATLAS', 'ECHO', 'HELEN']
+  ['PINE TREE', 'COMPASS', 'SEWING KIT', 'TURNTABLE']
+  ['LEAD', 'GUIDE', 'DIRECT', 'SHEPHERD']
+  ['TOILETRIES', 'CANDLE', 'LOOFAH', 'JOHNSON']
+Predictions sequence (lives used when wrong):
+  Wrong: ['ATLAS', 'GUIDE', 'COMPASS', 'DIRECT']
+  One-Away: ['LEAD', 'GUIDE', 'COMPASS', 'DIRECT']
+  Wrong: ['ATLAS', 'GUIDE', 'COMPASS', 'SHEPHERD']
+  One-Away: ['PAN', 'ATLAS', 'ECHO', 'COMPASS']
+Matched Groups: 0/4
+
+--- Results ---
+Total Games: 100
+Perfectly Solved Games: 16
+Game Accuracy: 0.1600 (16.00%)
+Group Match Accuracy: 0.3350 (33.50%)

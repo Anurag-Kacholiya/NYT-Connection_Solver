@@ -1,3 +1,7 @@
+### Baseline 1 Architecture Diagram
+
+![Baseline 1 Architecture Diagram](baseline1_architecture.png)
+
 ### Why Baseline 1 Failed: Architectural and Methodological Flaws
 
 The baseline architecture successfully clustered ~22.5% of the groups (90 out of 400 in the test set) but completely failed to solve a single full game. This partial success followed by catastrophic game-level failure highlights fundamental limitations in relying purely on dense semantic vectors and distance-based clustering for constraint satisfaction tasks.

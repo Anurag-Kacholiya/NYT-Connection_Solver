@@ -1,6 +1,6 @@
 # Proposed Methodology: NYT Connections NLP Solver
 
-*Multi-Signal Similarity Ensemble with Contrastive Fine-Tuning, Extended Features, and Beam Search Decoding*
+_Multi-Signal Similarity Ensemble with Contrastive Fine-Tuning, Extended Features, and Beam Search Decoding_
 
 ---
 
@@ -138,8 +138,8 @@ We additionally report a **partial overlap breakdown**: how many guesses shared 
 We run four ablation conditions to isolate the contribution of each proposed improvement:
 
 1. Baseline (7 signals, 17 features, greedy solver)
-2. + Contrastive fine-tuning only
-3. + Extended features only (9 signals, ~60 features)
+2. - Contrastive fine-tuning only
+3. - Extended features only (9 signals, ~60 features)
 4. Full improved system (fine-tuning + extended features + beam search)
 
 Feature importance analysis from the trained ensemble is reported in all conditions. In the baseline, the single most predictive feature was the minimum pairwise similarity within the candidate group under the joint MPNet+Numberbatch embedding, confirming the intuition that a correct Connections group has no weak links. We expect the extended feature set to surface rank-based and cross-matrix consistency features as additional high-importance signals.

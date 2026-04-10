@@ -1,0 +1,167 @@
+============================================================
+  AUGMENTED TRAINING — DATA LOADING
+============================================================
+Loading original dataset ...
+  Original CSV: 915 games
+  Original split → train slice=678  val=137  test=100
+
+Loading augmented datasets ...
+  BabelNet (dataset.csv): 500 games
+  LLM-1 (connections_dataset1.csv): 50 games
+  LLM-2 (connections_dataset2.csv): 50 games
+
+Final split:
+  Train : 1278  (678 original + 600 augmented)
+  Val   : 137  (original only)
+  Test  : 100  (original only — SEALED)
+
+Val and Test sets are SEALED until after training.
+
+──────────────────────────────────────────────────
+STEP 0/4  Verifying split integrity (no data leakage)
+──────────────────────────────────────────────────
+  ✓ Split integrity confirmed: NO overlap between train / val / test.
+    train=1278  val=137  test=100
+
+Initialising embedder (MPNet + GloVe + Numberbatch)...
+Loading embedding model: all-mpnet-base-v2...
+modules.json: 100%|████████████████████████████| 349/349 [00:00<00:00, 1.59MB/s]
+config_sentence_transformers.json: 100%|████████| 116/116 [00:00<00:00, 521kB/s]
+README.md: 11.6kB [00:00, 24.4MB/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+sentence_bert_config.json: 100%|██████████████| 53.0/53.0 [00:00<00:00, 275kB/s]
+config.json: 100%|█████████████████████████████| 571/571 [00:00<00:00, 2.17MB/s]
+model.safetensors:  61%|█████████████▍        | 268M/438M [00:02<00:01, 105MB/s]
+Loading weights: 100%|█| 199/199 [00:00<00:00, 1608.98it/s, Materializing param=
+MPNetModel LOAD REPORT from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+tokenizer_config.json: 100%|███████████████████| 363/363 [00:00<00:00, 1.43MB/s]
+vocab.txt: 232kB [00:00, 14.4MB/s]
+tokenizer.json: 466kB [00:00, 36.8MB/s]
+special_tokens_map.json: 100%|██████████████████| 239/239 [00:00<00:00, 840kB/s]
+config.json: 100%|██████████████████████████████| 190/190 [00:00<00:00, 786kB/s]
+Model loaded.
+Loading GloVe word vectors...
+[==================================================] 100.0% 128.1/128.1MB downloaded
+GloVe loaded.
+Loading ConceptNet Numberbatch from numberbatch-en-19.08.txt.gz...
+Numberbatch loaded (516782 words, dim=300).
+
+──────────────────────────────────────────────────
+STEP 1/4  Extract features (train only)
+──────────────────────────────────────────────────
+Extracting train features: 100%|██████████| 1278/1278 [1:06:54<00:00,  3.14s/it]
+  Samples : 25560  (5112 pos / 20448 neg)
+  Features: 153
+
+──────────────────────────────────────────────────
+STEP 2/4  Train RF + GBM
+──────────────────────────────────────────────────
+Training Random Forest (n_estimators=200, max_depth=10)...
+  RF   train accuracy : 93.67%
+Training Gradient Boosting (n_estimators=200, max_depth=3)...
+  GBM  train accuracy : 91.85%
+
+──────────────────────────────────────────────────
+STEP 3/4  Train LightGBM Lambdarank Ranker (with val early stopping)
+──────────────────────────────────────────────────
+
+Building ranking dataset for LightGBM lambdarank...
+Ranking feature extraction: 100%|█████████| 1278/1278 [1:00:24<00:00,  2.84s/it]
+  Ranking samples: 25560  |  queries: 1278
+  Building validation ranking dataset for early stopping...
+Val ranking features: 100%|███████████████████| 137/137 [06:46<00:00,  2.96s/it]
+  Val ranking samples: 2740  |  queries: 137
+[50]	train's ndcg@1: 0.995305	train's ndcg@3: 0.927666	train's ndcg@5: 0.906262	val's ndcg@1: 0.912409	val's ndcg@3: 0.847938	val's ndcg@5: 0.832981
+[100]	train's ndcg@1: 0.996088	train's ndcg@3: 0.94336	train's ndcg@5: 0.921857	val's ndcg@1: 0.914842	val's ndcg@3: 0.852383	val's ndcg@5: 0.839155
+[150]	train's ndcg@1: 0.997392	train's ndcg@3: 0.953551	train's ndcg@5: 0.933501	val's ndcg@1: 0.914842	val's ndcg@3: 0.852655	val's ndcg@5: 0.84108
+[200]	train's ndcg@1: 0.997913	train's ndcg@3: 0.961214	train's ndcg@5: 0.941364	val's ndcg@1: 0.914842	val's ndcg@3: 0.859805	val's ndcg@5: 0.843396
+[250]	train's ndcg@1: 0.998435	train's ndcg@3: 0.966061	train's ndcg@5: 0.948193	val's ndcg@1: 0.914842	val's ndcg@3: 0.861395	val's ndcg@5: 0.845936
+[300]	train's ndcg@1: 0.998957	train's ndcg@3: 0.972153	train's ndcg@5: 0.955678	val's ndcg@1: 0.914842	val's ndcg@3: 0.856407	val's ndcg@5: 0.844632
+[350]	train's ndcg@1: 1	train's ndcg@3: 0.978101	train's ndcg@5: 0.963812	val's ndcg@1: 0.914842	val's ndcg@3: 0.855265	val's ndcg@5: 0.844197
+[400]	train's ndcg@1: 1	train's ndcg@3: 0.981987	train's ndcg@5: 0.968456	val's ndcg@1: 0.914842	val's ndcg@3: 0.861123	val's ndcg@5: 0.847358
+[450]	train's ndcg@1: 1	train's ndcg@3: 0.985172	train's ndcg@5: 0.972256	val's ndcg@1: 0.914842	val's ndcg@3: 0.860675	val's ndcg@5: 0.847161
+[500]	train's ndcg@1: 1	train's ndcg@3: 0.986402	train's ndcg@5: 0.977241	val's ndcg@1: 0.919708	val's ndcg@3: 0.857644	val's ndcg@5: 0.847051
+
+──────────────────────────────────────────────────
+STEP 3.5/4  Train LR Matrix Weights (Path A — val set only)
+──────────────────────────────────────────────────
+LR fusion: val feature extraction: 100%|██████| 137/137 [07:33<00:00,  3.31s/it]
+  LR fusion samples : 2740  (548 pos / 2192 neg)
+  LR fusion features: 17  (one per matrix)
+  Learned matrix weights (LR coefficients):
+    MPNet+Numberbatch_sim                         +4.7033
+    MPNet_sim                                     +2.6103
+    WordNet_sim                                   +2.8847
+    GloVe_sim                                     +4.4154
+    Lexical_sim                                   +0.2757
+    Phonetic_sim                                  +1.2043
+    Morphological_sim                             -0.1891
+    MultiSense_sim                                +4.7744
+    PairContext_sim                               +0.2555
+    TemplateCtx_sim                               +2.4176
+    WikiData_sim                                  +0.1010
+    Datamuse_sim                                  -0.1126
+    ConceptNet_sim                                +0.0000
+    WikipediaCategories_sim                       +0.0006
+    GridPropertyUniqueness_sim                    +0.3882
+    GridCategoryUniqueness_sim                    +0.0044
+    GridDatamuseUniqueness_sim                    +1.0397
+
+──────────────────────────────────────────────────
+STEP 4/4  Save models and feature weights
+──────────────────────────────────────────────────
+  RF        model → aug_models/clf_rf.pkl
+  GBM       model → aug_models/clf_gbm.pkl
+  Ranker    model → aug_models/clf_lgbm_ranker.pkl
+  LR fusion model → aug_models/clf_lr_fusion.pkl
+Feature importances saved → aug_feature_weights/feature_weights.txt
+  Feature weights → aug_feature_weights/feature_weights.txt
+  ✓ Training complete. Models saved. Val/Test not yet accessed.
+
+Loading saved models for evaluation...
+
+============================================================
+  EVALUATION  (models are frozen — no training data used)
+============================================================
+Evaluating [VAL]: 100%|███████████████████████| 137/137 [24:12<00:00, 10.60s/it]
+
+  [VAL]  137 games
+    Perfect games  : 35  (25.55%)
+    Group accuracy : 243/548  (44.34%)
+    Guess breakdown:
+      4/4 →  243  (34.8%)
+      3/4 →  261  (37.4%)
+      2/4 →  183  (26.2%)
+      1/4 →   11  (1.6%)
+      0/4 →    0  (0.0%)
+Evaluating [TEST]: 100%|██████████████████████| 100/100 [17:48<00:00, 10.68s/it]
+
+  [TEST]  100 games
+    Perfect games  : 33  (33.00%)
+    Group accuracy : 201/400  (50.25%)
+    Guess breakdown:
+      4/4 →  201  (40.2%)
+      3/4 →  160  (32.0%)
+      2/4 →  133  (26.6%)
+      1/4 →    6  (1.2%)
+      0/4 →    0  (0.0%)
+
+============================================================
+  FINAL SUMMARY  (Augmented Training Run)
+============================================================
+Split      Games   Game Acc   Group Acc
+---------------------------------------------
+Val          137     25.55%      44.34%
+Test         100     33.00%      50.25%
+============================================================
+Train games   : 1278  (original=678, augmented=600)
+Features      : 153
+Models saved  : aug_models/clf_rf.pkl, clf_gbm.pkl, clf_lgbm_ranker.pkl, clf_lr_fusion.pkl
+Weights saved : aug_feature_weights/feature_weights.txt

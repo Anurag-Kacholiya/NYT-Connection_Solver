@@ -1,0 +1,9 @@
+===== FINAL EVALUATION METRICS =====
+1) Grouping Accuracy :
+   1.1) total no. of group solved: 199
+   1.2) no. of '3 words correct out of 4 in a group': 158
+____
+2) no. of games in which (2 groups solved completely and remaining 2 groups are '3 words correct out of 4 in a group'): 7
+____
+3) no. of games solved completely (out of 100 test games): 32
+_____

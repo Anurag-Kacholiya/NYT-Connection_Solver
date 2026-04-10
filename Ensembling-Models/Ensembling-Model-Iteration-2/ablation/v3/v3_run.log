@@ -1,0 +1,130 @@
+Loading data...
+Total : 915 games
+  Train : 678  (idx 0 – 677)
+  Val   : 137  (idx 678 – 814)
+  Test  : 100  (idx 815 – 914)
+
+  Val and Test sets are SEALED until after training.
+
+──────────────────────────────────────────────────
+STEP 0/4  Verifying split integrity (no data leakage)
+──────────────────────────────────────────────────
+  ✓ Split integrity confirmed: NO overlap between train / val / test.
+    train=678  val=137  test=100
+Initialising embedder (MPNet + GloVe + Numberbatch)...
+Loading embedding model: all-mpnet-base-v2...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights: 100%|█| 199/199 [00:00<00:00, 1433.51it/s, Materializing param=
+MPNetModel LOAD REPORT from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Model loaded.
+Loading GloVe word vectors...
+GloVe loaded.
+Loading ConceptNet Numberbatch from numberbatch-en-19.08.txt.gz...
+Numberbatch loaded (516782 words, dim=300).
+
+──────────────────────────────────────────────────
+STEP 1/4  Extract features (train only)
+──────────────────────────────────────────────────
+Extracting train features: 100%|██████████████| 678/678 [12:39<00:00,  1.12s/it]
+  Samples : 13560  (2712 pos / 10848 neg)
+  Features: 90
+
+──────────────────────────────────────────────────
+STEP 2/4  Train RF + GBM
+──────────────────────────────────────────────────
+Training Random Forest (n_estimators=200, max_depth=10)...
+  RF   train accuracy : 93.88%
+Training Gradient Boosting (n_estimators=200, max_depth=3)...
+  GBM  train accuracy : 91.73%
+
+──────────────────────────────────────────────────
+STEP 3/4  Train LightGBM Lambdarank Ranker (with val early stopping)
+──────────────────────────────────────────────────
+
+Building ranking dataset for LightGBM lambdarank...
+Ranking feature extraction: 100%|█████████████| 678/678 [12:36<00:00,  1.12s/it]
+  Ranking samples: 13560  |  queries: 678
+  Building validation ranking dataset for early stopping...
+Val ranking features: 100%|███████████████████| 137/137 [02:30<00:00,  1.10s/it]
+  Val ranking samples: 2740  |  queries: 137
+[50]	train's ndcg@1: 0.994592	train's ndcg@3: 0.926839	train's ndcg@5: 0.899896	val's ndcg@1: 0.907543	val's ndcg@3: 0.839742	val's ndcg@5: 0.8335
+[100]	train's ndcg@1: 0.99705	train's ndcg@3: 0.943711	train's ndcg@5: 0.920384	val's ndcg@1: 0.924574	val's ndcg@3: 0.850114	val's ndcg@5: 0.839457
+[150]	train's ndcg@1: 0.999017	train's ndcg@3: 0.961468	train's ndcg@5: 0.937778	val's ndcg@1: 0.92944	val's ndcg@3: 0.850114	val's ndcg@5: 0.841602
+[200]	train's ndcg@1: 0.999017	train's ndcg@3: 0.974105	train's ndcg@5: 0.953496	val's ndcg@1: 0.914842	val's ndcg@3: 0.847041	val's ndcg@5: 0.838733
+[250]	train's ndcg@1: 1	train's ndcg@3: 0.980873	train's ndcg@5: 0.96197	val's ndcg@1: 0.919708	val's ndcg@3: 0.844133	val's ndcg@5: 0.83868
+[300]	train's ndcg@1: 1	train's ndcg@3: 0.985091	train's ndcg@5: 0.971215	val's ndcg@1: 0.922141	val's ndcg@3: 0.845247	val's ndcg@5: 0.834276
+
+──────────────────────────────────────────────────
+STEP 3.5/4  Train LR Matrix Weights (Path A — val set only)
+──────────────────────────────────────────────────
+LR fusion: val feature extraction: 100%|██████| 137/137 [02:26<00:00,  1.07s/it]
+  LR fusion samples : 2740  (548 pos / 2192 neg)
+  LR fusion features: 10  (one per matrix)
+  Learned matrix weights (LR coefficients):
+    MPNet+Numberbatch_sim                         +4.7557
+    MPNet_sim                                     +2.4401
+    WordNet_sim                                   +2.8263
+    GloVe_sim                                     +4.8639
+    Lexical_sim                                   +0.4934
+    Phonetic_sim                                  +0.4300
+    Morphological_sim                             -0.0482
+    MultiSense_sim                                +4.5654
+    PairContext_sim                               +0.1479
+    TemplateCtx_sim                               +2.2570
+
+──────────────────────────────────────────────────
+STEP 4/4  Save models and feature weights
+──────────────────────────────────────────────────
+  RF        model → models/clf_rf.pkl
+  GBM       model → models/clf_gbm.pkl
+  Ranker    model → models/clf_lgbm_ranker.pkl
+  LR fusion model → models/clf_lr_fusion.pkl
+Feature importances saved → feature_weights.txt
+  ✓ Training complete. Models saved. Val/Test not yet accessed.
+
+Loading saved models for evaluation...
+
+============================================================
+  EVALUATION  (models are frozen — no training data used)
+============================================================
+Evaluating [VAL]: 100%|███████████████████████| 137/137 [14:30<00:00,  6.35s/it]
+
+  [VAL]  137 games
+    Perfect games  : 30  (21.90%)
+    Group accuracy :  (43.61%)
+    Guess breakdown:
+      4/4 →  239  (33.8%)
+      3/4 →  264  (37.3%)
+      2/4 →  193  (27.3%)
+      1/4 →   12  (1.7%)
+      0/4 →    0  (0.0%)
+Evaluating [TEST]: 100%|██████████████████████| 100/100 [10:39<00:00,  6.39s/it]
+
+  [TEST]  100 games
+    Perfect games  : 32  (32.00%)
+    Group accuracy :  (50.50%)
+    Guess breakdown:
+      4/4 →  202  (39.6%)
+      3/4 →  170  (33.3%)
+      2/4 →  131  (25.7%)
+      1/4 →    7  (1.4%)
+      0/4 →    0  (0.0%)
+
+============================================================
+  FINAL SUMMARY
+============================================================
+Split      Games   Game Acc   Group Acc
+---------------------------------------------
+Val          137     21.90%      43.61%
+Test         100     32.00%      50.50%
+============================================================
+Features      : 90
+Models saved  : models/clf_rf.pkl, models/clf_gbm.pkl, models/clf_lgbm_ranker.pkl
+Weights saved : feature_weights.txt

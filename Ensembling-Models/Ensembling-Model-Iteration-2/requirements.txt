@@ -13,3 +13,4 @@ scipy
 networkx
 hf_xet
 groq
+gensim

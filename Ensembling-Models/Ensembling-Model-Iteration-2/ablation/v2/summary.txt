@@ -1,0 +1,23 @@
+============================================================
+  V2 — + Dense Knowledge Embeddings
+============================================================
+  Active matrices : ['MPNet+Numberbatch_sim', 'MPNet_sim', 'WordNet_sim', 'GloVe_sim', 'Lexical_sim', 'Phonetic_sim', 'Morphological_sim']
+  Feature vector  : 63-d
+  Training games  : 678  (original only)
+
+Split      Games   Game Acc   Group Acc
+---------------------------------------------
+Val          137     17.52%      35.95%
+Test         100     25.00%      41.75%
+============================================================
+
+TEST Guess breakdown:
+  4/4 →  167  (32.9%)
+  3/4 →  168  (33.1%)
+  2/4 →  167  (32.9%)
+  1/4 →    6  (1.2%)
+  0/4 →    0  (0.0%)
+
+Models saved  : models_v2/
+Weights saved : results_v2/feature_weights.txt
+============================================================

@@ -1,0 +1,5 @@
+__pycache__
+wikidata_cache.sqlite
+conceptnet_en.sqlite
+numberbatch-en-19.08.txt.gz
+venv/

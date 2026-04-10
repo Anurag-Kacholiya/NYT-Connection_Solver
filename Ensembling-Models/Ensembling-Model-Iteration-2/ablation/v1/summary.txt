@@ -1,0 +1,23 @@
+============================================================
+  V1 — Pure Semantic Baseline (MPNet + GloVe + WordNet)
+============================================================
+  Active matrices : ['MPNet_sim', 'WordNet_sim', 'GloVe_sim']
+  Feature vector  : 27-d
+  Training games  : 678  (original only)
+
+Split      Games   Game Acc   Group Acc
+---------------------------------------------
+Val          137     17.52%      36.50%
+Test         100     21.00%      39.25%
+============================================================
+
+TEST Guess breakdown:
+  4/4 →  157  (31.2%)
+  3/4 →  173  (34.3%)
+  2/4 →  167  (33.1%)
+  1/4 →    7  (1.4%)
+  0/4 →    0  (0.0%)
+
+Models saved  : models_v1/
+Weights saved : results_v1/feature_weights.txt
+============================================================

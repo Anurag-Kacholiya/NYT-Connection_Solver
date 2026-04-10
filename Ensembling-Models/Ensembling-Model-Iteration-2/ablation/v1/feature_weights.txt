@@ -1,0 +1,35 @@
+========================================================================
+  FEATURE IMPORTANCES  (Gini impurity decrease, normalised to sum=1)
+========================================================================
+Rank  Feature                                         RF     GBM     Avg
+------------------------------------------------------------------------
+1     MPNet_sim_group_ambiguity                   0.0997  0.2257  0.1627
+2     MPNet_sim_min_in                            0.0827  0.1442  0.1134
+3     WordNet_sim_mean_in                         0.0724  0.0748  0.0736
+4     WordNet_sim_avg_top3_out                    0.0494  0.0849  0.0672
+5     WordNet_sim_min_in                          0.0540  0.0633  0.0586
+6     GloVe_sim_group_ambiguity                   0.0393  0.0587  0.0490
+7     MPNet_sim_mean_in                           0.0708  0.0139  0.0424
+8     GloVe_sim_min_in                            0.0298  0.0510  0.0404
+9     MPNet_sim_separation                        0.0680  0.0118  0.0399
+10    WordNet_sim_second_max_out                  0.0416  0.0336  0.0376
+11    WordNet_sim_group_ambiguity                 0.0339  0.0410  0.0374
+12    MPNet_sim_second_max_out                    0.0345  0.0357  0.0351
+13    GloVe_sim_second_max_out                    0.0281  0.0337  0.0309
+14    GloVe_sim_separation                        0.0480  0.0132  0.0306
+15    WordNet_sim_separation                      0.0466  0.0088  0.0277
+16    GloVe_sim_mean_in                           0.0304  0.0133  0.0219
+17    GloVe_sim_avg_top3_out                      0.0259  0.0176  0.0218
+18    MPNet_sim_var_in                            0.0256  0.0153  0.0204
+19    MPNet_sim_avg_top3_out                      0.0211  0.0120  0.0166
+20    WordNet_sim_max_out                         0.0230  0.0077  0.0153
+21    GloVe_sim_var_in                            0.0185  0.0118  0.0151
+22    WordNet_sim_var_in                          0.0167  0.0088  0.0128
+23    GloVe_sim_max_out                           0.0173  0.0077  0.0125
+24    MPNet_sim_max_out                           0.0151  0.0080  0.0115
+25    WordNet_sim_triangle_score                  0.0027  0.0028  0.0027
+26    GloVe_sim_triangle_score                    0.0027  0.0005  0.0016
+27    MPNet_sim_triangle_score                    0.0023  0.0002  0.0013
+========================================================================
+RF  importances sum  : 1.000000
+GBM importances sum  : 1.000000

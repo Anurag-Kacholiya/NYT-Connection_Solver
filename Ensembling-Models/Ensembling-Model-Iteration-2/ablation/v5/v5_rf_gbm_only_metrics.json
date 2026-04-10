@@ -1,0 +1,15 @@
+{
+  "run_name": "v5_rf_gbm_only",
+  "use_ranker": false,
+  "use_lr_fusion": false,
+  "val": {
+    "games": 137,
+    "game_accuracy": 0.21897810218978103,
+    "group_accuracy": 0.4324817518248175
+  },
+  "test": {
+    "games": 100,
+    "game_accuracy": 0.33,
+    "group_accuracy": 0.505
+  }
+}

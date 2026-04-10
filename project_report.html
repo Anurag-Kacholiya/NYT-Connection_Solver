@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NYT Connections Solver — Project Deep Dive</title>
+<style>
+  :root {
+    --yellow:  #f5c842;
+    --green:   #6aaa64;
+    --blue:    #4a90d9;
+    --purple:  #9b59b6;
+    --dark:    #1a1a2e;
+    --darker:  #12121e;
+    --card:    #1e1e35;
+    --text:    #e8e8f0;
+    --muted:   #9090b0;
+    --border:  #2e2e50;
+    --code-bg: #0d0d1a;
+    --red:     #e74c3c;
+    --teal:    #1abc9c;
+    --orange:  #e67e22;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--darker); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.7; }
+
+  /* Hero */
+  .hero { background: linear-gradient(135deg,#1a1a2e,#16213e 50%,#0f3460); padding:60px 40px 50px; text-align:center; border-bottom:3px solid var(--blue); }
+  .hero h1 { font-size:2.6rem; font-weight:800; background:linear-gradient(90deg,var(--yellow),var(--green),var(--blue),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:14px; }
+  .hero p { color:var(--muted); font-size:1.05rem; max-width:720px; margin:0 auto 24px; }
+  .pill-row { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .pill { padding:5px 16px; border-radius:999px; font-size:0.82rem; font-weight:600; letter-spacing:.5px; }
+  .pill-y { background:var(--yellow); color:#1a1a1a; }
+  .pill-g { background:var(--green);  color:#fff; }
+  .pill-b { background:var(--blue);   color:#fff; }
+  .pill-p { background:var(--purple); color:#fff; }
+
+  /* Nav */
+  .nav { position:sticky; top:0; z-index:100; background:#12121edd; backdrop-filter:blur(8px); border-bottom:1px solid var(--border); display:flex; gap:4px; padding:10px 30px; flex-wrap:wrap; }
+  .nav a { color:var(--muted); text-decoration:none; padding:5px 12px; border-radius:6px; font-size:0.8rem; font-weight:600; transition:all .2s; }
+  .nav a:hover { background:var(--border); color:var(--text); }
+  .nav a.active { background:var(--blue); color:#fff; }
+
+  /* Pipeline */
+  .pipeline-wrap { background:var(--card); border-bottom:1px solid var(--border); padding:28px 30px 22px; }
+  .pipeline-title { text-align:center; font-size:.72rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+  .pipeline { display:flex; align-items:flex-start; justify-content:center; flex-wrap:wrap; gap:0; }
+  .pipe-step { display:flex; flex-direction:column; align-items:center; gap:5px; min-width:105px; padding:14px 10px; border-radius:10px; text-align:center; }
+  .pipe-step .icon { font-size:1.7rem; }
+  .pipe-step .label { font-size:.72rem; font-weight:700; letter-spacing:.5px; text-transform:uppercase; }
+  .pipe-step .sub { font-size:.67rem; color:var(--muted); }
+  .pipe-step .role { font-size:.65rem; color:var(--muted); font-style:italic; margin-top:2px; }
+  .pipe-arrow { color:var(--muted); font-size:1.3rem; padding:0 2px; margin-top:22px; }
+  .ps-y { background:rgba(245,200,66,.12); border:1px solid var(--yellow); }
+  .ps-g { background:rgba(106,170,100,.12); border:1px solid var(--green); }
+  .ps-b { background:rgba(74,144,217,.12); border:1px solid var(--blue); }
+  .ps-p { background:rgba(155,89,182,.12); border:1px solid var(--purple); }
+  .ps-r { background:rgba(231,76,60,.12); border:1px solid var(--red); }
+  .ps-t { background:rgba(26,188,156,.12); border:1px solid var(--teal); }
+  .ps-o { background:rgba(230,126,34,.12); border:1px solid var(--orange); }
+
+  /* Execution note */
+  .exec-note { max-width:860px; margin:14px auto 0; background:rgba(74,144,217,.08); border:1px solid rgba(74,144,217,.2); border-radius:8px; padding:12px 18px; font-size:.83rem; color:#b0c8e8; text-align:center; }
+  .exec-note strong { color:var(--blue); }
+
+  /* Main */
+  .main { max-width:1100px; margin:0 auto; padding:40px 30px; }
+
+  /* File section */
+  .file-section { margin-bottom:70px; scroll-margin-top:70px; }
+  .file-header { display:flex; align-items:center; gap:16px; margin-bottom:28px; padding-bottom:16px; border-bottom:2px solid var(--border); }
+  .file-num { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:800; flex-shrink:0; }
+  .fn-1{background:var(--yellow);color:#1a1a1a}
+  .fn-2{background:var(--green);color:#fff}
+  .fn-3{background:var(--blue);color:#fff}
+  .fn-4{background:var(--purple);color:#fff}
+  .fn-5{background:var(--red);color:#fff}
+  .fn-6{background:var(--teal);color:#fff}
+  .fn-7{background:var(--orange);color:#fff}
+  .fn-ex{background:#555;color:#fff}
+  .file-title { flex:1; }
+  .file-title h2 { font-size:1.6rem; font-weight:800; font-family:'Courier New',monospace; margin-bottom:4px; }
+  .file-title p { color:var(--muted); font-size:.9rem; }
+
+  /* Cards */
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:20px; }
+  .card h3 { font-size:.78rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .card h3::after { content:''; flex:1; height:1px; background:var(--border); }
+  .card-accent-y{border-left:4px solid var(--yellow)}
+  .card-accent-g{border-left:4px solid var(--green)}
+  .card-accent-b{border-left:4px solid var(--blue)}
+  .card-accent-p{border-left:4px solid var(--purple)}
+  .card-accent-r{border-left:4px solid var(--red)}
+  .card-accent-t{border-left:4px solid var(--teal)}
+  .card-accent-o{border-left:4px solid var(--orange)}
+  .card-accent-w{border-left:4px solid #555}
+
+  /* Warning / dead-code box */
+  .warn { background:rgba(231,76,60,.1); border:1px solid rgba(231,76,60,.3); border-radius:8px; padding:14px 18px; font-size:.87rem; color:#f0b0a8; margin:12px 0; }
+  .warn strong { color:var(--red); }
+  .info { background:rgba(74,144,217,.08); border:1px solid rgba(74,144,217,.25); border-radius:8px; padding:14px 18px; font-size:.87rem; color:#b0c8e8; margin:12px 0; }
+  .info strong { color:var(--blue); }
+  .info-y { background:rgba(245,200,66,.08); border-color:rgba(245,200,66,.25); color:#e8d89a; }
+  .info-y strong { color:var(--yellow); }
+  .info-g { background:rgba(106,170,100,.08); border-color:rgba(106,170,100,.25); color:#a8d4a4; }
+  .info-g strong { color:var(--green); }
+  .info-p { background:rgba(155,89,182,.08); border-color:rgba(155,89,182,.25); color:#c8a8d8; }
+  .info-p strong { color:var(--purple); }
+  .info-o { background:rgba(230,126,34,.08); border-color:rgba(230,126,34,.25); color:#e8cca8; }
+  .info-o strong { color:var(--orange); }
+
+  /* Code */
+  pre { background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 20px; overflow-x:auto; font-family:'Courier New',monospace; font-size:.82rem; line-height:1.6; margin:12px 0; }
+  .kw{color:#ff79c6} .fn{color:#50fa7b} .str{color:#f1fa8c} .cm{color:#6272a4;font-style:italic} .num{color:#bd93f9} .cls{color:#8be9fd}
+
+  /* Tables */
+  .param-table { width:100%; border-collapse:collapse; font-size:.85rem; margin-top:4px; }
+  .param-table th { background:rgba(255,255,255,.05); padding:9px 14px; text-align:left; font-size:.75rem; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); border-bottom:1px solid var(--border); }
+  .param-table td { padding:9px 14px; border-bottom:1px solid rgba(255,255,255,.04); vertical-align:top; }
+  .param-table tr:last-child td { border-bottom:none; }
+  .param-table tr:hover td { background:rgba(255,255,255,.02); }
+  .mono { font-family:'Courier New',monospace; color:#8be9fd; font-size:.82rem; }
+  .type { font-family:'Courier New',monospace; color:#bd93f9; font-size:.8rem; }
+
+  /* Grids */
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  @media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+  /* Mini card */
+  .mini-card { background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:8px; padding:16px; }
+  .mini-card h4 { font-size:.82rem; font-weight:700; margin-bottom:8px; font-family:'Courier New',monospace; }
+  .mini-card p { font-size:.83rem; color:var(--muted); line-height:1.55; }
+
+  /* Tags */
+  .tag { display:inline-block; padding:2px 10px; border-radius:4px; font-size:.74rem; font-weight:600; margin:2px; }
+  .tag-y{background:rgba(245,200,66,.2);color:var(--yellow);border:1px solid rgba(245,200,66,.3)}
+  .tag-g{background:rgba(106,170,100,.2);color:var(--green);border:1px solid rgba(106,170,100,.3)}
+  .tag-b{background:rgba(74,144,217,.2);color:var(--blue);border:1px solid rgba(74,144,217,.3)}
+  .tag-p{background:rgba(155,89,182,.2);color:var(--purple);border:1px solid rgba(155,89,182,.3)}
+  .tag-r{background:rgba(231,76,60,.2);color:var(--red);border:1px solid rgba(231,76,60,.3)}
+  .tag-t{background:rgba(26,188,156,.2);color:var(--teal);border:1px solid rgba(26,188,156,.3)}
+  .tag-w{background:rgba(150,150,150,.15);color:#aaa;border:1px solid rgba(150,150,150,.25)}
+
+  /* Flow */
+  .flow { display:flex; flex-direction:column; gap:6px; padding:10px 0; }
+  .flow-row { display:flex; align-items:center; gap:10px; font-size:.85rem; }
+  .flow-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .flow-line { width:2px; height:16px; margin-left:4px; background:var(--border); flex-shrink:0; }
+
+  /* Section label */
+  .section-label { font-size:.74rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin:24px 0 12px; display:flex; align-items:center; gap:10px; }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* Summary table */
+  .summary-table { width:100%; border-collapse:collapse; font-size:.85rem; }
+  .summary-table th { background:rgba(255,255,255,.06); padding:10px 16px; text-align:left; color:var(--muted); font-size:.78rem; text-transform:uppercase; letter-spacing:.5px; }
+  .summary-table td { padding:10px 16px; border-bottom:1px solid rgba(255,255,255,.04); }
+  .summary-table tr:last-child td { border-bottom:none; }
+
+  /* Dead code row highlight */
+  .dead-row td { color:#888 !important; text-decoration:line-through; }
+  .dead-row td:last-child { text-decoration:none; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>NYT Connections Solver</h1>
+  <p>A verified, corrected deep-dive into all 7 files of the ML pipeline — including accurate pipeline order, dead code identification, and per-file execution roles.</p>
+  <div class="pill-row">
+    <span class="pill pill-y">Yellow · Easy</span>
+    <span class="pill pill-g">Green · Medium</span>
+    <span class="pill pill-b">Blue · Hard</span>
+    <span class="pill pill-p">Purple · Tricky</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <a href="#pipeline">Pipeline</a>
+  <a href="#how-it-works">How It Works</a>
+  <a href="#feature-importance">Feature Importance</a>
+  <a href="#data-loader">1 · data_loader</a>
+  <a href="#embedder">2 · embedder</a>
+  <a href="#evaluate">3 · evaluate</a>
+  <a href="#solver">4 · solver</a>
+  <a href="#train">5 · train</a>
+  <a href="#eval-advanced">6 · eval_test_advanced</a>
+  <a href="#eval-only">7 · eval_only</a>
+</div>
+
+<!-- PIPELINE -->
+<div class="pipeline-wrap" id="pipeline">
+  <div class="pipeline-title">Correct Execution Pipeline — train.py is the orchestrator</div>
+  <div class="pipeline">
+    <div class="pipe-step ps-y">
+      <span class="icon">📄</span>
+      <span class="label">data_loader</span>
+      <span class="sub">CSV → games</span>
+      <span class="role">library</span>
+    </div>
+    <span class="pipe-arrow">→</span>
+    <div class="pipe-step ps-g">
+      <span class="icon">🧠</span>
+      <span class="label">embedder</span>
+      <span class="sub">words → 17 matrices</span>
+      <span class="role">library</span>
+    </div>
+    <span class="pipe-arrow">→</span>
+    <div class="pipe-step ps-b">
+      <span class="icon">⚙️</span>
+      <span class="label">evaluate</span>
+      <span class="sub">features + simulation</span>
+      <span class="role">library</span>
+    </div>
+    <span class="pipe-arrow">→</span>
+    <div class="pipe-step ps-p">
+      <span class="icon">🎯</span>
+      <span class="label">solver</span>
+      <span class="sub">global optimiser</span>
+      <span class="role">library (called by evaluate)</span>
+    </div>
+    <span class="pipe-arrow">→</span>
+    <div class="pipe-step ps-r">
+      <span class="icon">🏋️</span>
+      <span class="label">train.py</span>
+      <span class="sub">runs everything above</span>
+      <span class="role">ENTRY POINT — you run this</span>
+    </div>
+  </div>
+  <div style="display:flex; justify-content:center; gap:20px; margin-top:16px; flex-wrap:wrap;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span style="color:var(--muted); font-size:.8rem;">After training completes, run separately:</span>
+    </div>
+  </div>
+  <div class="pipeline" style="margin-top:10px;">
+    <div class="pipe-step ps-t">
+      <span class="icon">📊</span>
+      <span class="label">eval_test_advanced</span>
+      <span class="sub">deep benchmarks</span>
+      <span class="role">standalone script</span>
+    </div>
+    <span class="pipe-arrow" style="margin-top:22px;">or</span>
+    <div class="pipe-step ps-o">
+      <span class="icon">🔁</span>
+      <span class="label">eval_only</span>
+      <span class="sub">re-run eval, no retrain</span>
+      <span class="role">standalone script</span>
+    </div>
+  </div>
+  <div class="exec-note">
+    <strong>Critical distinction:</strong> evaluate.py and solver.py are <strong>libraries</strong>, not scripts. They are imported and called inside train.py. You never run them directly. Only train.py, eval_only.py, and evaluate_test_advanced.py are entry points.
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ═══════════════════════════════════════════════ FILE 1 · data_loader -->
+<!-- ═══════════════════════════════════════════════ HOW IT WORKS -->
+<div class="file-section" id="how-it-works">
+  <div class="file-header">
+    <div class="file-num" style="background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;">✦</div>
+    <div class="file-title">
+      <h2 style="background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">How It All Works — Feature Extraction, Scoring & Model Choices</h2>
+      <p>A plain-English walkthrough of what the system actually does, step by step — no ML background needed.</p>
+    </div>
+  </div>
+
+  <!-- THE PROBLEM -->
+  <div class="card" style="border-left:4px solid var(--blue);background:linear-gradient(135deg,#1a1a2e,#1e1e35);">
+    <h3>🧩 The core problem</h3>
+    <p>You have <strong>16 words</strong>. They secretly belong to <strong>4 groups of 4</strong>. You need to figure out which 4 words belong together. The catch: there are <strong>1,820 possible ways</strong> to pick a group of 4 from 16 words (that's C(16,4)). The system has to score all of them and find the right 4.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
+      <div style="background:rgba(245,200,66,.15);border:1px solid rgba(245,200,66,.3);border-radius:8px;padding:10px 16px;flex:1;min-width:160px;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:800;color:var(--yellow);">16</div>
+        <div style="font-size:.8rem;color:var(--muted);">words in the puzzle</div>
+      </div>
+      <div style="background:rgba(74,144,217,.15);border:1px solid rgba(74,144,217,.3);border-radius:8px;padding:10px 16px;flex:1;min-width:160px;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:800;color:var(--blue);">1,820</div>
+        <div style="font-size:.8rem;color:var(--muted);">possible groups of 4</div>
+      </div>
+      <div style="background:rgba(106,170,100,.15);border:1px solid rgba(106,170,100,.3);border-radius:8px;padding:10px 16px;flex:1;min-width:160px;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:800;color:var(--green);">153</div>
+        <div style="font-size:.8rem;color:var(--muted);">features computed per group</div>
+      </div>
+      <div style="background:rgba(155,89,182,.15);border:1px solid rgba(155,89,182,.3);border-radius:8px;padding:10px 16px;flex:1;min-width:160px;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:800;color:var(--purple);">4</div>
+        <div style="font-size:.8rem;color:var(--muted);">ML models in the ensemble</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: SIMILARITY MATRICES -->
+  <div class="section-label">Step 1 — Building Similarity Matrices</div>
+  <div class="card card-accent-g">
+    <h3>🔗 What is a similarity matrix?</h3>
+    <p>Before we can score groups, we need to know how similar every word is to every other word. For each of the <strong>17 different signals</strong> (semantic, phonetic, knowledge-graph, etc.), we build a 16×16 grid where each cell tells us "how similar are word i and word j according to this signal?"</p>
+
+    <div style="margin:18px 0;">
+      <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px;overflow-x:auto;">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:10px;font-family:monospace;">Example: MPNet similarity matrix for 4 words (simplified)</div>
+        <table style="border-collapse:collapse;font-family:monospace;font-size:.82rem;min-width:360px;">
+          <tr>
+            <th style="padding:8px 12px;background:rgba(255,255,255,.05);color:var(--muted);font-size:.75rem;"></th>
+            <th style="padding:8px 12px;background:rgba(255,255,255,.05);color:var(--yellow);">PIANO</th>
+            <th style="padding:8px 12px;background:rgba(255,255,255,.05);color:var(--yellow);">GUITAR</th>
+            <th style="padding:8px 12px;background:rgba(255,255,255,.05);color:var(--blue);">HAMMER</th>
+            <th style="padding:8px 12px;background:rgba(255,255,255,.05);color:var(--blue);">DRILL</th>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;color:var(--yellow);font-weight:700;">PIANO</td>
+            <td style="padding:8px 12px;color:var(--green);text-align:center;">1.00</td>
+            <td style="padding:8px 12px;color:var(--green);text-align:center;">0.82</td>
+            <td style="padding:8px 12px;color:var(--red);text-align:center;">0.12</td>
+            <td style="padding:8px 12px;color:var(--red);text-align:center;">0.09</td>
+          </tr>
+          <tr style="background:rgba(255,255,255,.02);">
+            <td style="padding:8px 12px;color:var(--yellow);font-weight:700;">GUITAR</td>
+            <td style="padding:8px 12px;color:var(--green);text-align:center;">0.82</td>
+            <td style="padding:8px 12px;color:var(--green);text-align:center;">1.00</td>
+            <td style="padding:8px 12px;color:var(--red);text-align:center;">0.11</td>
+            <td style="padding:8px 12px;color:var(--red);text-align:center;">0.08</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;color:var(--blue);font-weight:700;">HAMMER</td>
+            <td style="padding:8px 12px;color:var(--red);text-align:center;">0.12</td>
+            <td style="padding:8px 12px;color:var(--red);text-align:center;">0.11</td>
+            <td style="padding:8px 12px;color:var(--green);text-align:center;">1.00</td>
+            <td style="padding:8px 12px;color:var(--green);text-align:center;">0.79</td>
+          </tr>
+          <tr style="background:rgba(255,255,255,.02);">
+            <td style="padding:8px 12px;color:var(--blue);font-weight:700;">DRILL</td>
+            <td style="padding:8px 12px;color:var(--red);text-align:center;">0.09</td>
+            <td style="padding:8px 12px;color:var(--red);text-align:center;">0.08</td>
+            <td style="padding:8px 12px;color:var(--green);text-align:center;">0.79</td>
+            <td style="padding:8px 12px;color:var(--green);text-align:center;">1.00</td>
+          </tr>
+        </table>
+        <div style="margin-top:10px;font-size:.78rem;color:var(--muted);">
+          <span style="color:var(--green);">■</span> High similarity (same group) &nbsp;&nbsp;
+          <span style="color:var(--red);">■</span> Low similarity (different groups)
+        </div>
+      </div>
+    </div>
+
+    <p>High values inside the correct groups, low values between groups — that's the ideal pattern. The system builds <strong>17 such matrices</strong> per puzzle (one for each signal type) and then double-centers each one to remove global bias.</p>
+    <div class="info info-g" style="margin-top:12px;">
+      <strong>Why 17 different matrices?</strong> No single signal works for all NYT puzzle types. GloVe catches word meanings, phonetics catches rhymes and homophones, Wikidata catches factual categories (e.g. "all Olympic sports"), Wikipedia catches membership (e.g. "all Beatles songs"). The puzzle designers deliberately exploit many types of connections.
+    </div>
+  </div>
+
+  <!-- STEP 2: FEATURE EXTRACTION -->
+  <div class="section-label">Step 2 — Extracting Features from Each Candidate Group</div>
+  <div class="card card-accent-b">
+    <h3>🔬 Turning matrices into numbers the models can use</h3>
+    <p>For each of the 1,820 candidate groups of 4, we extract <strong>9 features from each of the 17 matrices</strong> = up to <strong>153 numbers</strong> that describe that group. Think of it like filling out a 153-column questionnaire for every possible group.</p>
+    <p style="margin-top:10px;color:var(--muted);font-size:.88rem;">Here is what each of the 9 features means in plain English, using the group {PIANO, GUITAR, VIOLIN, DRUMS} as an example:</p>
+
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px;">
+
+      <div style="background:rgba(106,170,100,.08);border:1px solid rgba(106,170,100,.2);border-radius:10px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <span style="background:var(--green);color:#fff;font-weight:800;padding:3px 10px;border-radius:4px;font-size:.8rem;font-family:monospace;">mean_in</span>
+          <span style="color:var(--green);font-weight:600;font-size:.88rem;">Average similarity inside the group</span>
+        </div>
+        <p style="font-size:.87rem;color:var(--muted);">Average of all 6 pairwise similarity scores between the 4 words. For {PIANO, GUITAR, VIOLIN, DRUMS} this is high because they're all instruments. <strong>Higher = group is cohesive.</strong></p>
+      </div>
+
+      <div style="background:rgba(106,170,100,.08);border:1px solid rgba(106,170,100,.2);border-radius:10px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <span style="background:var(--green);color:#fff;font-weight:800;padding:3px 10px;border-radius:4px;font-size:.8rem;font-family:monospace;">min_in</span>
+          <span style="color:var(--green);font-weight:600;font-size:.88rem;">The weakest link inside the group</span>
+        </div>
+        <p style="font-size:.87rem;color:var(--muted);">The lowest similarity score among the 6 pairs. If even the least-similar pair inside the group is still quite similar, that's a very tight group. A bad group will have at least one pair that doesn't fit. <strong>Higher = no weak links.</strong></p>
+      </div>
+
+      <div style="background:rgba(106,170,100,.08);border:1px solid rgba(106,170,100,.2);border-radius:10px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <span style="background:var(--green);color:#fff;font-weight:800;padding:3px 10px;border-radius:4px;font-size:.8rem;font-family:monospace;">var_in</span>
+          <span style="color:var(--green);font-weight:600;font-size:.88rem;">How consistent the similarities are inside</span>
+        </div>
+        <p style="font-size:.87rem;color:var(--muted);">Variance of the 6 pairwise scores. A tight, uniform group (all pairs equally similar) has low variance. A group with one odd-word-out has high variance. <strong>Lower = more uniform group.</strong></p>
+      </div>
+
+      <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:10px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <span style="background:var(--red);color:#fff;font-weight:800;padding:3px 10px;border-radius:4px;font-size:.8rem;font-family:monospace;">max_out</span>
+          <span style="color:var(--red);font-weight:600;font-size:.88rem;">How close the group is to the nearest outsider</span>
+        </div>
+        <p style="font-size:.87rem;color:var(--muted);">Maximum similarity between any group member and any word outside the group. If BASS is in the group and also very similar to BASS GUITAR (an outsider), max_out will be high — a warning sign that the group might be confused. <strong>Lower = less confusion risk.</strong></p>
+      </div>
+
+      <div style="background:rgba(74,144,217,.08);border:1px solid rgba(74,144,217,.2);border-radius:10px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <span style="background:var(--blue);color:#fff;font-weight:800;padding:3px 10px;border-radius:4px;font-size:.8rem;font-family:monospace;">separation</span>
+          <span style="color:var(--blue);font-weight:600;font-size:.88rem;">The main signal — how much better inside than outside</span>
+        </div>
+        <p style="font-size:.87rem;color:var(--muted);"><strong>mean_in − mean_out.</strong> This is the most important single feature. It asks: "Are the 4 words more similar to each other than to the 12 outsiders?" A high positive separation means the group is clearly distinct. A group with separation near zero is ambiguous.</p>
+      </div>
+
+      <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:10px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <span style="background:var(--red);color:#fff;font-weight:800;padding:3px 10px;border-radius:4px;font-size:.8rem;font-family:monospace;">second_max_out</span>
+          <span style="color:var(--red);font-weight:600;font-size:.88rem;">The 2nd most dangerous outsider</span>
+        </div>
+        <p style="font-size:.87rem;color:var(--muted);">One strong outsider similarity might be a fluke. If the 2nd highest is also large, there are multiple confusing words outside — the group is genuinely ambiguous, not just unlucky. <strong>Lower = safer group.</strong></p>
+      </div>
+
+      <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:10px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <span style="background:var(--red);color:#fff;font-weight:800;padding:3px 10px;border-radius:4px;font-size:.8rem;font-family:monospace;">avg_top3_out</span>
+          <span style="color:var(--red);font-weight:600;font-size:.88rem;">Average of the top 3 outsider threats</span>
+        </div>
+        <p style="font-size:.87rem;color:var(--muted);">Mean of the 3 most similar outsider pairs. A broader measure of how many words outside the group are trying to "steal" members from it. <strong>Lower = cleaner boundary.</strong></p>
+      </div>
+
+      <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:10px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <span style="background:var(--red);color:#fff;font-weight:800;padding:3px 10px;border-radius:4px;font-size:.8rem;font-family:monospace;">group_ambiguity</span>
+          <span style="color:var(--red);font-weight:600;font-size:.88rem;">How "pulled" group members are towards outsiders</span>
+        </div>
+        <p style="font-size:.87rem;color:var(--muted);">For each of the 4 group members, compute their average similarity to all 12 outsiders. Sum these up. If a group member is generally similar to lots of other words in the puzzle, it's a generic word that could fit anywhere — making the group harder to pin down. <strong>Lower = more specific, less ambiguous group.</strong></p>
+      </div>
+
+      <div style="background:rgba(155,89,182,.08);border:1px solid rgba(155,89,182,.2);border-radius:10px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <span style="background:var(--purple);color:#fff;font-weight:800;padding:3px 10px;border-radius:4px;font-size:.8rem;font-family:monospace;">triangle_score</span>
+          <span style="color:var(--purple);font-weight:600;font-size:.88rem;">Structural coherence — do similarities "make sense together"?</span>
+        </div>
+        <p style="font-size:.87rem;color:var(--muted);">Logic test: if A is similar to B, and B is similar to C, then A should be similar to C too. For every triplet (a,b,c) in the group, checks if this triangle is consistent. A real group should be coherent — all members related to each other, not just in a chain. <strong>Higher = more internally coherent.</strong></p>
+      </div>
+
+    </div>
+
+    <div class="info" style="margin-top:16px;">
+      <strong>Total features per candidate group:</strong> 9 features × 17 matrices = <strong>153 features</strong>. For one puzzle, that's 1,820 groups × 153 features = <strong>278,460 numbers</strong> computed, just to score one puzzle.
+    </div>
+  </div>
+
+  <!-- STEP 3: MODELS -->
+  <div class="section-label">Step 3 — The 4-Layer Decision Hierarchy</div>
+
+  <!-- HIERARCHY OVERVIEW -->
+  <div class="card" style="border-left:4px solid var(--blue);background:linear-gradient(135deg,#1a1a2e,#1e1e35);">
+    <h3>🏛️ How the 4 models fit together</h3>
+    <p style="margin-bottom:16px;">Each model plays a <strong>different role</strong> in the decision process. They don't all do the same job — they form a hierarchy where each layer refines the previous one.</p>
+    <div style="display:flex;flex-direction:column;gap:0;">
+
+      <div style="display:flex;align-items:stretch;gap:0;">
+        <div style="width:4px;background:linear-gradient(to bottom,var(--red),var(--yellow));border-radius:4px 4px 0 0;flex-shrink:0;"></div>
+        <div style="flex:1;padding:14px 18px;background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.15);border-left:none;border-radius:0 8px 0 0;">
+          <span style="background:var(--red);color:#fff;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:700;font-family:monospace;">LAYER 1</span>
+          <span style="margin-left:10px;font-weight:700;color:var(--red);">RF &amp; GBM — Discovery</span>
+          <p style="font-size:.84rem;color:var(--muted);margin-top:6px;">Look at each candidate group independently. Ask: <em>"Is this a correct group? Yes or No?"</em> They are <strong>pointwise</strong> experts — they score each of the 1,820 groups in isolation without knowing what the others scored.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:stretch;gap:0;">
+        <div style="width:4px;background:var(--purple);flex-shrink:0;"></div>
+        <div style="flex:1;padding:14px 18px;background:rgba(155,89,182,.06);border:1px solid rgba(155,89,182,.15);border-left:none;border-top:none;">
+          <span style="background:var(--purple);color:#fff;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:700;font-family:monospace;">LAYER 2</span>
+          <span style="margin-left:10px;font-weight:700;color:var(--purple);">LightGBM Ranker — Ranking</span>
+          <p style="font-size:.84rem;color:var(--muted);margin-top:6px;">Doesn't look at candidates in isolation — it sees <strong>all 1,820 candidates for a puzzle together</strong> and asks: <em>"Which of these is the BEST one relative to the others?"</em> If RF and GBM both say "90% likely" for two groups, the ranker is the one that says "this one is 92%, that one is 89%." It is the <strong>re-ranker</strong> that breaks ties and applies context.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:stretch;gap:0;">
+        <div style="width:4px;background:var(--teal);flex-shrink:0;"></div>
+        <div style="flex:1;padding:14px 18px;background:rgba(26,188,156,.06);border:1px solid rgba(26,188,156,.15);border-left:none;border-top:none;">
+          <span style="background:var(--teal);color:#fff;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:700;font-family:monospace;">LAYER 3</span>
+          <span style="margin-left:10px;font-weight:700;color:var(--teal);">LR Fusion — Coordination</span>
+          <p style="font-size:.84rem;color:var(--muted);margin-top:6px;">Sits alongside the others and asks: <em>"Which of the 17 similarity signals should I trust today?"</em> It learned (on the validation set) that e.g. MPNet separation is a strong signal and morphological similarity is weak. It weights the raw matrix evidence before feeding into the final score — acting as the <strong>ensemble manager</strong> that keeps noisy signals from corrupting the decision.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:stretch;gap:0;">
+        <div style="width:4px;background:var(--blue);border-radius:0 0 4px 4px;flex-shrink:0;"></div>
+        <div style="flex:1;padding:14px 18px;background:rgba(74,144,217,.06);border:1px solid rgba(74,144,217,.15);border-left:none;border-top:none;border-radius:0 0 8px 0;">
+          <span style="background:var(--blue);color:#fff;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:700;font-family:monospace;">LAYER 4</span>
+          <span style="margin-left:10px;font-weight:700;color:var(--blue);">solve_ml() — Strategy</span>
+          <p style="font-size:.84rem;color:var(--muted);margin-top:6px;">Takes all the weighted scores from Layers 1–3 and asks: <em>"How do I fit 4 groups together so they all work as a complete partition of 16 words?"</em> It prevents choosing a high-scoring group that "steals" a word that belongs to another group. Without this layer, a greedy approach could win one group and ruin three others.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SUMMARY BADGES -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div style="background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.25);border-radius:8px;padding:8px 14px;text-align:center;flex:1;min-width:120px;">
+        <div style="font-weight:800;color:var(--red);font-size:.9rem;">RF &amp; GBM</div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:2px;">Discovery</div>
+        <div style="font-size:.72rem;color:var(--muted);">pointwise · "yes or no?"</div>
+      </div>
+      <div style="background:rgba(155,89,182,.1);border:1px solid rgba(155,89,182,.25);border-radius:8px;padding:8px 14px;text-align:center;flex:1;min-width:120px;">
+        <div style="font-weight:800;color:var(--purple);font-size:.9rem;">LightGBM</div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:2px;">Ranking</div>
+        <div style="font-size:.72rem;color:var(--muted);">listwise · "which is best?"</div>
+      </div>
+      <div style="background:rgba(26,188,156,.1);border:1px solid rgba(26,188,156,.25);border-radius:8px;padding:8px 14px;text-align:center;flex:1;min-width:120px;">
+        <div style="font-weight:800;color:var(--teal);font-size:.9rem;">LR Fusion</div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:2px;">Coordination</div>
+        <div style="font-size:.72rem;color:var(--muted);">signal weights · "trust whom?"</div>
+      </div>
+      <div style="background:rgba(74,144,217,.1);border:1px solid rgba(74,144,217,.25);border-radius:8px;padding:8px 14px;text-align:center;flex:1;min-width:120px;">
+        <div style="font-weight:800;color:var(--blue);font-size:.9rem;">solve_ml</div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:2px;">Strategy</div>
+        <div style="font-size:.72rem;color:var(--muted);">global · "how do 4 fit together?"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODEL 1+2: RF & GBM -->
+  <div class="card card-accent-r">
+    <h3>🔍 Layer 1 — RF &amp; GBM: The Detectives (Pointwise Scorers)</h3>
+    <p style="margin-bottom:14px;color:var(--muted);font-size:.88rem;">Both models do the same job — score each group independently — but they approach it differently, which is why both are kept.</p>
+    <div class="grid-2">
+      <div style="background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.15);border-radius:8px;padding:16px;">
+        <div style="font-weight:700;color:var(--red);margin-bottom:8px;">Random Forest</div>
+        <p style="font-size:.84rem;color:var(--muted);">Trains 200 decision trees <strong>in parallel</strong>, each on a random data + feature subset. All trees vote — the vote fraction becomes the probability. Very stable, hard to overfit, good when many features are irrelevant.</p>
+        <div style="margin-top:10px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--border);padding-top:8px;">
+          Output: probability 0–1 &nbsp;·&nbsp; Weight: <strong style="color:var(--red);">15%</strong>
+        </div>
+      </div>
+      <div style="background:rgba(245,200,66,.06);border:1px solid rgba(245,200,66,.15);border-radius:8px;padding:16px;">
+        <div style="font-weight:700;color:var(--yellow);margin-bottom:8px;">Gradient Boosting</div>
+        <p style="font-size:.84rem;color:var(--muted);">Builds 200 trees <strong>sequentially</strong> — each new tree specifically targets the mistakes of the previous ones. More sensitive to subtle patterns and difficult edge cases. Complements RF because they make different errors.</p>
+        <div style="margin-top:10px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--border);padding-top:8px;">
+          Output: probability 0–1 &nbsp;·&nbsp; Weight: <strong style="color:var(--yellow);">15%</strong>
+        </div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:12px;">
+      <strong>What "pointwise" means in code:</strong> <code>clf_rf.predict_proba(feats_arr)[:, 1]</code> and <code>clf_gbm.predict_proba(feats_arr)[:, 1]</code> — each row of <code>feats_arr</code> is one candidate group, scored completely independently. The model never sees the other 1,819 candidates when scoring any one of them.
+    </div>
+  </div>
+
+  <!-- MODEL 3: LightGBM -->
+  <div class="card card-accent-p">
+    <h3>🏆 Layer 2 — LightGBM Lambdarank: The Judge (Re-ranker)</h3>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:.87rem;color:var(--muted);margin-bottom:12px;">The key insight behind choosing a ranker: we don't need to know the <em>absolute</em> probability that a group is correct — we need to know which group is <em>more likely correct than the others in this specific puzzle</em>. That's a ranking problem, not a classification problem.</p>
+        <div class="flow" style="padding:0;">
+          <div class="flow-row" style="font-size:.84rem;"><div class="flow-dot" style="background:var(--purple)"></div>Treats each puzzle as a "query", all 1,820 candidates as "documents to rank"</div>
+          <div class="flow-row" style="font-size:.84rem;"><div class="flow-dot" style="background:var(--purple)"></div>Optimises NDCG — ranks correct groups at the top within each puzzle</div>
+          <div class="flow-row" style="font-size:.84rem;"><div class="flow-dot" style="background:var(--purple)"></div>Breaks ties RF and GBM can't — if two groups both score 90%, the ranker picks the better one</div>
+          <div class="flow-row" style="font-size:.84rem;"><div class="flow-dot" style="background:var(--purple)"></div>Gets 50% weight because of this — it is the dominant signal</div>
+        </div>
+      </div>
+      <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:.83rem;">
+        <div style="color:var(--muted);margin-bottom:8px;font-size:.75rem;text-transform:uppercase;letter-spacing:1px;">Training labels (3-level relevance)</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="background:var(--green);color:#fff;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:700;font-family:monospace;">label 2</span>
+            <span style="color:var(--text);font-size:.84rem;">Correct group — this is what we want ranked #1</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="background:var(--yellow);color:#1a1a1a;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:700;font-family:monospace;">label 1</span>
+            <span style="color:var(--text);font-size:.84rem;">Hard negative — 3/4 overlap, almost right but wrong</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="background:var(--red);color:#fff;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:700;font-family:monospace;">label 0</span>
+            <span style="color:var(--text);font-size:.84rem;">Easy negative — random wrong group</span>
+          </div>
+        </div>
+        <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px;color:var(--muted);font-size:.8rem;">
+          Output: ranking score (not a probability)<br>
+          Weight in ensemble: <strong style="color:var(--purple);">50%</strong>
+        </div>
+      </div>
+    </div>
+    <div class="info info-p" style="margin-top:12px;">
+      <strong>Code detail:</strong> <code>probs_ranker = clf_ranker.predict(feats_arr)</code> — then min-max normalized to [0,1] so it can be combined with RF/GBM probabilities in the weighted average. All 1,820 candidates are scored (not just 120 — the <code>top_k=120</code> parameter in generate_candidates is accepted but currently unused).
+    </div>
+  </div>
+
+  <!-- MODEL 4: LR -->
+  <div class="card card-accent-t">
+    <h3>⚖️ Layer 3 — LR Fusion: The Taskmaster (Signal Coordinator)</h3>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:.87rem;color:var(--muted);margin-bottom:12px;">LR Fusion has a completely different input from the other three models. It doesn't receive the full 153-feature vector — it only receives <strong>17 numbers</strong> (the separation score from each matrix). It learns: <em>"When these 17 signals conflict, which ones should I trust?"</em></p>
+        <div class="flow" style="padding:0;">
+          <div class="flow-row" style="font-size:.84rem;"><div class="flow-dot" style="background:var(--teal)"></div>Only 17 parameters — one learned weight per similarity matrix</div>
+          <div class="flow-row" style="font-size:.84rem;"><div class="flow-dot" style="background:var(--teal)"></div>Trained on validation set only — never saw training data</div>
+          <div class="flow-row" style="font-size:.84rem;"><div class="flow-dot" style="background:var(--teal)"></div>Fully interpretable — you can read the coefficients directly from the saved model</div>
+          <div class="flow-row" style="font-size:.84rem;"><div class="flow-dot" style="background:var(--teal)"></div>Keeps noisy/redundant signals from corrupting the final score</div>
+        </div>
+      </div>
+      <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:.83rem;">
+        <div style="color:var(--muted);margin-bottom:10px;font-size:.75rem;text-transform:uppercase;letter-spacing:1px;">What it learns (example learned weights)</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-family:monospace;">
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:#8be9fd;">MPNet_separation</span>
+            <span style="color:var(--green);">+5.28 ✦ trust this</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:#8be9fd;">WikiData_separation</span>
+            <span style="color:var(--green);">+3.91 ✦ trust this</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:#8be9fd;">GloVe_separation</span>
+            <span style="color:var(--yellow);">+1.44</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:#8be9fd;">Morphological_separation</span>
+            <span style="color:var(--muted);">+0.02 ≈ ignore</span>
+          </div>
+        </div>
+        <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px;color:var(--muted);font-size:.8rem;">
+          Output: probability 0–1<br>
+          Weight in ensemble: <strong style="color:var(--teal);">20%</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODEL solve_ml -->
+  <div class="card card-accent-b">
+    <h3>🧩 Layer 4 — solve_ml(): The Strategist (Global Partition Optimizer)</h3>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:.87rem;color:var(--muted);margin-bottom:12px;">Even after perfect scoring, a greedy approach fails in one specific scenario: when the highest-scoring group "steals" a word that's actually needed by another group. solve_ml() prevents this.</p>
+        <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:8px;padding:12px;margin-bottom:10px;">
+          <p style="font-size:.83rem;color:#f0b0a8;"><strong style="color:var(--red);">The problem it solves:</strong> Group A scores 0.95 and is picked greedily. But word "BASS" in Group A actually belongs to Group B (score 0.90). Now Group B has only 3 correct words — it can never score well. Groups C and D also suffer. Total score collapses.</p>
+        </div>
+        <div style="background:rgba(106,170,100,.08);border:1px solid rgba(106,170,100,.2);border-radius:8px;padding:12px;">
+          <p style="font-size:.83rem;color:#a8d4a8;"><strong style="color:var(--green);">The solution:</strong> Find the 4-partition of all 16 words that maximises the <em>sum</em> of all 4 group scores — not just the best single group. Sometimes choosing Group A' (score 0.88) instead of A lets B', C', D' all score highly, giving a better total.</p>
+        </div>
+      </div>
+      <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:.83rem;">
+        <div style="color:var(--muted);margin-bottom:8px;font-size:.75rem;text-transform:uppercase;letter-spacing:1px;">When is it triggered?</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:rgba(106,170,100,.1);border:1px solid rgba(106,170,100,.2);border-radius:6px;padding:8px 12px;">
+            <span style="color:var(--green);font-weight:700;font-size:.82rem;">top score &lt; 0.70</span>
+            <p style="font-size:.81rem;color:var(--muted);margin-top:4px;">Model is uncertain → run solve_ml() on top-250 candidates → submit the entire optimal 4-partition at once</p>
+          </div>
+          <div style="background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.2);border-radius:6px;padding:8px 12px;">
+            <span style="color:var(--red);font-weight:700;font-size:.82rem;">top score ≥ 0.70</span>
+            <p style="font-size:.81rem;color:var(--muted);margin-top:4px;">Model is confident → skip solve_ml, greedy pick is safe and faster</p>
+          </div>
+        </div>
+        <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px;color:var(--muted);font-size:.8rem;">
+          This is in solver.py, called from evaluate.py's simulate_game_ml()
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3b: OBJECTIVE FUNCTIONS -->
+  <div class="section-label">Step 3b — What Each Model is Actually Trying to Learn (Objective Functions)</div>
+
+  <div class="card" style="border-left:4px solid var(--blue);background:linear-gradient(135deg,#1a1a2e,#1e1e35);">
+    <h3>🎯 Why objective functions matter</h3>
+    <p>Every ML model needs a <strong>loss function</strong> — a number that measures "how wrong am I right now?" Training is the process of minimising that number. Different loss functions teach models to be good at different things. Here's what each model is optimising, with a concrete Connections example.</p>
+    <div class="info" style="margin-top:12px;">
+      <strong>Our running example puzzle:</strong> 16 words including PIANO, GUITAR, VIOLIN, DRUMS, BASS, HAMMER, DRILL, SAW, CHISEL, APPLE, MANGO, GRAPE, PEACH, CLOUD, RAIN, THUNDER. Correct groups: {instruments}, {tools}, {fruits}, {weather}.
+    </div>
+  </div>
+
+  <!-- GINI -->
+  <div class="card card-accent-r">
+    <h3>🌲 RF Objective — Gini Impurity</h3>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:14px;">At every split in every decision tree, the RF asks: <em>"Which feature threshold most cleanly separates correct groups from wrong groups?"</em> It measures "cleanliness" using Gini impurity.</p>
+
+    <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;">Formula</div>
+      <div style="font-family:monospace;font-size:.9rem;color:var(--text);">Gini = 1 − p(correct)² − p(wrong)²</div>
+      <div style="color:var(--muted);font-size:.82rem;margin-top:6px;">Lower Gini = purer split = better. Gini = 0 means perfectly separated. Gini = 0.5 means total chaos (50/50 mix).</div>
+    </div>
+
+    <div style="font-weight:600;margin-bottom:10px;font-size:.88rem;">Concrete example from our puzzle:</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:14px 16px;">
+        <div style="font-size:.82rem;color:var(--muted);margin-bottom:8px;">The tree considers the split: <span style="font-family:monospace;color:#8be9fd;">MPNet_sim_separation > 0.35</span></div>
+        <div class="grid-2" style="gap:10px;">
+          <div style="background:rgba(106,170,100,.08);border:1px solid rgba(106,170,100,.2);border-radius:6px;padding:10px;">
+            <div style="font-size:.78rem;font-weight:700;color:var(--green);margin-bottom:6px;">ABOVE threshold (separation &gt; 0.35)</div>
+            <div style="font-size:.82rem;color:var(--muted);">320 candidate groups land here<br>240 are <span style="color:var(--green);">correct groups</span><br>80 are <span style="color:var(--red);">wrong groups</span></div>
+            <div style="font-family:monospace;font-size:.8rem;color:var(--text);margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">Gini = 1 − (240/320)² − (80/320)²<br>     = 1 − 0.5625 − 0.0625 = <span style="color:var(--green);">0.375</span></div>
+          </div>
+          <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:6px;padding:10px;">
+            <div style="font-size:.78rem;font-weight:700;color:var(--red);margin-bottom:6px;">BELOW threshold (separation ≤ 0.35)</div>
+            <div style="font-size:.82rem;color:var(--muted);">1500 candidate groups land here<br>40 are <span style="color:var(--green);">correct groups</span><br>1460 are <span style="color:var(--red);">wrong groups</span></div>
+            <div style="font-family:monospace;font-size:.8rem;color:var(--text);margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">Gini = 1 − (40/1500)² − (1460/1500)²<br>     = 1 − 0.0007 − 0.9484 = <span style="color:var(--green);">0.0509</span></div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:.83rem;color:var(--muted);">Weighted average Gini = <span style="color:var(--text);">0.375 × (320/1820) + 0.0509 × (1500/1820)</span> = <span style="color:var(--green);font-weight:700;">0.108</span> — a very clean split! The tree keeps this split.</div>
+      </div>
+
+      <div style="background:rgba(74,144,217,.06);border:1px solid rgba(74,144,217,.2);border-radius:8px;padding:12px 16px;font-size:.84rem;">
+        <strong style="color:var(--blue);">What this means for our puzzle:</strong> The RF learns that {PIANO, GUITAR, VIOLIN, DRUMS} has MPNet_separation = 0.71 → lands well above the threshold → tree votes <span style="color:var(--green);font-weight:700;">"correct"</span>. The group {PIANO, GUITAR, VIOLIN, BASS} has MPNet_separation = 0.48 → also above, but other trees with other features will vote it down.
+      </div>
+    </div>
+  </div>
+
+  <!-- LOG LOSS -->
+  <div class="card card-accent-y">
+    <h3>📈 GBM Objective — Log Loss (Binary Cross-Entropy)</h3>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:14px;">GBM trains sequentially. Each round adds a new tree that specifically fixes the errors of the previous ensemble. The loss it minimises is log loss — which punishes <em>confident wrong answers</em> much more severely than uncertain wrong answers.</p>
+
+    <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;">Formula</div>
+      <div style="font-family:monospace;font-size:.9rem;color:var(--text);">Loss = −[y·log(p) + (1−y)·log(1−p)]</div>
+      <div style="color:var(--muted);font-size:.82rem;margin-top:6px;">y = true label (1=correct, 0=wrong), p = predicted probability. Lower loss = better.</div>
+    </div>
+
+    <div style="font-weight:600;margin-bottom:10px;font-size:.88rem;">Concrete example from our puzzle:</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:14px 16px;">
+        <div style="font-size:.82rem;color:var(--muted);margin-bottom:10px;font-weight:600;">Round 1 — initial predictions:</div>
+        <table style="width:100%;border-collapse:collapse;font-size:.82rem;">
+          <tr style="background:rgba(255,255,255,.04);">
+            <th style="padding:7px 10px;text-align:left;color:var(--muted);font-size:.75rem;">Candidate group</th>
+            <th style="padding:7px 10px;text-align:left;color:var(--muted);font-size:.75rem;">True label</th>
+            <th style="padding:7px 10px;text-align:left;color:var(--muted);font-size:.75rem;">Predicted p</th>
+            <th style="padding:7px 10px;text-align:left;color:var(--muted);font-size:.75rem;">Log Loss</th>
+            <th style="padding:7px 10px;text-align:left;color:var(--muted);font-size:.75rem;">Status</th>
+          </tr>
+          <tr>
+            <td style="padding:7px 10px;font-family:monospace;color:var(--green);">{PIANO, GUITAR, VIOLIN, DRUMS}</td>
+            <td style="padding:7px 10px;color:var(--green);">1 (correct)</td>
+            <td style="padding:7px 10px;">0.85</td>
+            <td style="padding:7px 10px;color:var(--green);">0.163</td>
+            <td style="padding:7px 10px;color:var(--green);">✓ good</td>
+          </tr>
+          <tr style="background:rgba(255,255,255,.02);">
+            <td style="padding:7px 10px;font-family:monospace;color:var(--red);">{PIANO, GUITAR, VIOLIN, BASS}</td>
+            <td style="padding:7px 10px;color:var(--red);">0 (wrong)</td>
+            <td style="padding:7px 10px;">0.80</td>
+            <td style="padding:7px 10px;color:var(--red);">1.609</td>
+            <td style="padding:7px 10px;color:var(--red);">✗ very wrong — confidently wrong!</td>
+          </tr>
+          <tr>
+            <td style="padding:7px 10px;font-family:monospace;color:var(--muted);">{HAMMER, APPLE, RAIN, PIANO}</td>
+            <td style="padding:7px 10px;color:var(--red);">0 (wrong)</td>
+            <td style="padding:7px 10px;">0.05</td>
+            <td style="padding:7px 10px;color:var(--green);">0.051</td>
+            <td style="padding:7px 10px;color:var(--green);">✓ correctly uncertain</td>
+          </tr>
+        </table>
+        <div style="margin-top:10px;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);border-radius:6px;padding:10px 14px;font-size:.83rem;">
+          <strong style="color:var(--yellow);">Round 2 focuses on:</strong> {PIANO, GUITAR, VIOLIN, BASS} because it had the highest loss (1.609). The next tree is trained specifically to push that group's score DOWN by learning what feature distinguishes it from the real instruments group — e.g. <span style="font-family:monospace;color:#8be9fd;">WordNet_sim_min_in</span> is lower because BASS has musical AND fish senses.
+        </div>
+      </div>
+
+      <div style="background:rgba(74,144,217,.06);border:1px solid rgba(74,144,217,.2);border-radius:8px;padding:12px 16px;font-size:.84rem;">
+        <strong style="color:var(--blue);">Key insight:</strong> GBM is specifically designed to handle the "close but wrong" decoy groups (3/4 overlap) — exactly the hard negatives in our training set. Each round zooms in on whichever decoy group is currently fooling the model most.
+      </div>
+    </div>
+  </div>
+
+  <!-- NDCG -->
+  <div class="card card-accent-p">
+    <h3>🏆 LightGBM Objective — NDCG@[1,3,5] (Ranking Quality)</h3>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:14px;">NDCG = Normalised Discounted Cumulative Gain. It measures: <em>"Are the correct groups sitting at the top of our ranking?"</em> Getting rank #1 right is worth more than getting rank #5 right.</p>
+
+    <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;">Intuition</div>
+      <div style="font-family:monospace;font-size:.87rem;color:var(--text);line-height:1.8;">
+        DCG = Σ relevance(rank_i) / log₂(rank_i + 1)<br>
+        NDCG = DCG / ideal_DCG &nbsp;&nbsp;<span style="color:var(--muted);">(normalised so max = 1.0)</span>
+      </div>
+      <div style="color:var(--muted);font-size:.82rem;margin-top:6px;">Relevance: correct group=2, hard-wrong=1, easy-wrong=0. Rank 1 counts most, rank 5 counts less.</div>
+    </div>
+
+    <div style="font-weight:600;margin-bottom:10px;font-size:.88rem;">Concrete example from our puzzle:</div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:10px;">
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:10px;">For our puzzle, after scoring all 1,820 candidates, the top-5 ranked groups look like this in two scenarios:</div>
+      <div class="grid-2" style="gap:10px;">
+        <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:8px;padding:12px;">
+          <div style="font-size:.78rem;font-weight:700;color:var(--red);margin-bottom:8px;">BAD RANKING (low NDCG)</div>
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:.8rem;font-family:monospace;">
+            <div><span style="color:var(--muted);">#1</span> {PIANO,GUITAR,VIOLIN,<span style="color:var(--red);">BASS</span>} <span style="color:var(--yellow);">rel=1</span></div>
+            <div><span style="color:var(--muted);">#2</span> {PIANO,GUITAR,<span style="color:var(--red);">BASS</span>,DRUMS} <span style="color:var(--yellow);">rel=1</span></div>
+            <div><span style="color:var(--muted);">#3</span> {PIANO,GUITAR,VIOLIN,DRUMS} <span style="color:var(--green);">rel=2</span></div>
+            <div><span style="color:var(--muted);">#4</span> {HAMMER,DRILL,SAW,<span style="color:var(--red);">PIANO</span>} <span style="color:var(--yellow);">rel=0</span></div>
+            <div><span style="color:var(--muted);">#5</span> {HAMMER,DRILL,SAW,CHISEL} <span style="color:var(--green);">rel=2</span></div>
+          </div>
+          <div style="margin-top:8px;font-size:.78rem;color:var(--red);">NDCG@3 ≈ 0.61 — correct group buried at #3</div>
+        </div>
+        <div style="background:rgba(106,170,100,.08);border:1px solid rgba(106,170,100,.2);border-radius:8px;padding:12px;">
+          <div style="font-size:.78rem;font-weight:700;color:var(--green);margin-bottom:8px;">GOOD RANKING (high NDCG)</div>
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:.8rem;font-family:monospace;">
+            <div><span style="color:var(--muted);">#1</span> {PIANO,GUITAR,VIOLIN,DRUMS} <span style="color:var(--green);">rel=2</span></div>
+            <div><span style="color:var(--muted);">#2</span> {HAMMER,DRILL,SAW,CHISEL} <span style="color:var(--green);">rel=2</span></div>
+            <div><span style="color:var(--muted);">#3</span> {APPLE,MANGO,GRAPE,PEACH} <span style="color:var(--green);">rel=2</span></div>
+            <div><span style="color:var(--muted);">#4</span> {PIANO,GUITAR,VIOLIN,<span style="color:var(--red);">BASS</span>} <span style="color:var(--yellow);">rel=1</span></div>
+            <div><span style="color:var(--muted);">#5</span> {CLOUD,RAIN,THUNDER,<span style="color:var(--red);">BASS</span>} <span style="color:var(--yellow);">rel=0</span></div>
+          </div>
+          <div style="margin-top:8px;font-size:.78rem;color:var(--green);">NDCG@3 ≈ 0.97 — correct groups at #1, #2, #3</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;background:rgba(155,89,182,.08);border:1px solid rgba(155,89,182,.2);border-radius:6px;padding:10px 14px;font-size:.83rem;">
+        <strong style="color:var(--purple);">The lambdarank trick:</strong> If {PIANO, GUITAR, VIOLIN, BASS} (wrong) is ranked above {PIANO, GUITAR, VIOLIN, DRUMS} (correct), swapping them gains a lot of NDCG. The model learns a large gradient update specifically for this swap — pushing the correct group higher and the decoy lower. RF and GBM can't do this because they never compare the two candidates against each other.
+      </div>
+    </div>
+  </div>
+
+  <!-- LR LOG LOSS -->
+  <div class="card card-accent-t">
+    <h3>⚖️ LR Fusion Objective — Log Loss + L2 Regularisation</h3>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:14px;">LR Fusion uses the same log loss as GBM, but on a much simpler input — just 17 numbers (one separation score per matrix). The L2 penalty keeps the 17 weights small so no single matrix dominates unfairly.</p>
+
+    <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;">Formula</div>
+      <div style="font-family:monospace;font-size:.87rem;color:var(--text);line-height:1.8;">
+        Loss = −[y·log(p) + (1−y)·log(1−p)] + (1/C)·Σw²<br>
+        <span style="color:var(--muted);">C=1.0, class_weight="balanced" (upweights rare correct groups)</span>
+      </div>
+    </div>
+
+    <div style="font-weight:600;margin-bottom:10px;font-size:.88rem;">Concrete example from our puzzle:</div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;">
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:12px;">For candidate group <span style="font-family:monospace;color:#8be9fd;">{PIANO, GUITAR, VIOLIN, DRUMS}</span>, the 17 separation scores are computed:</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:.82rem;font-family:monospace;">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);color:var(--muted);font-size:.75rem;font-family:sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">
+          <span>Matrix</span><span>Separation</span><span>LR weight</span><span>Contribution</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+          <span style="color:#8be9fd;">MPNet_sim</span><span style="color:var(--text);">0.71</span><span style="color:var(--green);">+5.28</span><span style="color:var(--green);">+3.75 ← big push toward "correct"</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+          <span style="color:#8be9fd;">WikiData_sim</span><span style="color:var(--text);">0.62</span><span style="color:var(--green);">+3.91</span><span style="color:var(--green);">+2.42 ← "musical instruments" wikidata category matches</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+          <span style="color:#8be9fd;">GloVe_sim</span><span style="color:var(--text);">0.44</span><span style="color:var(--yellow);">+1.44</span><span style="color:var(--yellow);">+0.63</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+          <span style="color:#8be9fd;">Morphological_sim</span><span style="color:var(--text);">0.03</span><span style="color:var(--muted);">+0.02</span><span style="color:var(--muted);">+0.001 ← nearly ignored</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;padding:5px 0;">
+          <span style="color:#8be9fd;">Phonetic_sim</span><span style="color:var(--text);">0.08</span><span style="color:var(--muted);">+0.05</span><span style="color:var(--muted);">+0.004 ← ignored (rhyming irrelevant here)</span>
+        </div>
+      </div>
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px;font-family:monospace;font-size:.85rem;">
+        p = sigmoid(3.75 + 2.42 + 0.63 + 0.001 + ...) = sigmoid(7.1) = <span style="color:var(--green);font-weight:700;">0.9992</span> → very likely correct ✓
+      </div>
+    </div>
+
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;">
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:12px;">Now for the decoy group <span style="font-family:monospace;color:#8be9fd;">{PIANO, GUITAR, VIOLIN, BASS}</span>:</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:.82rem;font-family:monospace;">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+          <span style="color:#8be9fd;">MPNet_sim</span><span style="color:var(--text);">0.65</span><span style="color:var(--green);">+5.28</span><span style="color:var(--yellow);">+3.43 ← still high, BASS sounds musical</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+          <span style="color:#8be9fd;">WikiData_sim</span><span style="color:var(--text);">0.18</span><span style="color:var(--green);">+3.91</span><span style="color:var(--red);">+0.70 ← BASS wikidata = fish + music, category unclear</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;padding:5px 0;">
+          <span style="color:#8be9fd;">GloVe_sim</span><span style="color:var(--text);">0.38</span><span style="color:var(--yellow);">+1.44</span><span style="color:var(--yellow);">+0.55</span>
+        </div>
+      </div>
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px;font-family:monospace;font-size:.85rem;">
+        p = sigmoid(3.43 + 0.70 + 0.55 + ...) = sigmoid(5.0) = <span style="color:var(--yellow);font-weight:700;">0.993</span>
+      </div>
+    </div>
+
+    <div style="background:rgba(26,188,156,.08);border:1px solid rgba(26,188,156,.2);border-radius:8px;padding:12px 16px;font-size:.84rem;">
+      <strong style="color:var(--teal);">What LR fusion caught that others missed:</strong> The WikiData separation dropped from 0.62 → 0.18 for the BASS decoy group because BASS has conflicting Wikidata properties (fish vs. instrument). LR learned that WikiData_separation is a high-weight signal (+3.91), so this drop dramatically reduces the decoy's score — even though MPNet didn't catch it (BASS still sounds like a musical word).
+    </div>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="card" style="border-left:4px solid var(--yellow);">
+    <h3>📊 Objective function summary</h3>
+    <table class="param-table">
+      <tr>
+        <th>Model</th>
+        <th>Objective</th>
+        <th>Sees candidates as</th>
+        <th>Best at catching</th>
+      </tr>
+      <tr>
+        <td><span style="color:var(--red);font-weight:700;">RF</span></td>
+        <td>Gini impurity (minimise)</td>
+        <td>Independent, isolated</td>
+        <td>Clear-cut obvious groups with high separation</td>
+      </tr>
+      <tr>
+        <td><span style="color:var(--yellow);font-weight:700;">GBM</span></td>
+        <td>Log loss (minimise)</td>
+        <td>Independent, isolated</td>
+        <td>Subtle decoys — learns from its own confident mistakes round by round</td>
+      </tr>
+      <tr>
+        <td><span style="color:var(--purple);font-weight:700;">LightGBM</span></td>
+        <td>NDCG@[1,3,5] (maximise)</td>
+        <td>Compared against all 1,820 in the same puzzle</td>
+        <td>Tie-breaking between near-identical candidates — puts the right one on top</td>
+      </tr>
+      <tr>
+        <td><span style="color:var(--teal);font-weight:700;">LR Fusion</span></td>
+        <td>Log loss + L2 (minimise)</td>
+        <td>Independent, but only 17 matrix signals</td>
+        <td>Polysemous words (BASS, CLOUD) where some signals mislead and others reveal truth</td>
+      </tr>
+    </table>
+    <div class="info" style="margin-top:14px;">
+      <strong>Why all 4 together?</strong> RF provides stable baseline probabilities. GBM sharpens on hard decoys. LightGBM re-ranks within the puzzle context. LR Fusion down-weights noisy signals. Each failure mode of one model is covered by another — which is the entire point of an ensemble.
+    </div>
+  </div>
+
+  <!-- OBJECTIVE FUNCTIONS -->
+  <div class="section-label">Step 3c — What Each Model is Actually Trying to Minimise During Training</div>
+
+  <!-- INTRO -->
+  <div class="card" style="border-left:4px solid var(--blue);background:linear-gradient(135deg,#1a1a2e,#1e1e35);">
+    <h3>🎯 What is an objective function?</h3>
+    <p>Every time a model trains, it needs to measure <strong>"how wrong am I right now?"</strong> so it can fix itself. The objective function is that measurement. Training = repeatedly computing this number and adjusting the model's internal parameters to make it smaller (or larger). The choice of objective function decides <em>what the model gets good at</em>.</p>
+    <div class="info" style="margin-top:12px;">
+      <strong>Our setup:</strong> For each puzzle we have 1,820 candidate groups. Of those, exactly <strong>4 are correct</strong> (label = 1) and <strong>1,816 are wrong</strong> (label = 0). Each model sees this extreme imbalance and needs its own strategy to handle it.
+    </div>
+  </div>
+
+  <!-- RF OBJECTIVE -->
+  <div class="card card-accent-r">
+    <h3>🌲 Random Forest — Minimises Gini Impurity at every tree split</h3>
+
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:16px;">The RF doesn't have one single global loss function. Instead, each individual tree split asks: <em>"Which feature + threshold creates the cleanest separation between correct and wrong groups on this side vs. that side?"</em> Gini impurity measures that cleanliness.</p>
+
+    <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;">Formula</div>
+      <div style="font-family:monospace;font-size:.95rem;color:var(--text);line-height:2.2;">
+        Gini = 1 − p(correct)² − p(wrong)²
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px;display:flex;gap:20px;flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div style="font-family:monospace;color:var(--red);font-size:1rem;">Gini = 0.5</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:4px;">worst possible<br>50/50 mix — no information</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:monospace;color:var(--yellow);font-size:1rem;">Gini = 0.3</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:4px;">decent split<br>some separation</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:monospace;color:var(--green);font-size:1rem;">Gini = 0.0</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:4px;">perfect split<br>all correct on one side</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-weight:600;margin-bottom:10px;">What this means in our puzzle:</div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;">
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:12px;">The tree asks: <em>"Should I split on <span style="font-family:monospace;color:#8be9fd;">MPNet+Numberbatch_min_in > 0.35</span>?"</em></p>
+      <div class="grid-2" style="gap:10px;">
+        <div style="background:rgba(106,170,100,.08);border:1px solid rgba(106,170,100,.2);border-radius:8px;padding:12px;">
+          <div style="font-size:.78rem;font-weight:700;color:var(--green);margin-bottom:8px;">Left side — min_in &gt; 0.35</div>
+          <p style="font-size:.82rem;color:var(--muted);">{PIANO, GUITAR, VIOLIN, DRUMS} lands here — all 6 pairs are strongly similar. min_in = 0.71 ✓</p>
+          <div style="font-family:monospace;font-size:.8rem;margin-top:8px;color:var(--text);">Say: 300 groups here<br>280 correct, 20 wrong<br>Gini = 1 − (280/300)² − (20/300)²<br>     = <span style="color:var(--green);">0.121</span> ← very clean</div>
+        </div>
+        <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:8px;padding:12px;">
+          <div style="font-size:.78rem;font-weight:700;color:var(--red);margin-bottom:8px;">Right side — min_in ≤ 0.35</div>
+          <p style="font-size:.82rem;color:var(--muted);">{PIANO, GUITAR, VIOLIN, BASS} lands here — BASS–VIOLIN pair is weak. min_in = 0.28 ✗</p>
+          <div style="font-family:monospace;font-size:.8rem;margin-top:8px;color:var(--text);">Say: 1520 groups here<br>4 correct, 1516 wrong<br>Gini = 1 − (4/1520)² − (1516/1520)²<br>     = <span style="color:var(--green);">0.005</span> ← also clean (mostly wrong)</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:.83rem;color:var(--muted);">Weighted Gini = 0.121×(300/1820) + 0.005×(1520/1820) = <span style="color:var(--green);font-weight:700;">0.024</span> — excellent split! The tree keeps this. <strong style="color:var(--text);">This is exactly why MPNet+Numberbatch_min_in is ranked #1 in feature_weights.txt with 25.28% average importance.</strong></div>
+    </div>
+
+    <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:8px;padding:12px 16px;font-size:.84rem;">
+      <strong style="color:var(--red);">What the RF is trying to do:</strong> Find as many clean splits as possible across 200 trees, each using a random subset of features. The result is a probability — what fraction of all 200 trees said "yes, this is a correct group" for a given candidate.
+    </div>
+  </div>
+
+  <!-- GBM OBJECTIVE -->
+  <div class="card card-accent-y">
+    <h3>📈 Gradient Boosting — Minimises Log Loss (Binary Cross-Entropy)</h3>
+
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:16px;">Log loss is the most common loss for binary classification. It measures not just <em>whether</em> you got it wrong, but <em>how confidently wrong</em> you were. Being 99% confident on a wrong answer is penalised far more than being 51% confident on a wrong answer.</p>
+
+    <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;">Formula</div>
+      <div style="font-family:monospace;font-size:.92rem;color:var(--text);line-height:2.2;">
+        Loss = −[ y · log(p) + (1−y) · log(1−p) ]
+      </div>
+      <div style="font-size:.82rem;color:var(--muted);margin-top:6px;">where y = true label (1 = correct group, 0 = wrong group), p = what the model predicted</div>
+      <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px;">
+        <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px;">How this plays out in 4 concrete cases:</div>
+        <table style="width:100%;border-collapse:collapse;font-family:monospace;font-size:.81rem;">
+          <tr style="color:var(--muted);font-size:.75rem;font-family:sans-serif;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border);">
+            <td style="padding:6px 10px;">True label</td>
+            <td style="padding:6px 10px;">Model predicted</td>
+            <td style="padding:6px 10px;">Loss</td>
+            <td style="padding:6px 10px;">Meaning</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+            <td style="padding:7px 10px;color:var(--green);">y=1 (correct)</td>
+            <td style="padding:7px 10px;">p=0.90</td>
+            <td style="padding:7px 10px;color:var(--green);">0.105</td>
+            <td style="padding:7px 10px;color:var(--muted);">Correctly confident ✓ tiny penalty</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+            <td style="padding:7px 10px;color:var(--green);">y=1 (correct)</td>
+            <td style="padding:7px 10px;">p=0.20</td>
+            <td style="padding:7px 10px;color:var(--red);">1.609</td>
+            <td style="padding:7px 10px;color:var(--muted);">Missed a correct group ✗ big penalty</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+            <td style="padding:7px 10px;color:var(--red);">y=0 (wrong)</td>
+            <td style="padding:7px 10px;">p=0.05</td>
+            <td style="padding:7px 10px;color:var(--green);">0.051</td>
+            <td style="padding:7px 10px;color:var(--muted);">Correctly rejected ✓ tiny penalty</td>
+          </tr>
+          <tr>
+            <td style="padding:7px 10px;color:var(--red);">y=0 (wrong)</td>
+            <td style="padding:7px 10px;">p=0.85</td>
+            <td style="padding:7px 10px;color:var(--red);">1.897</td>
+            <td style="padding:7px 10px;color:var(--muted);">Confidently wrong ✗ biggest penalty</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div style="font-weight:600;margin-bottom:10px;">What this means in our puzzle:</div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;">
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:10px;"><strong style="color:var(--text);">Round 1:</strong> Model predicts {PIANO, GUITAR, VIOLIN, BASS} = 0.85 (confidently wrong). Loss = 1.897. This is the biggest error right now.</p>
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:0;"><strong style="color:var(--text);">Round 2:</strong> GBM trains a new tree specifically to fix this — it studies what's different between {PIANO, GUITAR, VIOLIN, BASS} and {PIANO, GUITAR, VIOLIN, DRUMS}. It finds that <span style="font-family:monospace;color:#8be9fd;">MultiSense_sim_min_in</span> is lower for the BASS group because BASS has a fish sense that pulls its multi-sense embedding away from instruments. The new tree pushes the BASS group's score down.</p>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <div style="background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);border-radius:8px;padding:12px 16px;font-size:.84rem;flex:1;min-width:200px;">
+        <strong style="color:var(--yellow);">After 200 rounds:</strong> GBM has iteratively fixed every confidently-wrong prediction. It becomes very good at the subtle "almost right" decoys — which is why MultiSense and WordNet features dominate its importance.
+      </div>
+      <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:8px;padding:12px 16px;font-size:.84rem;flex:1;min-width:200px;">
+        <strong style="color:var(--red);">Key difference from RF:</strong> RF builds 200 independent trees all at once. GBM builds 200 trees in sequence, each one correcting the previous. GBM is slower to train but much sharper on hard cases.
+      </div>
+    </div>
+  </div>
+
+  <!-- LIGHTGBM OBJECTIVE -->
+  <div class="card card-accent-p">
+    <h3>🏆 LightGBM Lambdarank — Maximises NDCG@[1,3,5]</h3>
+
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:16px;">This is the most different objective. RF and GBM both ask <em>"is this group correct?"</em> — they treat each candidate in isolation. LightGBM asks <em>"given all 1,820 candidates for this puzzle, can I rank the 4 correct ones at the very top?"</em> This is a fundamentally different problem.</p>
+
+    <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;">NDCG — Normalised Discounted Cumulative Gain</div>
+      <div style="font-family:monospace;font-size:.88rem;color:var(--text);line-height:2.2;">
+        DCG  = Σ  relevance(i) / log₂(rank(i) + 1)<br>
+        NDCG = DCG / ideal_DCG &nbsp;&nbsp;<span style="color:var(--muted);">(1.0 = perfect ranking)</span>
+      </div>
+      <div style="font-size:.82rem;color:var(--muted);margin-top:8px;">Relevance: correct group = 2, hard-wrong (3/4 overlap) = 1, easy-wrong = 0. Rank 1 counts most, rank 100 counts little. The model is penalised more for burying a correct group at rank 10 than at rank 5.</div>
+    </div>
+
+    <div style="font-weight:600;margin-bottom:10px;">What this means in our puzzle — a step-by-step example:</div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;">
+
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:12px;">Imagine after initial training, our top-5 ranked candidates for one puzzle look like this:</p>
+
+      <div style="display:flex;flex-direction:column;gap:4px;font-size:.83rem;margin-bottom:14px;">
+        <div style="display:grid;grid-template-columns:40px 1fr 80px 80px;gap:10px;padding:8px 12px;background:rgba(231,76,60,.1);border-radius:6px;border:1px solid rgba(231,76,60,.2);">
+          <span style="font-family:monospace;color:var(--muted);">#1</span>
+          <span style="font-family:monospace;color:var(--text);">{PIANO, GUITAR, VIOLIN, BASS}</span>
+          <span style="color:var(--yellow);">rel = 1</span>
+          <span style="color:var(--red);">WRONG (decoy)</span>
+        </div>
+        <div style="display:grid;grid-template-columns:40px 1fr 80px 80px;gap:10px;padding:8px 12px;background:rgba(106,170,100,.08);border-radius:6px;border:1px solid rgba(106,170,100,.2);">
+          <span style="font-family:monospace;color:var(--muted);">#2</span>
+          <span style="font-family:monospace;color:var(--text);">{PIANO, GUITAR, VIOLIN, DRUMS}</span>
+          <span style="color:var(--green);">rel = 2</span>
+          <span style="color:var(--green);">CORRECT ✓</span>
+        </div>
+        <div style="display:grid;grid-template-columns:40px 1fr 80px 80px;gap:10px;padding:8px 12px;background:rgba(255,255,255,.02);border-radius:6px;">
+          <span style="font-family:monospace;color:var(--muted);">#3</span>
+          <span style="font-family:monospace;color:var(--text);">{HAMMER, DRILL, SAW, CHISEL}</span>
+          <span style="color:var(--green);">rel = 2</span>
+          <span style="color:var(--green);">CORRECT ✓</span>
+        </div>
+        <div style="display:grid;grid-template-columns:40px 1fr 80px 80px;gap:10px;padding:8px 12px;background:rgba(255,255,255,.02);border-radius:6px;">
+          <span style="font-family:monospace;color:var(--muted);">#4</span>
+          <span style="font-family:monospace;color:var(--text);">{APPLE, MANGO, GRAPE, PEACH}</span>
+          <span style="color:var(--green);">rel = 2</span>
+          <span style="color:var(--green);">CORRECT ✓</span>
+        </div>
+        <div style="display:grid;grid-template-columns:40px 1fr 80px 80px;gap:10px;padding:8px 12px;background:rgba(255,255,255,.02);border-radius:6px;">
+          <span style="font-family:monospace;color:var(--muted);">#5</span>
+          <span style="font-family:monospace;color:var(--text);">{CLOUD, RAIN, THUNDER, DRIZZLE}</span>
+          <span style="color:var(--green);">rel = 2</span>
+          <span style="color:var(--green);">CORRECT ✓</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(155,89,182,.08);border:1px solid rgba(155,89,182,.2);border-radius:8px;padding:12px 16px;font-size:.84rem;margin-bottom:10px;">
+        <strong style="color:var(--purple);">The lambdarank calculation:</strong> Swapping rank #1 (wrong, rel=1) with rank #2 (correct, rel=2) would gain <span style="color:var(--green);">ΔNDCG = +0.22</span>. Swapping rank #3 with rank #5 only gains <span style="color:var(--yellow);">ΔNDCG = +0.04</span>. The model assigns a much larger gradient to the #1/#2 swap — it focuses its update on fixing the most damaging mistake first. This is the "lambda" in lambdarank.
+      </div>
+
+      <div style="font-size:.83rem;color:var(--muted);">
+        <strong style="color:var(--text);">After training:</strong> The model learns that {PIANO, GUITAR, VIOLIN, BASS} should always rank below {PIANO, GUITAR, VIOLIN, DRUMS} — and it learns this by seeing this scenario across hundreds of training puzzles where BASS keeps appearing as a decoy.
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <div style="background:rgba(155,89,182,.08);border:1px solid rgba(155,89,182,.2);border-radius:8px;padding:12px 16px;font-size:.84rem;flex:1;min-width:200px;">
+        <strong style="color:var(--purple);">@[1,3,5] means:</strong> The model evaluates NDCG at rank 1, rank 3, and rank 5. Getting rank #1 right matters most. If a correct group is at rank 6, it's basically invisible to this objective.
+      </div>
+      <div style="background:rgba(155,89,182,.08);border:1px solid rgba(155,89,182,.2);border-radius:8px;padding:12px 16px;font-size:.84rem;flex:1;min-width:200px;">
+        <strong style="color:var(--purple);">Why RF/GBM can't do this:</strong> They score each of the 1,820 candidates independently. They never compare {PIANO, GUITAR, VIOLIN, BASS} against {PIANO, GUITAR, VIOLIN, DRUMS} within the same training step. LightGBM does — and that's its entire advantage.
+      </div>
+    </div>
+  </div>
+
+  <!-- LR OBJECTIVE -->
+  <div class="card card-accent-t">
+    <h3>⚖️ Logistic Regression Fusion — Minimises Log Loss + L2 Regularisation</h3>
+
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:16px;">LR Fusion also uses log loss — same formula as GBM — but on a much simpler input. It only receives <strong>17 numbers per candidate</strong> (one separation score per matrix). The L2 penalty is the key addition that prevents any one matrix from taking over.</p>
+
+    <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;">Formula</div>
+      <div style="font-family:monospace;font-size:.88rem;color:var(--text);line-height:2.4;">
+        Loss = −[ y·log(p) + (1−y)·log(1−p) ]&nbsp;&nbsp;<span style="color:var(--muted);">← same as GBM</span><br>
+             + (1/C) · Σ w²&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--teal);">← L2 penalty (new)</span>
+      </div>
+      <div style="font-size:.82rem;color:var(--muted);margin-top:8px;">C=1.0 controls L2 strength. <code>class_weight="balanced"</code> automatically upweights the 4 correct groups to compensate for the 1,816 wrong ones — without this, the model would just learn to always predict "wrong" and get 99.8% accuracy.</div>
+    </div>
+
+    <div style="font-weight:600;margin-bottom:10px;">What the L2 penalty actually does:</div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;">
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:12px;">Imagine without L2, the model found that MPNet separation alone perfectly separates correct from wrong on the validation set. It might assign w = +50 to MPNet and w ≈ 0 to everything else. That's overfitting to one signal. The L2 penalty adds <span style="font-family:monospace;color:#8be9fd;">(1/1.0) × 50² = 2500</span> to the loss — making this extreme weight very costly. The model is forced to spread the weight more evenly across signals that actually help.</p>
+
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:.82rem;font-family:monospace;">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);color:var(--muted);font-size:.74rem;font-family:sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">
+          <span>Matrix signal</span><span>Without L2</span><span>With L2 (C=1.0)</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+          <span style="color:#8be9fd;">MPNet_separation</span>
+          <span style="color:var(--red);">w = +50.0</span>
+          <span style="color:var(--green);">w = +5.28</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+          <span style="color:#8be9fd;">WikiData_separation</span>
+          <span style="color:var(--muted);">w ≈ 0.0</span>
+          <span style="color:var(--green);">w = +3.91</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;padding:5px 0;">
+          <span style="color:#8be9fd;">Morphological_separation</span>
+          <span style="color:var(--muted);">w ≈ 0.0</span>
+          <span style="color:var(--muted);">w = +0.02</span>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:.83rem;color:var(--muted);">The L2 version is more honest — it gives credit to WikiData when it helps, rather than ignoring it just because MPNet is already strong on its own.</div>
+    </div>
+
+    <div style="background:rgba(26,188,156,.08);border:1px solid rgba(26,188,156,.2);border-radius:8px;padding:12px 16px;font-size:.84rem;">
+      <strong style="color:var(--teal);">What LR is actually minimising:</strong> The total log loss across all candidate groups in the validation set, plus a penalty for any weight that gets too large. The 17 learned weights are the answer to: <em>"Which signals, when combined linearly, best predict whether a group is correct — while staying simple enough to not overfit?"</em>
+    </div>
+  </div>
+
+  <!-- COMPARISON -->
+  <div class="card" style="border-left:4px solid var(--yellow);">
+    <h3>📊 Side-by-side comparison of all 4 objectives</h3>
+    <table class="param-table">
+      <tr>
+        <th>Model</th>
+        <th>Objective</th>
+        <th>Direction</th>
+        <th>What it punishes hardest</th>
+        <th>What it ignores</th>
+      </tr>
+      <tr>
+        <td><span style="color:var(--red);font-weight:700;">RF</span></td>
+        <td>Gini impurity per split</td>
+        <td><span style="color:var(--green);">Minimise</span></td>
+        <td>Unclear splits — features that don't separate classes well</td>
+        <td>How confident the final vote is — just counts tree votes</td>
+      </tr>
+      <tr>
+        <td><span style="color:var(--yellow);font-weight:700;">GBM</span></td>
+        <td>Log loss (total)</td>
+        <td><span style="color:var(--green);">Minimise</span></td>
+        <td>Confident wrong predictions — gets huge penalty for high p on a wrong group</td>
+        <td>Relative ranking between candidates — each scored independently</td>
+      </tr>
+      <tr>
+        <td><span style="color:var(--purple);font-weight:700;">LightGBM</span></td>
+        <td>NDCG@[1,3,5]</td>
+        <td><span style="color:var(--blue);">Maximise</span></td>
+        <td>Correct groups ranked low — especially if a wrong group outranks them</td>
+        <td>Absolute probability values — only cares about order within the puzzle</td>
+      </tr>
+      <tr>
+        <td><span style="color:var(--teal);font-weight:700;">LR Fusion</span></td>
+        <td>Log loss + L2</td>
+        <td><span style="color:var(--green);">Minimise</span></td>
+        <td>Confidently wrong + large weights (L2 shrinks all weights toward zero)</td>
+        <td>Complex feature interactions — it's a linear model, only sees 17 numbers</td>
+      </tr>
+    </table>
+    <div class="info" style="margin-top:14px;">
+      <strong>The deeper reason we use all 4:</strong> Gini tells us which features are most discriminative. Log loss tells us to not be overconfident on wrong groups. NDCG tells us to rank correct groups above wrong ones in each puzzle context. L2 regularisation tells us not to trust any one signal too much. No single objective captures all of these requirements — so we use all four and combine them.
+    </div>
+  </div>
+
+  <!-- STEP 4: COMBINING SCORES -->
+  <div class="section-label">Step 4 — Combining Scores and Picking the Best Group</div>
+  <div class="card" style="border-left:4px solid var(--blue);">
+    <h3>🎛️ How the final score is computed for each group</h3>
+
+    <p style="margin-bottom:14px;">Each of the 1,820 candidate groups gets a final score assembled from all 4 models:</p>
+
+    <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;">
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;">Full ensemble (all 4 models available)</div>
+      <div style="font-size:1rem;font-family:monospace;color:var(--text);line-height:2;">
+        base_score = <span style="color:var(--red);">0.15 × RF</span> + <span style="color:var(--yellow);">0.15 × GBM</span> + <span style="color:var(--purple);">0.50 × LightGBM_ranker</span> + <span style="color:var(--teal);">0.20 × LR_fusion</span>
+      </div>
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px;font-size:.83rem;color:var(--muted);">
+        Then a small bonus is added:<br>
+        <span style="color:var(--text);font-family:monospace;">final_score = base_score + 0.05 × (1/rank) + 0.05 × gap_to_next_best</span><br>
+        <span style="font-size:.8rem;">These bonuses are tiny (0.05 weight) — they slightly favour candidates already ranked highly and well-separated from competitors, without overriding the ML score.</span>
+      </div>
+    </div>
+
+    <p style="font-weight:600;margin-bottom:10px;">After scoring all 1,820 groups, one of two things happens:</p>
+
+    <div class="grid-2">
+      <div style="background:rgba(106,170,100,.08);border:1px solid rgba(106,170,100,.25);border-radius:10px;padding:16px;">
+        <div style="font-weight:700;color:var(--green);margin-bottom:8px;font-size:.9rem;">If top score ≥ 0.70 — Confident → Greedy</div>
+        <p style="font-size:.84rem;color:var(--muted);">The model is confident about its top pick. Just take that group, remove those 4 words, and repeat for the remaining 12, 8, and 4 words. Fast and simple.</p>
+      </div>
+      <div style="background:rgba(155,89,182,.08);border:1px solid rgba(155,89,182,.25);border-radius:10px;padding:16px;">
+        <div style="font-weight:700;color:var(--purple);margin-bottom:8px;font-size:.9rem;">If top score &lt; 0.70 — Uncertain → Global Optimiser</div>
+        <p style="font-size:.84rem;color:var(--muted);">The model is unsure. Instead of greedily picking one group, it asks: "What combination of 4 groups gives the best total score?" <code>solve_ml()</code> finds this optimal 4-way partition — preventing one good-looking group from blocking the others.</p>
+      </div>
+    </div>
+
+    <div class="info" style="margin-top:14px;">
+      <strong>The uncertainty check:</strong> There's also a per-candidate uncertainty filter. If the 4 models strongly disagree on a candidate (std &gt; 0.25 across their scores), that candidate is skipped in greedy mode — even if it has a high average score, disagreement signals it's risky to commit to.
+    </div>
+  </div>
+
+  <!-- END-TO-END WALKTHROUGH -->
+  <div class="section-label">Putting It All Together — End-to-End for One Puzzle</div>
+  <div class="card" style="border-left:4px solid var(--yellow);">
+    <h3>🗺️ Complete walkthrough for a single puzzle</h3>
+    <div class="flow">
+      <div class="flow-row"><div class="flow-dot" style="background:var(--yellow);width:14px;height:14px;"></div><strong>1.</strong> Load 16 words from the puzzle (data_loader.py)</div>
+      <div class="flow-line" style="height:20px;"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--green);width:14px;height:14px;"></div><strong>2.</strong> Build 17 similarity matrices — one API/embedding call per signal type (embedder.py). Each matrix is 16×16.</div>
+      <div class="flow-line" style="height:20px;"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--green);width:14px;height:14px;"></div><strong>3.</strong> Double-center all 17 matrices to remove global bias (evaluate.py)</div>
+      <div class="flow-line" style="height:20px;"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--blue);width:14px;height:14px;"></div><strong>4.</strong> Enumerate all 1,820 possible groups of 4 from the 16 words (evaluate.py)</div>
+      <div class="flow-line" style="height:20px;"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--blue);width:14px;height:14px;"></div><strong>5.</strong> For each group: extract 153 features (9 features × 17 matrices). Result: a 1820×153 matrix (evaluate.py)</div>
+      <div class="flow-line" style="height:20px;"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--red);width:14px;height:14px;"></div><strong>6.</strong> Run all 4 models on those 1820×153 features. Get 4 score arrays of size 1820. (evaluate.py)</div>
+      <div class="flow-line" style="height:20px;"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--red);width:14px;height:14px;"></div><strong>7.</strong> Combine into one base_score per group using the weighted ensemble formula</div>
+      <div class="flow-line" style="height:20px;"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--red);width:14px;height:14px;"></div><strong>8.</strong> Apply rank bonus + gap bonus → final adjusted_score per group</div>
+      <div class="flow-line" style="height:20px;"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--purple);width:14px;height:14px;"></div><strong>9a.</strong> If top score ≥ 0.70: take the highest-scoring group greedily, remove 4 words, repeat</div>
+      <div class="flow-row" style="margin-left:22px;font-size:.84rem;color:var(--muted);">— or —</div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--purple);width:14px;height:14px;"></div><strong>9b.</strong> If top score &lt; 0.70: pass top-250 candidates to solve_ml() → find the 4-partition that maximises total score → submit all 4 groups at once (solver.py)</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════ FEATURE IMPORTANCE -->
+<div class="file-section" id="feature-importance">
+  <div class="file-header">
+    <div class="file-num" style="background:linear-gradient(135deg,var(--green),var(--teal));color:#000;">★</div>
+    <div class="file-title">
+      <h2 style="color:var(--green)">Feature Importance Analysis — What the Models Actually Learned</h2>
+      <p>Ranked Gini impurity decrease (averaged across RF + GBM) for all 153 features. From <code>feature_weights.txt</code>. Read this to see which similarity matrices matter most — and which ones are broken or useless.</p>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--green);background:linear-gradient(135deg,#0d1f0d,#0f2010);">
+    <h3>🧠 How to read this</h3>
+    <p>After training, we compute <strong>Gini importance</strong> for each of the 153 features in the RF and GBM models. Gini importance measures: <em>"How much did splitting on this feature reduce the impurity across all decision tree nodes?"</em> A feature used at many high-level splits has high importance. A feature never used (or used only at leaf level) has near-zero importance.</p>
+    <div class="info" style="margin-top:12px;">
+      The importances are normalised so they sum to 1.0 per model. We average RF and GBM importances to get a combined rank. <strong>153 features = 9 features × 17 similarity matrices.</strong> The table below tells us which matrices and which feature types actually drive correct predictions.
+    </div>
+  </div>
+
+  <!-- TOP 10 WINNERS -->
+  <div class="section-label">Top 10 Most Important Features</div>
+  <div class="card" style="border-left:4px solid var(--green);background:#0a1a0a;">
+    <table class="param-table" style="width:100%;">
+      <tr><th>Rank</th><th>Feature</th><th>RF</th><th>GBM</th><th>Avg</th><th>What it means</th></tr>
+      <tr style="background:rgba(0,200,100,0.12);">
+        <td style="color:var(--green);font-weight:700;">1</td>
+        <td class="mono" style="color:var(--green);">MPNet+Numberbatch_sim_min_in</td>
+        <td>9.81%</td><td>33.25%</td><td style="color:var(--green);font-weight:700;">21.53%</td>
+        <td>The <em>weakest internal similarity</em> in the group using MPNet+Numberbatch. "Is the worst pair in this group still reasonably similar?" — the single best signal of a true group.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--yellow);font-weight:700;">2</td>
+        <td class="mono" style="color:var(--yellow);">MultiSense_sim_min_in</td>
+        <td>6.68%</td><td>18.69%</td><td style="color:var(--yellow);font-weight:700;">12.68%</td>
+        <td>Same logic, from the multi-sense embedding. Together, features 1+2 account for <strong>34% of all predictive power</strong>.</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td class="mono">MPNet+Numberbatch_sim_group_ambiguity</td>
+        <td>5.07%</td><td>6.31%</td><td style="font-weight:700;">5.69%</td>
+        <td>How similar is this group to the "average" remaining word? High ambiguity = words in this group also look like other groups. Bad sign.</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td class="mono">MultiSense_sim_avg_top3_out</td>
+        <td>3.75%</td><td>6.77%</td><td style="font-weight:700;">5.26%</td>
+        <td>Average similarity of the top-3 outside-group words to this group. High = easy to confuse. Low = this group is well-separated.</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td class="mono">MPNet+Numberbatch_sim_second_max_out</td>
+        <td>3.41%</td><td>4.41%</td><td style="font-weight:700;">3.91%</td>
+        <td>Second-most-similar outside word. Helps the model know if separation is solid or just barely present.</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td class="mono">MultiSense_sim_second_max_out</td>
+        <td>4.19%</td><td>2.51%</td><td style="font-weight:700;">3.35%</td>
+        <td>Same from MultiSense. RF values this more than GBM does.</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td class="mono">MultiSense_sim_group_ambiguity</td>
+        <td>3.77%</td><td>2.76%</td><td style="font-weight:700;">3.26%</td>
+        <td>MultiSense version of the ambiguity check. Validates the MPNet ambiguity signal independently.</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td class="mono">WordNet_sim_avg_top3_out</td>
+        <td>1.78%</td><td>3.30%</td><td style="font-weight:700;">2.54%</td>
+        <td>WordNet (dictionary synonym graphs) makes it to the top 10! Useful for "words that are all types of X" categories.</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td class="mono">MultiSense_sim_mean_in</td>
+        <td>3.53%</td><td>1.30%</td><td style="font-weight:700;">2.41%</td>
+        <td>Average pairwise similarity inside the group. RF trusts this heavily; GBM prefers min_in instead.</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td class="mono">MPNet+Numberbatch_sim_mean_in</td>
+        <td>3.40%</td><td>0.86%</td><td style="font-weight:700;">2.13%</td>
+        <td>Average pairwise similarity (MPNet+Numberbatch). Strong in RF, weak in GBM — GBM prefers the minimum over the mean.</td>
+      </tr>
+    </table>
+    <div class="info" style="margin-top:14px;">
+      <strong>Key insight:</strong> The top 10 features account for roughly <strong>63% of all predictive power</strong>. They are dominated by just two matrix types: <span style="color:var(--green);font-weight:700;">MPNet+Numberbatch</span> and <span style="color:var(--yellow);font-weight:700;">MultiSense</span>. And the most important feature type is consistently <code>min_in</code> — the weakest link inside a candidate group.
+    </div>
+  </div>
+
+  <!-- WHY MIN_IN -->
+  <div class="card" style="border-left:4px solid var(--teal);background:#0a1818;">
+    <h3>💡 Why is <code>min_in</code> the #1 feature by a huge margin?</h3>
+    <p>Think about how Connections puzzles work. A group is valid if and only if <em>all 4 words</em> belong together. The model is penalised most when one word is an outlier in the group. <code>min_in</code> directly measures "how similar is the <em>worst</em> pair?" — it captures exactly this.</p>
+    <div class="grid-2" style="margin-top:12px;">
+      <div class="mini-card" style="border-color:var(--red)">
+        <h4 style="color:var(--red);">Wrong group example</h4>
+        <p><strong>Candidate:</strong> {PIANO, GUITAR, VIOLIN, BASS}</p>
+        <p><code>min_in</code> = sim(BASS, VIOLIN) ≈ <strong style="color:var(--red);">0.12</strong> — BASS (fish) doesn't fit</p>
+        <p>The minimum similarity is very low → model predicts ❌ not a group</p>
+      </div>
+      <div class="mini-card" style="border-color:var(--green)">
+        <h4 style="color:var(--green);">Correct group example</h4>
+        <p><strong>Candidate:</strong> {PIANO, GUITAR, VIOLIN, CELLO}</p>
+        <p><code>min_in</code> = sim(PIANO, GUITAR) ≈ <strong style="color:var(--green);">0.71</strong> — all are string/keyboard instruments</p>
+        <p>Even the weakest pair has high similarity → model predicts ✅ correct group</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BY MATRIX CONTRIBUTION -->
+  <div class="section-label">Matrix-Level Summary — Who Carries Their Weight?</div>
+  <div class="card" style="border-left:4px solid var(--purple);background:#100a1a;">
+    <table class="param-table">
+      <tr><th>Matrix</th><th>Approx. Total Contribution</th><th>Verdict</th></tr>
+      <tr style="background:rgba(0,200,100,0.10);">
+        <td class="mono" style="color:var(--green);">MPNet+Numberbatch</td>
+        <td style="color:var(--green);font-weight:700;">~38%</td>
+        <td>🏆 Dominant. Neural embeddings + lexical knowledge. The backbone of the system.</td>
+      </tr>
+      <tr style="background:rgba(255,200,0,0.08);">
+        <td class="mono" style="color:var(--yellow);">MultiSense</td>
+        <td style="color:var(--yellow);font-weight:700;">~28%</td>
+        <td>🥈 Strong runner-up. Handles polysemy (words with multiple meanings). Excellent complement to MPNet.</td>
+      </tr>
+      <tr>
+        <td class="mono">WordNet</td>
+        <td>~7%</td>
+        <td>✅ Meaningful. Dictionary/synonym graph helps for "types of X" category puzzles.</td>
+      </tr>
+      <tr>
+        <td class="mono">GloVe</td>
+        <td>~5%</td>
+        <td>✅ Useful. Older embeddings still contribute, especially for common words.</td>
+      </tr>
+      <tr>
+        <td class="mono">TemplateCtx</td>
+        <td>~4%</td>
+        <td>✅ Moderate. Template-based contextual similarity adds signal beyond pure embeddings.</td>
+      </tr>
+      <tr>
+        <td class="mono">MPNet (plain)</td>
+        <td>~4%</td>
+        <td>✅ Moderate. Weaker than MPNet+Numberbatch — Numberbatch boost adds real value.</td>
+      </tr>
+      <tr>
+        <td class="mono">Lexical / Phonetic / Datamuse / PairContext</td>
+        <td>~2% each</td>
+        <td>⚠️ Low but present. Surface/sound similarity useful for wordplay categories (puns, homophones).</td>
+      </tr>
+      <tr>
+        <td class="mono">Morphological</td>
+        <td>~0.5%</td>
+        <td>⚠️ Very low. Prefix/suffix patterns rarely decide Connections groups.</td>
+      </tr>
+      <tr>
+        <td class="mono">GridDatamuseUniqueness / GridPropertyUniqueness / GridCategoryUniqueness</td>
+        <td>~0.3% each</td>
+        <td>⚠️ Near useless. Grid-level uniqueness didn't transfer to group-level discrimination.</td>
+      </tr>
+      <tr>
+        <td class="mono">WikiData / WikipediaCategories</td>
+        <td>~0.2% each</td>
+        <td>⚠️ Very low. Knowledge graph lookups rarely fire for typical puzzle words.</td>
+      </tr>
+      <tr style="background:rgba(255,50,50,0.10);">
+        <td class="mono" style="color:var(--red);">ConceptNet</td>
+        <td style="color:var(--red);font-weight:700;">0.0000% — dead zero</td>
+        <td>❌ <strong>Completely broken.</strong> All 9 ConceptNet features have importance 0.0000 for both RF and GBM. Almost certainly the SQLite database file is missing from disk. ConceptNet contributed nothing to any prediction.</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- TRIANGLE SCORE -->
+  <div class="card" style="border-left:4px solid var(--muted);background:#111;">
+    <h3>📉 triangle_score — the nearly useless feature</h3>
+    <p>Every matrix has a <code>triangle_score</code> feature. In theory it measures <em>transitivity</em>: if A→B and B→C are both similar, is A→C also similar? (A triangle of mutual similarity is a sign of a coherent group.)</p>
+    <p>In practice, it adds almost nothing. Top <code>triangle_score</code> values from the table:</p>
+    <table class="param-table" style="margin-top:10px;">
+      <tr><th>Feature</th><th>RF</th><th>GBM</th><th>Avg</th></tr>
+      <tr><td class="mono">MultiSense_sim_triangle_score</td><td>0.0005</td><td>0.0000</td><td style="color:var(--muted);">0.0003</td></tr>
+      <tr><td class="mono">WordNet_sim_triangle_score</td><td>0.0004</td><td>0.0001</td><td style="color:var(--muted);">0.0003</td></tr>
+      <tr><td class="mono">Morphological_sim_triangle_score</td><td>0.0000</td><td>0.0000</td><td style="color:var(--red);">0.0000</td></tr>
+      <tr><td class="mono">ConceptNet_sim_triangle_score</td><td>0.0000</td><td>0.0000</td><td style="color:var(--red);">0.0000</td></tr>
+    </table>
+    <div class="warn" style="margin-top:12px;">
+      <strong>Why is triangle_score so useless?</strong> After double-centering the matrix, the scores already capture within-group vs. out-of-group structure. Triangle transitivity doesn't add new information — the <code>min_in</code>, <code>mean_in</code>, and <code>separation</code> features already encode the same signal more directly. The triangle_score features are candidates for removal in future versions to reduce noise.
+    </div>
+  </div>
+
+  <!-- KEY TAKEAWAYS -->
+  <div class="card" style="border-left:4px solid var(--orange);background:linear-gradient(135deg,#1a0f00,#201500);">
+    <h3>🔑 Key Takeaways from Feature Importance</h3>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--green);font-size:1.2rem;min-width:24px;">1.</span>
+        <span><strong>MPNet+Numberbatch + MultiSense carry ~66% of the total predictive power.</strong> If you had to keep only 2 matrices, these are the two. Numberbatch's lexical knowledge boosts raw MPNet significantly — worth the extra computation.</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--yellow);font-size:1.2rem;min-width:24px;">2.</span>
+        <span><strong><code>min_in</code> is the king of features.</strong> Across all matrices, the minimum internal similarity dominates. A group is only as strong as its weakest pair. This makes intuitive sense for Connections: one outlier word breaks the whole group.</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--red);font-size:1.2rem;min-width:24px;">3.</span>
+        <span><strong>ConceptNet is dead weight.</strong> 9 features, all 0.0000. The SQLite DB is missing or empty. This is wasted feature space — removing ConceptNet from the pipeline would make feature extraction faster with zero accuracy loss.</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--muted);font-size:1.2rem;min-width:24px;">4.</span>
+        <span><strong><code>triangle_score</code> features add almost no value.</strong> Best case is 0.03% contribution. These 17 features (one per matrix) are candidates for removal to reduce noise and computation.</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--blue);font-size:1.2rem;min-width:24px;">5.</span>
+        <span><strong>GBM is more aggressive than RF.</strong> GBM puts 33.25% of all importance on a single feature (MPNet+Numberbatch_min_in). RF spreads importance more evenly. This is why averaging them helps — GBM's concentration and RF's diversity are complementary.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ FILE 1 · data_loader -->
+<div class="file-section" id="data-loader">
+  <div class="file-header">
+    <div class="file-num fn-1">1</div>
+    <div class="file-title">
+      <h2 style="color:var(--yellow)">data_loader.py</h2>
+      <p>Entry point for all data. Parses the CSV into structured game dicts. Called by train.py, eval_only.py, and evaluate_test_advanced.py.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-y">
+    <h3>🎯 Role</h3>
+    <p>This is the <strong>only</strong> place the raw CSV is read. It returns a clean list of game dicts that every other file consumes. It is a pure library — no training, no models, no API calls.</p>
+    <div class="info info-y" style="margin-top:14px;">
+      <strong>Key guard:</strong> Any game with ≠ 16 words is silently skipped, protecting against corrupted rows.
+      The CSV is read with <code>keep_default_na=False</code> so the word "NA" is stored as the string "NA", not NaN.
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-accent-y">
+      <h3>📥 CSV columns used</h3>
+      <table class="param-table">
+        <tr><th>Column</th><th>Description</th></tr>
+        <tr><td class="mono">Game ID</td><td>Unique integer per puzzle — used for groupby</td></tr>
+        <tr><td class="mono">Puzzle Date</td><td>Publication date string</td></tr>
+        <tr><td class="mono">Word</td><td>One of the 16 words</td></tr>
+        <tr><td class="mono">Group Name</td><td>Human-readable category label</td></tr>
+        <tr><td class="mono">Group Level</td><td>0=Yellow, 1=Green, 2=Blue, 3=Purple</td></tr>
+        <tr><td class="mono">Starting Row/Col</td><td>Present in CSV — <strong>not used</strong> by the ML pipeline</td></tr>
+      </table>
+    </div>
+    <div class="card card-accent-y">
+      <h3>📤 Output structure per game</h3>
+      <pre><span class="kw">game</span> = {
+  <span class="str">"game_id"</span>:     <span class="num">123</span>,
+  <span class="str">"date"</span>:        <span class="str">"2023-08-01"</span>,
+  <span class="str">"words"</span>:       [<span class="str">"BASS"</span>, ...],  <span class="cm"># 16 strings</span>
+  <span class="str">"groups"</span>: {
+    <span class="num">0</span>: [<span class="str">"BASS"</span>, <span class="str">"DRUM"</span>, ...],  <span class="cm"># 4 words</span>
+    <span class="num">1</span>: [...], <span class="num">2</span>: [...], <span class="num">3</span>: [...]
+  },
+  <span class="str">"group_names"</span>: {
+    <span class="num">0</span>: <span class="str">"Types of Jazz"</span>, ...
+  }
+}</pre>
+    </div>
+  </div>
+
+  <div class="card card-accent-y">
+    <h3>🔧 load_games(csv_path) — parameters</h3>
+    <table class="param-table">
+      <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+      <tr><td class="mono">csv_path</td><td class="type">str</td><td>Path to Connections_Data.csv</td></tr>
+      <tr><td class="mono">→ returns</td><td class="type">List[Dict]</td><td>One game dict per valid 16-word puzzle, in CSV order (chronological)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ FILE 2 · embedder -->
+<div class="file-section" id="embedder">
+  <div class="file-header">
+    <div class="file-num fn-2">2</div>
+    <div class="file-title">
+      <h2 style="color:var(--green)">embedder.py</h2>
+      <p>Converts 16 words into similarity matrices using 17 distinct signals. Of the 21 methods defined, only 17 are actually wired into the pipeline.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-g">
+    <h3>🎯 Role</h3>
+    <p>For every puzzle, the embedder produces a set of <strong>16×16 pairwise similarity matrices</strong>. Each matrix[i][j] encodes how similar word i and word j are according to one signal (semantic, lexical, phonetic, knowledge-graph etc.). These matrices go directly into evaluate.py's <code>build_matrices()</code>.</p>
+    <div class="info info-g" style="margin-top:12px;">
+      <strong>Caching:</strong> All expensive external API calls (Wikidata, Wikipedia, Datamuse) are fired once per 16-word grid via <code>_ensure_grid_cache()</code>. Wikidata is fetched sequentially (polite); Wikipedia and Datamuse are fetched in parallel ThreadPoolExecutors.
+    </div>
+  </div>
+
+  <div class="card card-accent-g">
+    <h3>🏗️ Constructor — ConnectionsEmbedder()</h3>
+    <table class="param-table">
+      <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr>
+        <td class="mono">model_name</td><td class="type">str</td><td class="mono">"all-mpnet-base-v2"</td>
+        <td>HuggingFace SentenceTransformer. If <code>models/mpnet_finetuned/</code> exists it is loaded automatically instead.</td>
+      </tr>
+      <tr>
+        <td class="mono">numberbatch_path</td><td class="type">str</td><td class="mono">"numberbatch-en-19.08.txt.gz"</td>
+        <td>ConceptNet Numberbatch 300-dim word vectors (word2vec text format). Missing file → Numberbatch silently skipped.</td>
+      </tr>
+    </table>
+    <p style="margin-top:10px;color:var(--muted);font-size:.85rem;">On init: loads MPNet → GloVe-100 (via gensim cache) → Numberbatch. Also loads CMU pronouncing dict for phonetics and installs a persistent <code>requests_cache</code> for Wikidata responses.</p>
+  </div>
+
+  <div class="section-label">17 methods USED by evaluate.py → build_matrices()</div>
+
+  <div class="grid-2">
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_embeddings() → MPNet_sim</h4>
+      <p>MPNet-base-v2 sentence embeddings (768-dim), L2-normalized. Dot product = cosine similarity. Distributional semantics from 1B sentence pairs.</p>
+      <div style="margin-top:8px"><span class="tag tag-g">Neural · 768-dim</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_concatenated_mpnet_numberbatch_embedding() → MPNet+Numberbatch_sim</h4>
+      <p>Concatenates MPNet-768 + Numberbatch-300, re-normalizes to unit norm → 1068-dim joint space. Combines distributional + common-sense graph knowledge.</p>
+      <div style="margin-top:8px"><span class="tag tag-g">Neural · 1068-dim</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_glove_similarity() → GloVe_sim</h4>
+      <p>GloVe-wiki-gigaword-100 cosine similarity. Co-occurrence from Wikipedia+Gigaword. Falls back to mean of sub-tokens for multi-word phrases.</p>
+      <div style="margin-top:8px"><span class="tag tag-g">Neural · 100-dim</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_wordnet_similarity() → WordNet_sim</h4>
+      <p>Wu-Palmer similarity across all WordNet synsets. Takes max across all sense combinations per word pair. Captures taxonomic hierarchy.</p>
+      <div style="margin-top:8px"><span class="tag tag-b">Knowledge Graph</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_lexical_similarity() → Lexical_sim</h4>
+      <p>Character n-gram (2–4) cosine similarity via CountVectorizer. Catches shared prefixes, suffixes, palindromes, surface patterns.</p>
+      <div style="margin-top:8px"><span class="tag tag-y">Lexical</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_phonetic_similarity() → Phonetic_sim</h4>
+      <p>Normalised phoneme-level edit distance via CMU dict. DP edit distance over phoneme sequences; uses best-matching pair if multiple pronunciations exist.</p>
+      <div style="margin-top:8px"><span class="tag tag-y">Lexical</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_morphological_similarity() → Morphological_sim</h4>
+      <p>WordNet lemmatizer (noun/verb/adj → shortest form) + prefix/suffix Jaccard (3–5 chars). Lemma match → 1.0; otherwise affix Jaccard.</p>
+      <div style="margin-top:8px"><span class="tag tag-y">Lexical</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_multisense_sim_matrix() → MultiSense_sim</h4>
+      <p><em>Tier 1.1.</em> Up to 6 sense embeddings per word using "WORD: definition" prompts. Pairwise max cosine across all sense combos. Handles polysemy (BAT = animal vs. equipment).</p>
+      <div style="margin-top:8px"><span class="tag tag-p">Tier 1.1</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_pairwise_context_sim_matrix() → PairContext_sim</h4>
+      <p><em>Tier 2.2.</em> Embeds "A and B are both" for all 256 ordered pairs in one batch call. Symmetrized by averaging (i,j) and (j,i). Captures shared categorical membership.</p>
+      <div style="margin-top:8px"><span class="tag tag-p">Tier 2.2</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_template_context_sim_matrix() → TemplateCtx_sim</h4>
+      <p><em>Tier 2.2.</em> Embeds "WORD belongs to the category of" for each word, then cosine similarity between the 16 context embeddings.</p>
+      <div style="margin-top:8px"><span class="tag tag-p">Tier 2.2</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_wikidata_similarity() → WikiData_sim</h4>
+      <p>Jaccard of Wikidata property sets (×5 scaled). Traverses hierarchy 2 levels via P171/P279. Catches factual categories. Uses persistent requests_cache.</p>
+      <div style="margin-top:8px"><span class="tag tag-b">Knowledge Graph</span><span class="tag tag-r">External API</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_grid_property_uniqueness_matrix() → GridPropertyUniqueness_sim</h4>
+      <p>Grid-aware Wikidata: properties shared by exactly 4 grid words → 1.0, 3 words → 0.4, too common → 0.1/0.05. Finds hidden group-defining properties.</p>
+      <div style="margin-top:8px"><span class="tag tag-b">Knowledge Graph</span><span class="tag tag-r">Grid-Aware</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_datamuse_similarity() → Datamuse_sim</h4>
+      <p>Statistical word associations (rel_trg). Direct mention → 0.8; Jaccard of shared associations ×5. Fetched in parallel (16 workers).</p>
+      <div style="margin-top:8px"><span class="tag tag-b">Knowledge Graph</span><span class="tag tag-r">External API</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_grid_datamuse_uniqueness_matrix() → GridDatamuseUniqueness_sim</h4>
+      <p>Grid-aware Datamuse: shared associations appearing for exactly 4 words → 1.0, 3 words → 0.3. Finds "hidden connector" words for a group.</p>
+      <div style="margin-top:8px"><span class="tag tag-b">Knowledge Graph</span><span class="tag tag-r">Grid-Aware</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_conceptnet_similarity() → ConceptNet_sim</h4>
+      <p>Common-sense relations (IsA, PartOf, UsedFor) from a local SQLite ConceptNet cache. Jaccard + direct-match. Fully offline — no API needed.</p>
+      <div style="margin-top:8px"><span class="tag tag-b">Knowledge Graph</span><span class="tag tag-t">Local SQLite</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_wikipedia_categories_similarity() → WikipediaCategories_sim</h4>
+      <p>Jaccard of Wikipedia category sets (×5 scaled). Filters generic categories containing "article". Uses <code>_ensure_grid_cache()</code>. <strong>Note:</strong> defined twice in the file — the second definition (line 711) is the active one.</p>
+      <div style="margin-top:8px"><span class="tag tag-b">Knowledge Graph</span><span class="tag tag-r">External API</span></div>
+    </div>
+    <div class="mini-card">
+      <h4 style="color:var(--green)">get_grid_category_uniqueness_matrix() → GridCategoryUniqueness_sim</h4>
+      <p>Grid-aware Wikipedia: categories shared by exactly 4 words → 1.0, 3 words → 0.4. Same uniqueness logic as GridPropertyUniqueness but for Wikipedia categories.</p>
+      <div style="margin-top:8px"><span class="tag tag-b">Knowledge Graph</span><span class="tag tag-r">Grid-Aware</span></div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:24px;">4 methods defined in embedder.py but NEVER used by evaluate.py</div>
+
+  <div class="warn">
+    <strong>⚠️ Dead code — these methods are never called by build_matrices() or any other pipeline file.</strong>
+  </div>
+
+  <table class="param-table" style="margin-top:4px;">
+    <tr><th>Method</th><th>What it was supposed to do</th><th>Actual state</th></tr>
+    <tr>
+      <td class="mono" style="color:#e74c3c;">get_knowledge_graph_ppr_similarity()</td>
+      <td>Personalized PageRank over a combined WordNet + ConceptNet + Datamuse graph to measure structural proximity between words</td>
+      <td><span class="tag tag-r">Returns np.zeros</span> — the body just adds nodes and returns a zero matrix. Never connected to build_matrices().</td>
+    </tr>
+    <tr>
+      <td class="mono" style="color:#e74c3c;">get_phrase_completions()</td>
+      <td>Words that commonly appear before/after each word via Datamuse bgb/bga endpoints</td>
+      <td><span class="tag tag-r">Empty stub</span> — body is just <code>pass</code>. Returns None. Research placeholder only.</td>
+    </tr>
+    <tr>
+      <td class="mono" style="color:#e74c3c;">get_explicit_categories()</td>
+      <td>Exact Wikidata properties + WordNet ancestor chains per word</td>
+      <td><span class="tag tag-r">Empty stub</span> — body is just <code>pass</code>. Returns None. Research placeholder only.</td>
+    </tr>
+    <tr>
+      <td class="mono" style="color:#888;">get_numberbatch_embedding()</td>
+      <td>Returns raw Numberbatch-300 vectors</td>
+      <td><span class="tag tag-w">Internal helper</span> — called by <code>get_concatenated_mpnet_numberbatch_embedding()</code>, not directly by evaluate.py.</td>
+    </tr>
+  </table>
+
+  <div class="warn" style="margin-top:16px;">
+    <strong>Duplicate method:</strong> <code>get_wikipedia_categories_similarity()</code> is defined twice in the file (lines ~609 and ~711). In Python the second definition silently overrides the first. The second (simpler) version filters only categories containing "article" rather than the broader generic_keywords list in the first version.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ FILE 3 · evaluate -->
+<div class="file-section" id="evaluate">
+  <div class="file-header">
+    <div class="file-num fn-3">3</div>
+    <div class="file-title">
+      <h2 style="color:var(--blue)">evaluate.py</h2>
+      <p>Pure library. Defines feature extraction, the 3-stage ML simulation pipeline, and the training loop. Imported by train.py — never run directly.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-b">
+    <h3>🎯 Role</h3>
+    <p>This file bridges embedder and solver. It answers: <em>"Given similarity matrices, what numerical features describe each group-of-4? How do we score those features with ML models? How do we play a game turn by turn?"</em></p>
+    <div class="info" style="margin-top:12px;">
+      <strong>Not an entry point.</strong> train.py imports <code>build_matrices, build_feature_names, extract_features, compute_per_matrix_separation, save_feature_weights, simulate_game_ml</code> from this file. evaluate_test_advanced.py imports <code>build_matrices, extract_features</code>.
+    </div>
+  </div>
+
+  <div class="card card-accent-b">
+    <h3>📐 double_center(mat) — preprocessing applied to every matrix</h3>
+    <pre>double_center(mat) = mat − row_mean − col_mean + global_mean</pre>
+    <p style="color:var(--muted);font-size:.85rem;margin-top:8px;">Removes global bias so words that are "similar to everything" don't dominate. Applied to all 17 matrices before any features are computed. Analogous to kernel centering in Kernel PCA.</p>
+  </div>
+
+  <div class="card card-accent-b">
+    <h3>🔧 build_matrices() — flags and what they enable</h3>
+    <table class="param-table">
+      <tr><th>Flag</th><th>Default</th><th>Matrices added when True</th></tr>
+      <tr><td class="mono">use_numberbatch</td><td>True</td><td>MPNet+Numberbatch_sim</td></tr>
+      <tr><td colspan="2" style="color:var(--muted);font-size:.8rem;">(always on)</td><td>MPNet_sim, WordNet_sim, GloVe_sim</td></tr>
+      <tr><td class="mono">use_lexical</td><td>True</td><td>Lexical_sim, Phonetic_sim, Morphological_sim</td></tr>
+      <tr><td class="mono">use_multisense</td><td>True</td><td>MultiSense_sim</td></tr>
+      <tr><td class="mono">use_pairwise_context</td><td>True</td><td>PairContext_sim, TemplateCtx_sim</td></tr>
+      <tr><td class="mono">use_knowledge_graphs</td><td>True</td><td>WikiData_sim, Datamuse_sim, ConceptNet_sim, WikipediaCategories_sim, GridPropertyUniqueness_sim, GridCategoryUniqueness_sim, GridDatamuseUniqueness_sim</td></tr>
+    </table>
+    <p style="margin-top:10px;color:var(--muted);font-size:.84rem;">All flags default True → 17 matrices total. Returns <code>(names: list[str], matrices: list[ndarray 16×16])</code>.</p>
+  </div>
+
+  <div class="card card-accent-b">
+    <h3>🔧 extract_features() — 9 features × up to 17 matrices = up to 153 features per candidate</h3>
+    <table class="param-table">
+      <tr><th>Feature</th><th>Formula / meaning</th><th>Signal type</th></tr>
+      <tr><td class="mono">mean_in</td><td>Mean of the 6 pairwise edges inside group S</td><td><span class="tag tag-g">Cohesion</span></td></tr>
+      <tr><td class="mono">min_in</td><td>Weakest pairwise link in group S</td><td><span class="tag tag-g">Cohesion</span></td></tr>
+      <tr><td class="mono">var_in</td><td>Variance of in-group edges — low = uniform group</td><td><span class="tag tag-g">Cohesion</span></td></tr>
+      <tr><td class="mono">max_out</td><td>Max similarity from any group member to any outsider</td><td><span class="tag tag-r">Distractor</span></td></tr>
+      <tr><td class="mono">separation</td><td>mean_in − mean_out</td><td><span class="tag tag-b">Combined</span></td></tr>
+      <tr><td class="mono">second_max_out</td><td>2nd highest out-group similarity (Tier 2.1)</td><td><span class="tag tag-r">Distractor</span></td></tr>
+      <tr><td class="mono">avg_top3_out</td><td>Mean of top-3 out-group similarities (Tier 2.1)</td><td><span class="tag tag-r">Distractor</span></td></tr>
+      <tr><td class="mono">group_ambiguity</td><td>Sum of each member's avg similarity to all 12 outsiders (Tier 2.1)</td><td><span class="tag tag-r">Distractor</span></td></tr>
+      <tr><td class="mono">triangle_score</td><td>Fraction of (a,b,c) triplets where "A~B and B~C → A~C" holds (Tier 2.3)</td><td><span class="tag tag-p">Coherence</span></td></tr>
+    </table>
+  </div>
+
+  <div class="card card-accent-b">
+    <h3>🎮 simulate_game_ml() — 3-Stage Pipeline (the core game loop)</h3>
+
+    <div class="info" style="margin-bottom:12px;">
+      <strong>Stage 1 — Candidate generation:</strong> All C(16,4) = 1,820 possible groups-of-4 are enumerated via <code>generate_candidates()</code>. No pruning — every candidate is scored.
+    </div>
+    <div class="info" style="margin-bottom:12px;">
+      <strong>Stage 2 — ML ensemble scoring</strong> (4 combinations depending on which models are available):
+      <pre style="margin-top:8px;"><span class="cm"># All 4 models (full ensemble)</span>
+score = <span class="num">0.15</span>·RF + <span class="num">0.15</span>·GBM + <span class="num">0.50</span>·LightGBM_ranker + <span class="num">0.20</span>·LR_fusion
+
+<span class="cm"># Ranker but no LR fusion</span>
+score = <span class="num">0.20</span>·RF + <span class="num">0.20</span>·GBM + <span class="num">0.60</span>·LightGBM_ranker
+
+<span class="cm"># LR fusion but no ranker</span>
+score = <span class="num">0.35</span>·RF + <span class="num">0.35</span>·GBM + <span class="num">0.30</span>·LR_fusion
+
+<span class="cm"># RF + GBM only</span>
+score = (RF + GBM) / <span class="num">2</span></pre>
+    </div>
+    <div class="info" style="margin-bottom:12px;">
+      <strong>Stage 2b — Competition-aware adjustments:</strong>
+      <pre>adjusted[g] = base_score[g] + <span class="num">0.05</span>·(1/rank(g)) + <span class="num">0.05</span>·gap_to_next(g)</pre>
+      Small bonuses so high-confidence, well-separated candidates are preferred. α = β = 0.05 keeps ML score dominant.
+    </div>
+    <div class="info" style="margin-bottom:12px;">
+      <strong>Stage 3 — Global optimisation (only if top score &lt; 0.70):</strong> Calls <code>solve_ml()</code> from solver.py on top-250 candidates to find the 4-partition that maximises total adjusted score. Submits groups in decreasing score order. If the top candidate scores ≥ 0.70, skips to greedy (high confidence → commit directly).
+    </div>
+    <div class="warn">
+      <strong>Uncertainty filter:</strong> std([RF, GBM, ranker, LR]) &gt; 0.25 → models disagree → skip this candidate in greedy fallback. Forces a safer pick if models conflict.
+    </div>
+
+    <div class="section-label">parameters</div>
+    <table class="param-table">
+      <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+      <tr><td class="mono">words</td><td class="type">list[str]</td><td>16 words of the puzzle</td></tr>
+      <tr><td class="mono">matrices</td><td class="type">list[ndarray]</td><td>Double-centered 16×16 matrices from build_matrices()</td></tr>
+      <tr><td class="mono">matrix_names</td><td class="type">list[str]</td><td>Names in same order as matrices — needed for feature alignment</td></tr>
+      <tr><td class="mono">clf</td><td class="type">tuple</td><td>(clf_rf, clf_gbm) sklearn classifiers</td></tr>
+      <tr><td class="mono">gt_partitions_list</td><td class="type">list[set]</td><td>Ground-truth groups as index sets — for scoring during evaluation</td></tr>
+      <tr><td class="mono">clf_ranker</td><td class="type">lgb.Booster</td><td>Optional LightGBM lambdarank model</td></tr>
+      <tr><td class="mono">clf_lr_fusion</td><td class="type">LogisticRegression</td><td>Optional LR for per-matrix weight fusion (Path A)</td></tr>
+      <tr><td class="mono">use_candidates</td><td class="type">bool</td><td>If True, uses generate_candidates() (all 1820) for the first turn; itertools.combinations for sub-puzzles</td></tr>
+      <tr><td class="mono">→ returns</td><td class="type">tuple</td><td>(matched_groups: int, pred_partitions: list[set], partial_matches: dict{4:n, 3:n, 2:n, 1:n, 0:n})</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ FILE 4 · solver -->
+<div class="file-section" id="solver">
+  <div class="file-header">
+    <div class="file-num fn-4">4</div>
+    <div class="file-title">
+      <h2 style="color:var(--purple)">solver.py</h2>
+      <p>Pure library. Called by evaluate.py's simulate_game_ml(). Finds the globally optimal 4-partition using memoized recursive search.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-p">
+    <h3>🎯 Role</h3>
+    <p>A greedy approach (pick the highest-scoring group, remove it, repeat) risks committing to a group that blocks better overall partitions. <code>solve_ml()</code> searches for the 4-partition of all 16 words that maximises the <em>sum</em> of adjusted scores across all 4 groups simultaneously.</p>
+    <div class="info info-p" style="margin-top:12px;">
+      <strong>When is it called?</strong> Only during the very first turn of a game (all 16 words remain) AND only when the top individual candidate scores &lt; 0.70. If the model is confident, greedy is used instead.
+    </div>
+  </div>
+
+  <div class="card card-accent-p">
+    <h3>🔧 solve_ml() — memoized DP partition search</h3>
+    <table class="param-table">
+      <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+      <tr><td class="mono">score_lookup</td><td class="type">Dict[Tuple, float]</td><td>Adjusted scores for candidate groups. Keys = sorted tuples of word indices. Missing groups default to −1e9.</td></tr>
+      <tr><td class="mono">items</td><td class="type">Set[int]</td><td>Word indices still remaining. Usually {0..15} on the first call.</td></tr>
+      <tr><td class="mono">→ returns</td><td class="type">tuple</td><td>(best_partition: list[tuple], best_score: float)</td></tr>
+    </table>
+    <div class="section-label">algorithm</div>
+    <div class="flow">
+      <div class="flow-row"><div class="flow-dot" style="background:var(--purple)"></div>Base: 0 items → ([], 0.0). 4 items → single lookup.</div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--purple)"></div>Fix the lowest-index item. Try all C(n−1, 3) groups containing it.</div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--purple)"></div>For each candidate: group_score + recurse(remaining items).</div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--purple)"></div>Memoize by frozen sorted remaining-item tuple. Each sub-problem solved once.</div>
+    </div>
+    <p style="color:var(--muted);font-size:.84rem;margin-top:10px;">Fixing the lowest-index item at each level eliminates symmetric orderings, making the search tractable. Only the top-250 candidates (by score) are passed in from evaluate.py to limit the search space.</p>
+  </div>
+
+  <div class="card card-accent-p">
+    <h3>🖥️ InteractiveSolver — for the Streamlit app (app.py)</h3>
+    <p style="margin-bottom:12px;">Wraps solve_ml() with human-feedback state for the interactive UI. Not used in the batch evaluation pipeline.</p>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4 style="color:var(--purple)">add_feedback(indices, result)</h4>
+        <p><strong>"correct"</strong> → removes words from remaining_indices.<br>
+        <strong>"one_away"</strong> → blacklisted + stored as hint (+0.5 boost for candidates sharing 3/4 words).<br>
+        <strong>"incorrect"</strong> → blacklisted (score = −1e6).</p>
+      </div>
+      <div class="mini-card">
+        <h4 style="color:var(--purple)">get_next_suggestions(mats, mat_names, top_k=5)</h4>
+        <p>Runs LightGBM ranker on remaining candidates, applies blacklist + one-away boosts, then calls solve_ml() for the globally optimal partition. Returns suggestions sorted by score.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ FILE 5 · train -->
+<div class="file-section" id="train">
+  <div class="file-header">
+    <div class="file-num fn-5">5</div>
+    <div class="file-title">
+      <h2 style="color:var(--red)">train.py</h2>
+      <p>The main entry point. Orchestrates all other library files: loads data, trains 4 models, saves them, then evaluates on val and test.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-r">
+    <h3>🎯 Role</h3>
+    <p>This is the <strong>only script you run</strong> to train the system. It imports and calls functions from data_loader, embedder, evaluate, and solver. It enforces strict no-leakage: val/test are sealed during training; models are saved then reloaded for evaluation.</p>
+  </div>
+
+  <div class="card card-accent-r">
+    <h3>📊 Data split — 915 games, chronological order preserved</h3>
+    <div class="grid-3">
+      <div class="mini-card" style="border-color:var(--green)">
+        <h4 style="color:var(--green)">Train — 70% · 640 games</h4>
+        <p>idx 0–639. All model fitting happens here. Features extracted from positives + hard negatives + easy negatives.</p>
+      </div>
+      <div class="mini-card" style="border-color:var(--blue)">
+        <h4 style="color:var(--blue)">Validation — 15% · 137 games</h4>
+        <p>idx 640–776. Used only for LightGBM early stopping signal and LR matrix-weight training (Path A).</p>
+      </div>
+      <div class="mini-card" style="border-color:var(--purple)">
+        <h4 style="color:var(--purple)">Test — 15% · 138 games</h4>
+        <p>idx 777–914. Completely sealed. Never seen until after all training is complete.</p>
+      </div>
+    </div>
+    <div class="info" style="margin-top:14px;">
+      <strong>check_splits_no_overlap():</strong> Verifies zero game overlap by word-set identity across all three splits. Raises AssertionError immediately if a leak is detected — training cannot proceed.
+    </div>
+  </div>
+
+  <div class="card card-accent-r">
+    <h3>🏋️ Training pipeline — ordered steps</h3>
+    <div class="flow">
+      <div class="flow-row"><div class="flow-dot" style="background:var(--red)"></div><strong>Step 0:</strong> check_splits_no_overlap() — abort on any data leak</div>
+      <div class="flow-line"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--red)"></div><strong>Step 1:</strong> extract_train_features() — 4 positives + ≤8 hard negatives + ≤8 easy negatives per game</div>
+      <div class="flow-line"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--red)"></div><strong>Step 2:</strong> Train RF (200 trees, depth 10) + GBM (200 rounds, depth 3, lr 0.1, subsample 0.8)</div>
+      <div class="flow-line"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--red)"></div><strong>Step 3:</strong> train_lgbm_ranker() — lambdarank, NDCG@[1,3,5], 300 fixed rounds, val set for monitoring</div>
+      <div class="flow-line"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--red)"></div><strong>Step 3.5:</strong> train_lr_matrix_weights() — LR on val set only, one coefficient per matrix (Path A)</div>
+      <div class="flow-line"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--red)"></div><strong>Step 4:</strong> Save 4 .pkl models + feature_weights.txt</div>
+      <div class="flow-line"></div>
+      <div class="flow-row"><div class="flow-dot" style="background:var(--red)"></div><strong>Step 5:</strong> Reload from disk → evaluate_split(val) → evaluate_split(test) → print final summary</div>
+    </div>
+  </div>
+
+  <div class="card card-accent-r">
+    <h3>🧪 Sample construction per game (used in Steps 1, 3, 3.5)</h3>
+    <table class="param-table">
+      <tr><th>Type</th><th>sklearn label</th><th>LightGBM label</th><th>Count</th><th>Rule</th></tr>
+      <tr><td><span class="tag tag-g">Positive</span></td><td class="mono">1</td><td class="mono">2</td><td>4</td><td>The 4 ground-truth groups</td></tr>
+      <tr><td><span class="tag tag-y">Hard negative</span></td><td class="mono">0</td><td class="mono">1</td><td>≤8</td><td>Groups sharing exactly 3/4 words with a correct group — most confusing decoys</td></tr>
+      <tr><td><span class="tag tag-r">Easy negative</span></td><td class="mono">0</td><td class="mono">0</td><td>≤8</td><td>Random invalid groups shuffled and capped at 8</td></tr>
+    </table>
+  </div>
+
+  <div class="card card-accent-r">
+    <h3>⚙️ Model hyperparameters</h3>
+    <div class="grid-2">
+      <div>
+        <table class="param-table">
+          <tr><th colspan="2">Random Forest</th></tr>
+          <tr><td class="mono">n_estimators</td><td>200</td></tr>
+          <tr><td class="mono">max_depth</td><td>10</td></tr>
+          <tr><td class="mono">n_jobs</td><td>-1 (all cores)</td></tr>
+          <tr><td class="mono">random_state</td><td>42</td></tr>
+        </table>
+        <br>
+        <table class="param-table">
+          <tr><th colspan="2">Gradient Boosting</th></tr>
+          <tr><td class="mono">n_estimators</td><td>200</td></tr>
+          <tr><td class="mono">max_depth</td><td>3</td></tr>
+          <tr><td class="mono">learning_rate</td><td>0.1</td></tr>
+          <tr><td class="mono">subsample</td><td>0.8</td></tr>
+        </table>
+        <br>
+        <table class="param-table">
+          <tr><th colspan="2">Logistic Regression (Path A)</th></tr>
+          <tr><td class="mono">C</td><td>1.0</td></tr>
+          <tr><td class="mono">max_iter</td><td>300</td></tr>
+          <tr><td class="mono">class_weight</td><td>balanced</td></tr>
+          <tr><td>features</td><td>one separation score per matrix</td></tr>
+          <tr><td>trained on</td><td>val set only (137 games)</td></tr>
+        </table>
+      </div>
+      <div>
+        <table class="param-table">
+          <tr><th colspan="2">LightGBM Lambdarank</th></tr>
+          <tr><td class="mono">objective</td><td>lambdarank</td></tr>
+          <tr><td class="mono">metric</td><td>ndcg</td></tr>
+          <tr><td class="mono">ndcg_eval_at</td><td>[1, 3, 5]</td></tr>
+          <tr><td class="mono">learning_rate</td><td>0.05</td></tr>
+          <tr><td class="mono">num_leaves</td><td>31</td></tr>
+          <tr><td class="mono">min_data_in_leaf</td><td>15</td></tr>
+          <tr><td class="mono">max_depth</td><td>5</td></tr>
+          <tr><td class="mono">reg_alpha</td><td>0.1 (L1)</td></tr>
+          <tr><td class="mono">reg_lambda</td><td>0.1 (L2)</td></tr>
+          <tr><td class="mono">subsample</td><td>0.8</td></tr>
+          <tr><td class="mono">colsample_bytree</td><td>0.8</td></tr>
+          <tr><td class="mono">num_boost_round</td><td>300 fixed (no early stopping)</td></tr>
+          <tr><td class="mono">seed</td><td>42</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-accent-r">
+    <h3>📁 Files saved after training</h3>
+    <table class="param-table">
+      <tr><th>File</th><th>Contents</th></tr>
+      <tr><td class="mono">models/clf_rf.pkl</td><td>Trained RandomForestClassifier</td></tr>
+      <tr><td class="mono">models/clf_gbm.pkl</td><td>Trained GradientBoostingClassifier</td></tr>
+      <tr><td class="mono">models/clf_lgbm_ranker.pkl</td><td>Trained LightGBM lambdarank Booster</td></tr>
+      <tr><td class="mono">models/clf_lr_fusion.pkl</td><td>Trained LogisticRegression (per-matrix weights)</td></tr>
+      <tr><td class="mono">feature_weights.txt</td><td>Ranked Gini importance table (RF + GBM averaged)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ FILE 6 · evaluate_test_advanced -->
+<div class="file-section" id="eval-advanced">
+  <div class="file-header">
+    <div class="file-num fn-6">6</div>
+    <div class="file-title">
+      <h2 style="color:var(--teal)">evaluate_test_advanced.py</h2>
+      <p>Standalone script. Runs deep benchmarking after training — search efficiency, per-difficulty analysis, guess distribution. Uses a simpler ensemble than train.py.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-t">
+    <h3>🎯 Role</h3>
+    <p>Goes beyond the binary accuracy metric. Answers: <em>How many guesses does the model need? Which difficulty level does it struggle with? What's the search depth distribution?</em></p>
+  </div>
+
+  <div class="warn">
+    <strong>⚠️ Two key differences from train.py's evaluation:</strong><br><br>
+    1. <strong>Simpler ensemble:</strong> Uses <code>(RF + GBM + LightGBM) / 3</code> (simple average) — no LR fusion, no competition-aware score adjustment.<br>
+    2. <strong>No global optimiser:</strong> Does not call <code>solve_ml()</code>. Sorting candidates by score and picking top guess is purely greedy.
+  </div>
+
+  <div class="card card-accent-t">
+    <h3>🔧 evaluate_test_advanced() — parameters</h3>
+    <table class="param-table">
+      <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td class="mono">test_games</td><td class="type">list[dict]</td><td>—</td><td>Games from data_loader (test split, idx 777+)</td></tr>
+      <tr><td class="mono">embedder</td><td class="type">ConnectionsEmbedder</td><td>—</td><td>Loaded embedder to build matrices</td></tr>
+      <tr><td class="mono">rf_path</td><td class="type">str</td><td><code>"models/clf_rf.pkl"</code></td><td>Path to saved RF model</td></tr>
+      <tr><td class="mono">gbm_path</td><td class="type">str</td><td><code>"models/clf_gbm.pkl"</code></td><td>Path to saved GBM model</td></tr>
+      <tr><td class="mono">lgbm_path</td><td class="type">str</td><td><code>"models/clf_lgbm_ranker.pkl"</code></td><td>Path to saved LightGBM model. Note: LR fusion model is NOT loaded.</td></tr>
+    </table>
+  </div>
+
+  <div class="card card-accent-t">
+    <h3>📊 Two simulation phases per game</h3>
+    <div class="grid-2">
+      <div class="mini-card" style="border-color:var(--teal)">
+        <h4 style="color:var(--teal)">Phase 2 — Unlimited lives (search efficiency)</h4>
+        <p>Keeps guessing in score-ranked order until all 4 groups are found. No life limit. Counts total guesses and errors. Tracks how many guesses it took to find each difficulty level (Yellow/Green/Blue/Purple).</p>
+      </div>
+      <div class="mini-card" style="border-color:var(--teal)">
+        <h4 style="color:var(--teal)">Phase 3 — Standard 4-life (partial credit)</h4>
+        <p>Simulates real game rules: 4 mistakes = game over. Counts how many of the 4 groups were found. Special rule: if 3 groups found, the 4th is given free (<code>correct_count = 4</code>).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-accent-t">
+    <h3>📈 Metrics reported</h3>
+    <table class="param-table">
+      <tr><th>Metric</th><th>Description</th></tr>
+      <tr><td>4-Life Win Rate</td><td>% of games where all 4 groups found with &lt;4 mistakes</td></tr>
+      <tr><td>Total Guesses (Unlimited)</td><td>Full distribution of guesses-to-complete. Perfect = 4.</td></tr>
+      <tr><td>Average Total Guesses</td><td>Mean of the unlimited-life guess counts</td></tr>
+      <tr><td>Search depth by color</td><td>Avg tries to find Yellow / Green / Blue / Purple separately</td></tr>
+      <tr><td>Groups Solved (4-Life)</td><td>Mean groups found per game under standard rules</td></tr>
+    </table>
+  </div>
+
+  <div class="card card-accent-t">
+    <h3>📁 Outputs</h3>
+    <table class="param-table">
+      <tr><th>File</th><th>Contents</th></tr>
+      <tr><td class="mono">results/per_game_detailed_stats.csv</td><td>One row per game: Game_Index, Total_Guesses_Unlimited, Errors_Unlimited, Win_4_Lives, Yellow/Green/Blue/Purple_Tries, Groups_Solved_4_Lives</td></tr>
+      <tr><td class="mono">guess_efficiency_report.png</td><td>Two-panel figure: histogram of total guesses (with KDE + "Perfect=4" line) and bar chart of avg tries by difficulty level</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ FILE 7 · eval_only -->
+<div class="file-section" id="eval-only">
+  <div class="file-header">
+    <div class="file-num fn-7">7</div>
+    <div class="file-title">
+      <h2 style="color:var(--orange)">eval_only.py</h2>
+      <p>Standalone script. Re-runs the full evaluation (val + test) using saved .pkl models — without retraining. Use this when you want to test different model folders or re-run eval after code changes.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-o">
+    <h3>🎯 Role</h3>
+    <p>The training step is expensive (hours of feature extraction + model fitting). <code>eval_only.py</code> lets you skip it entirely and jump straight to evaluation using models already saved on disk.</p>
+    <div class="info info-o" style="margin-top:12px;">
+      <strong>When to use this instead of train.py:</strong> You've already trained, you changed a flag in simulate_game_ml, you want to compare two different saved model directories, or you want to run evaluation on a different CSV without retraining.
+    </div>
+  </div>
+
+  <div class="card card-accent-o">
+    <h3>🔧 Parameters (CLI arguments)</h3>
+    <table class="param-table">
+      <tr><th>Argument</th><th>Default</th><th>Description</th></tr>
+      <tr><td class="mono">--csv</td><td class="mono">Connections_Data.csv</td><td>Path to the data file</td></tr>
+      <tr><td class="mono">--models-dir</td><td class="mono">models</td><td>Directory containing the 4 .pkl model files</td></tr>
+    </table>
+    <div class="section-label">usage</div>
+    <pre><span class="cm"># Default — uses models/ directory</span>
+python eval_only.py
+
+<span class="cm"># Point at a different trained model set</span>
+python eval_only.py --models-dir aug_models_suparshwa
+
+<span class="cm"># Different CSV + model dir</span>
+python eval_only.py --csv Connections_Data.csv --models-dir models</pre>
+  </div>
+
+  <div class="card card-accent-o">
+    <h3>⚙️ What it loads vs. what train.py does</h3>
+    <table class="param-table">
+      <tr><th></th><th>train.py</th><th>eval_only.py</th></tr>
+      <tr><td>Trains models</td><td>✅ Yes</td><td>❌ No</td></tr>
+      <tr><td>Touches train set</td><td>✅ Yes</td><td>❌ No</td></tr>
+      <tr><td>Uses val for LightGBM/LR</td><td>✅ Yes</td><td>❌ Eval only</td></tr>
+      <tr><td>Loads 4 .pkl models</td><td>After training</td><td>✅ Immediately</td></tr>
+      <tr><td>Runs simulate_game_ml</td><td>✅ Yes</td><td>✅ Yes (same function)</td></tr>
+      <tr><td>Uses full ensemble (RF+GBM+ranker+LR)</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+      <tr><td>Uses solve_ml global optimizer</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+    </table>
+    <div class="info info-o" style="margin-top:12px;">
+      <strong>eval_only.py uses the full pipeline</strong> (including LR fusion and solve_ml) — it delegates entirely to <code>evaluate_split()</code> from train.py, which calls <code>simulate_game_ml()</code> from evaluate.py with all 4 models. This is different from evaluate_test_advanced.py which uses a simpler 1/3 average ensemble and no global optimizer.
+    </div>
+  </div>
+
+  <div class="card card-accent-o">
+    <h3>📦 Currently saved model sets on disk</h3>
+    <table class="param-table">
+      <tr><th>Directory</th><th>Models present</th></tr>
+      <tr><td class="mono">models/</td><td>clf_rf.pkl, clf_gbm.pkl, clf_lgbm_ranker.pkl, clf_lr_fusion.pkl</td></tr>
+      <tr><td class="mono">aug_models_suparshwa/</td><td>clf_rf.pkl, clf_gbm.pkl, clf_lgbm_ranker.pkl, clf_lr_fusion.pkl</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SUMMARY -->
+<div class="card" style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #2e2e60;margin-bottom:40px;">
+  <h3>📋 All 7 files at a glance</h3>
+  <table class="summary-table">
+    <tr><th>File</th><th>Type</th><th>Calls into</th><th>Key function(s)</th><th>Run directly?</th></tr>
+    <tr>
+      <td><span style="color:var(--yellow);font-family:monospace;font-weight:700;">data_loader.py</span></td>
+      <td>Library</td><td>—</td><td class="mono">load_games()</td><td>No</td>
+    </tr>
+    <tr>
+      <td><span style="color:var(--green);font-family:monospace;font-weight:700;">embedder.py</span></td>
+      <td>Library</td><td>External APIs, GloVe, WordNet</td><td class="mono">ConnectionsEmbedder, get_*_similarity()</td><td>No</td>
+    </tr>
+    <tr>
+      <td><span style="color:var(--blue);font-family:monospace;font-weight:700;">evaluate.py</span></td>
+      <td>Library</td><td>embedder, solver</td><td class="mono">build_matrices(), extract_features(), simulate_game_ml()</td><td>No</td>
+    </tr>
+    <tr>
+      <td><span style="color:var(--purple);font-family:monospace;font-weight:700;">solver.py</span></td>
+      <td>Library</td><td>evaluate (for InteractiveSolver)</td><td class="mono">solve_ml(), InteractiveSolver</td><td>No</td>
+    </tr>
+    <tr>
+      <td><span style="color:var(--red);font-family:monospace;font-weight:700;">train.py</span></td>
+      <td><strong>Entry point</strong></td><td>data_loader, embedder, evaluate, solver</td><td class="mono">train(), train_lgbm_ranker(), evaluate_split()</td><td>✅ Yes — main script</td>
+    </tr>
+    <tr>
+      <td><span style="color:var(--teal);font-family:monospace;font-weight:700;">evaluate_test_advanced.py</span></td>
+      <td>Entry point</td><td>data_loader, embedder, evaluate</td><td class="mono">evaluate_test_advanced()</td><td>✅ Yes — after training</td>
+    </tr>
+    <tr>
+      <td><span style="color:var(--orange);font-family:monospace;font-weight:700;">eval_only.py</span></td>
+      <td>Entry point</td><td>data_loader, embedder, train (evaluate_split)</td><td class="mono">main()</td><td>✅ Yes — skip retraining</td>
+    </tr>
+  </table>
+
+  <div style="margin-top:20px;">
+    <div class="section-label">Key corrections from first version of this report</div>
+    <div class="warn">
+      ① evaluate.py and solver.py are <strong>libraries called by train.py</strong>, not scripts run after it.<br>
+      ② embedder.py has <strong>3 dead/stub methods</strong>: get_knowledge_graph_ppr_similarity() returns zeros; get_phrase_completions() and get_explicit_categories() are empty pass stubs.<br>
+      ③ evaluate_test_advanced.py uses a <strong>simple (RF+GBM+LGBM)/3 average</strong> — no LR fusion, no solve_ml, no score adjustments.<br>
+      ④ get_wikipedia_categories_similarity() is <strong>defined twice</strong> in embedder.py; the second definition (line ~711) silently overrides the first.<br>
+      ⑤ eval_only.py was missing from the original report — it is a legitimate <strong>7th entry point</strong> for evaluation without retraining.
+    </div>
+  </div>
+</div>
+
+</div><!-- /.main -->
+<script>
+  const sections = document.querySelectorAll('.file-section, #pipeline');
+  const navLinks = document.querySelectorAll('.nav a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+    navLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + cur); });
+  });
+</script>
+</body>
+</html>

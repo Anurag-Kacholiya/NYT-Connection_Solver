@@ -1,0 +1,35 @@
+Loading original dataset: Connections_Data.csv
+Mode: ORIGINAL DATA ONLY
+Loading embedding model: all-mpnet-base-v2...
+Model loaded.
+Loading GloVe word vectors...
+Loading original dataset: Connections_Data.csv
+Mode: ORIGINAL DATA ONLY
+Loading embedding model: all-mpnet-base-v2...
+Model loaded.
+Loading GloVe word vectors...
+GloVe loaded.
+Loading ConceptNet Numberbatch from numberbatch-en-19.08.txt.gz...
+Numberbatch loaded (516782 words, dim=300).
+V4 Train Features: 100%|##########| 678/678 [1:50:01<00:00,  9.74s/it]
+Training RF + GBM...
+Ranker training data: 100%|##########| 678/678 [1:54:28<00:00, 10.13s/it]
+Ranker val data: 100%|##########| 137/137 [20:24<00:00,  8.94s/it]
+Training until validation scores don't improve for 50 rounds
+[50]	training's ndcg@1: 0.996559	training's ndcg@2: 0.979061	training's ndcg@3: 0.943368	training's ndcg@4: 0.895689	training's ndcg@5: 0.921542	valid_1's ndcg@1: 0.722628	valid_1's ndcg@2: 0.66427	valid_1's ndcg@3: 0.624299	valid_1's ndcg@4: 0.591742	valid_1's ndcg@5: 0.623903
+Early stopping, best iteration is:
+[1]	training's ndcg@1: 0.958702	training's ndcg@2: 0.930363	training's ndcg@3: 0.883602	training's ndcg@4: 0.830928	training's ndcg@5: 0.864338	valid_1's ndcg@1: 0.829684	valid_1's ndcg@2: 0.743089	valid_1's ndcg@3: 0.673205	valid_1's ndcg@4: 0.627518	valid_1's ndcg@5: 0.653066
+LR fusion features: 100%|##########| 137/137 [22:18<00:00,  9.77s/it]
+Saving models to ablation_study_results/v4_original ...
+Feature importances saved → ablation_study_results/v4_original/original_feature_weights.txt
+Saving ranker feature importance to ablation_study_results/v4_original/original_ranker_weights_of_models.txt ...
+
+All results saved in: ablation_study_results/v4_original
+
+Evaluating 100 games...
+Progress [LAST_100_TEST]: 100%|████████████████████████████████████████████████| 100/100 [21:02<00:00, 12.62s/it]
+
+  [LAST_100_TEST Results]
+    Games Processed : 100
+    Perfect Games   : 29 (29.00%)
+    Group Accuracy  : 48.25%
